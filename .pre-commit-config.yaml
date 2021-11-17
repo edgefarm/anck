@@ -1,0 +1,36 @@
+exclude: "(?x)^(.*/base/charts/.*)"
+repos:
+  # general stuff
+  - repo: git://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+      # Git style
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: check-vcs-permalinks
+      - id: forbid-new-submodules
+      - id: no-commit-to-branch
+
+      # Common errors
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+      - id: check-yaml
+        exclude: config/manager/manager.yaml
+      - id: check-merge-conflict
+      - id: check-executables-have-shebangs
+
+  # markdown
+  - repo: https://github.com/markdownlint/markdownlint.git
+    rev: master
+    hooks:
+      - id: markdownlint_docker
+
+  # Golang
+  - repo: git://github.com/dnephin/pre-commit-golang
+    rev: master
+    hooks:
+      - id: go-fmt
+      - id: go-lint
+      - id: go-imports
+      - id: go-mod-tidy
