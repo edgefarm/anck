@@ -1,0 +1,11 @@
+apiVersion: network.edgefarm.io/v1alpha1
+kind: Network
+metadata:
+  name: full-network-sample
+spec:
+  namespace: my-target-namespace
+  accountname: my-account-name
+  usernames:
+    - userA
+    - userB
+    - userC

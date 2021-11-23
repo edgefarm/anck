@@ -1,19 +1,19 @@
-domain: network.edgefarm.io
+domain: edgefarm.io
 layout:
   - go.kubebuilder.io/v3
 plugins:
   manifests.sdk.operatorframework.io/v2: {}
   scorecard.sdk.operatorframework.io/v2: {}
-projectName: network-operator
-repo: github.com/edgefarm/edgefarm.network
+projectName: edgefarm-network-operator
+repo: github.com/edgefarm/edgefarm-network-operator
 resources:
   - api:
       crdVersion: v1
       namespaced: true
     controller: true
-    domain: network.edgefarm.io
+    domain: edgefarm.io
     group: network
     kind: Network
-    path: github.com/edgefarm/edgefarm.network/api/v1alpha1
+    path: github.com/edgefarm/edgefarm-network-operator/api/v1alpha1
     version: v1alpha1
 version: "3"

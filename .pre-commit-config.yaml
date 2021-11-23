@@ -6,31 +6,45 @@ repos:
     hooks:
       # Git style
       - id: check-added-large-files
+        exclude: ^vendor
       - id: check-merge-conflict
+        exclude: ^vendor
       - id: check-vcs-permalinks
+        exclude: ^vendor
       - id: forbid-new-submodules
+        exclude: ^vendor
       - id: no-commit-to-branch
+        exclude: ^vendor
 
       # Common errors
       - id: end-of-file-fixer
+        exclude: ^vendor
       - id: trailing-whitespace
         args: [--markdown-linebreak-ext=md]
+        exclude: ^vendor
       - id: check-yaml
-        exclude: config/manager/manager.yaml
+        exclude: (^vendor)|(config/manager/manager.yaml)
       - id: check-merge-conflict
+        exclude: ^vendor
       - id: check-executables-have-shebangs
+        exclude: ^vendor
 
   # markdown
   - repo: https://github.com/markdownlint/markdownlint.git
     rev: master
     hooks:
       - id: markdownlint_docker
+        exclude: ^vendor
 
   # Golang
   - repo: git://github.com/dnephin/pre-commit-golang
     rev: master
     hooks:
       - id: go-fmt
+        exclude: ^vendor
       - id: go-lint
+        exclude: ^vendor
       - id: go-imports
+        exclude: ^vendor
       - id: go-mod-tidy
+        exclude: ^vendor

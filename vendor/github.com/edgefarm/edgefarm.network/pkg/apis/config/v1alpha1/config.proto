@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package v1alpha1;
+option go_package = ".;v1alpha1";
+
+message DesiredStateRequest {
+  string account = 1;
+  repeated string username = 2;
+}
+
+message DesiredStateResponse { map<string, string> credentials = 1; }
+
+message DeleteAccountRequest { string account = 1; }
+
+message DeleteAccountResponse {}
+
+service ConfigService {
+  rpc DesiredState(DesiredStateRequest) returns (DesiredStateResponse);
+  rpc DeleteAccount(DeleteAccountRequest) returns (DeleteAccountResponse);
+}

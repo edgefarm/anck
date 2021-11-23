@@ -1,6 +1,5 @@
 /*
-Copyright 2021.
-
+Copyright © 2021 Ci4Rail GmbH <engineering@ci4rail.com>
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -28,8 +27,14 @@ type NetworkSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Foo is an example field of Network. Edit network_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	// Namespace is the namespace the credentials shall be stored in. If empty, the accountname is used for credential deplyoment.
+	Namespace string `json:"namespace,omitempty"`
+
+	// Accountname is the name of the nats account. If empty, the namespace, where the Network ressource was deployed is used.
+	Accountname string `json:"accountname,omitempty"`
+
+	// Usernames is the name of the nats users.
+	Usernames []string `json:"usernames"`
 }
 
 // NetworkStatus defines the observed state of Network

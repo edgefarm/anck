@@ -4,17 +4,17 @@ kind: ClusterRole
 metadata:
   name: network-viewer-role
 rules:
-- apiGroups:
-  - network.network.edgefarm.io
-  resources:
-  - networks
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - network.network.edgefarm.io
-  resources:
-  - networks/status
-  verbs:
-  - get
+  - apiGroups:
+      - network.edgefarm.io
+    resources:
+      - networks
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - network.edgefarm.io
+    resources:
+      - networks/status
+    verbs:
+      - get

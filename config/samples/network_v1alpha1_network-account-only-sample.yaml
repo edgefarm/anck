@@ -1,0 +1,10 @@
+apiVersion: network.edgefarm.io/v1alpha1
+kind: Network
+metadata:
+  name: my-account-only-sample
+spec:
+  accountname: my-account-only
+  usernames:
+    - userA
+    - userB
+    - userC

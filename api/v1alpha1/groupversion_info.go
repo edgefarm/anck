@@ -1,6 +1,5 @@
 /*
-Copyright 2021.
-
+Copyright © 2021 Ci4Rail GmbH <engineering@ci4rail.com>
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -16,7 +15,7 @@ limitations under the License.
 
 // Package v1alpha1 contains API Schema definitions for the network v1alpha1 API group
 //+kubebuilder:object:generate=true
-//+groupName=network.network.edgefarm.io
+//+groupName=network.edgefarm.io
 package v1alpha1
 
 import (
@@ -26,7 +25,7 @@ import (
 
 var (
 	// GroupVersion is group version used to register these objects
-	GroupVersion = schema.GroupVersion{Group: "network.network.edgefarm.io", Version: "v1alpha1"}
+	GroupVersion = schema.GroupVersion{Group: "network.edgefarm.io", Version: "v1alpha1"}
 
 	// SchemeBuilder is used to add go types to the GroupVersionKind scheme
 	SchemeBuilder = &scheme.Builder{GroupVersion: GroupVersion}

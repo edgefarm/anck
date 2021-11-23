@@ -1,0 +1,132 @@
+version: v1beta11
+
+vars:
+  - name: IMAGE
+    value: ci4rail/edgefarm-network-operator
+  - name: IMAGE-CREDSMANAGER
+    value: ci4rail/credsmanager
+
+dependencies:
+  - name: k3d
+    source:
+      git: https://github.com/edgefarm/devspace.base
+      subPath: /environments/k3d
+      branch: main
+  - name: credsmanager
+    source:
+      git: https://github.com/edgefarm/edgefarm.network.git
+      subPath: /
+      branch: main
+
+commands:
+  - name: init
+    command: |-
+      devspace run update
+      devspace run k3d.init
+
+  - name: purge
+    command: |-
+      devspace run k3d.purge
+
+  - name: activate
+    command: |-
+      devspace run k3d.activate
+
+  - name: update
+    command: |-
+      devspace update dependencies
+
+dev:
+  # `dev.ports` specifies all ports that should be forwarded while `devspace dev` is running
+  # Port-forwarding lets you access your application via localhost on your local machine
+  ports:
+    - imageSelector: ${IMAGE} # Select the Pod that runs our `${IMAGE}`
+      forward:
+        - port: 23451 # Forward the port from the Pod to localhost:23451
+          remotePort: 2345
+    - imageSelector: ${IMAGE-CREDSMANAGER} # Select the Pod that runs our `${IMAGE}`
+      namespace: edgefarm-network
+      forward:
+        - port: 6000
+        - port: 23450 # Forward the port from the Pod to localhost:23450
+          remotePort: 2345
+  # `dev.sync` configures a file sync between our Pods in k8s and your local project files
+  sync:
+    - imageSelector: ${IMAGE} # Select the Pod that runs our `${IMAGE}`
+      localSubPath: ./
+      excludePaths:
+        - .git/
+    - imageSelector: ${IMAGE-CREDSMANAGER} # Select the Pod that runs our `${IMAGE}`
+      namespace: edgefarm-network
+      localSubPath: ../edgefarm.network/
+      excludePaths:
+        - .git/
+  # `dev.terminal` tells DevSpace to open a terminal as a last step during `devspace dev`
+  terminal:
+    imageSelector: ${IMAGE} # Select the Pod that runs our `${IMAGE}`
+    # With this optional `command` we can tell DevSpace to run a script when opening the terminal
+    # This is often useful to display help info for new users or perform initial tasks (e.g. installing dependencies)
+    # DevSpace has generated an example ./devspace_start.sh file in your local project - Feel free to customize it!
+    command:
+      - bash
+
+  # Since our Helm charts and manifests deployments are often optimized for production,
+  # DevSpace let's you swap out Pods dynamically to get a better dev environment
+  replacePods:
+    - imageSelector: ${IMAGE} # Select the Pod that runs our `${IMAGE}`
+      # Since the `${IMAGE}` used to start our main application pod may be distroless or not have any dev tooling, let's replace it with a dev-optimized image
+      # DevSpace provides a sample image here but you can use any image for your specific needs
+      replaceImage: loftsh/go:latest
+      # Besides replacing the container image, let's also apply some patches to the `spec` of our Pod
+      # We are overwriting `command` + `args` for the first container in our selected Pod, so it starts with `sleep 9999999`
+      # Using `sleep 9999999` as PID 1 (instead of the regular ENTRYPOINT), allows you to start the application manually
+      patches:
+        - op: replace
+          path: spec.containers[1].command
+          value:
+            - sleep
+        - op: replace
+          path: spec.containers[1].args
+          value:
+            - "9999999"
+        - op: remove
+          path: spec.containers[1].securityContext
+    - imageSelector: ${IMAGE-CREDSMANAGER} # Select the Pod that runs our `${IMAGE}`
+      # Since the `${IMAGE}` used to start our main application pod may be distroless or not have any dev tooling, let's replace it with a dev-optimized image
+      # DevSpace provides a sample image here but you can use any image for your specific needs
+      replaceImage: loftsh/go:latest
+      # Besides replacing the container image, let's also apply some patches to the `spec` of our Pod
+      # We are overwriting `command` + `args` for the first container in our selected Pod, so it starts with `sleep 9999999`
+      # Using `sleep 9999999` as PID 1 (instead of the regular ENTRYPOINT), allows you to start the application manually
+      namespace: edgefarm-network
+      patches:
+        - op: replace
+          path: spec.containers[0].command
+          value:
+            - sleep
+        - op: replace
+          path: spec.containers[0].args
+          value:
+            - "9999999"
+        - op: remove
+          path: spec.containers[0].securityContext
+#   - name: network-operator
+#     kubectl:
+#     kustomize: true
+#       manifests:
+#         - ../edgefarm-network-operator/manifests/crds
+
+deployments:
+  - name: network-operator
+    namespace: network-operator
+    kubectl:
+      kustomize: true
+      manifests:
+        - config/default
+  # - name: network-operator-rbac
+  #   namespace: system
+  #   kubectl:
+  #     manifests:
+  #       - config/rbac/role.yaml
+  #       - config/rbac/role_binding.yaml
+  #       - config/rbac/service_account.yaml

@@ -4,21 +4,21 @@ kind: ClusterRole
 metadata:
   name: network-editor-role
 rules:
-- apiGroups:
-  - network.network.edgefarm.io
-  resources:
-  - networks
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - network.network.edgefarm.io
-  resources:
-  - networks/status
-  verbs:
-  - get
+  - apiGroups:
+      - network.edgefarm.io
+    resources:
+      - networks
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - network.edgefarm.io
+    resources:
+      - networks/status
+    verbs:
+      - get

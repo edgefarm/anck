@@ -22,3 +22,5 @@ testbin/*
 *.swp
 *.swo
 *~
+
+.devspace
