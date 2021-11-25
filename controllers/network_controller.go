@@ -150,7 +150,7 @@ func (r *NetworkReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	}
 
 	fmt.Printf("Create or update secret '%s' in namespace '%s'\n", natsCredsSecretName, namespace)
-	err = createOrUpdateSecret(natsCredsSecretName, namespace, resp.Credentials)
+	err = createOrUpdateSecret(accountName, natsCredsSecretName, namespace, resp.Credentials)
 	if err != nil {
 		errorText := "Error creating or updating secret"
 		setupLog.Error(err, errorText)
@@ -158,7 +158,6 @@ func (r *NetworkReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 			Requeue:      false,
 			RequeueAfter: 0,
 		}, fmt.Errorf("%s", errorText)
-
 	}
 
 	return ctrl.Result{
@@ -193,11 +192,12 @@ func createNamespace(namespace string) error {
 	return nil
 }
 
-func createOrUpdateSecret(name string, namespace string, users map[string]string) error {
+func createOrUpdateSecret(accountName string, name string, namespace string, users map[string]string) error {
 	secret := &v1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,
 			Namespace: namespace,
+			Labels:    map[string]string{"account": accountName},
 		},
 	}
 	secret.Data = make(map[string][]byte)
@@ -220,6 +220,7 @@ func createOrUpdateSecret(name string, namespace string, users map[string]string
 	_, err = clientset.CoreV1().Secrets(namespace).Create(context.Background(), secret, metav1.CreateOptions{})
 	if err != nil {
 		if apierrors.IsAlreadyExists(err) {
+			fmt.Printf("Secret '%s' already exists in namespace '%s'. Updating.\n", name, namespace)
 			_, err = clientset.CoreV1().Secrets(namespace).Update(context.Background(), secret, metav1.UpdateOptions{})
 			if err != nil {
 				setupLog.Error(err, "error updating secret")
