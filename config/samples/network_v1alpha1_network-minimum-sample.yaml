@@ -4,4 +4,4 @@ metadata:
   name: minimum-network-sample
 spec:
   usernames:
-    - oneUser
+    - oneuser

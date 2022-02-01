@@ -3,7 +3,7 @@ module github.com/edgefarm/edgefarm-network-operator
 go 1.17
 
 require (
-	github.com/edgefarm/edgefarm.network v0.1.0
+	github.com/edgefarm/edgefarm.network v0.2.3-dev
 	github.com/onsi/ginkgo v1.16.4
 	github.com/onsi/gomega v1.15.0
 	google.golang.org/grpc v1.42.0

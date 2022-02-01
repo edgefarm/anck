@@ -6,6 +6,6 @@ spec:
   namespace: my-target-namespace
   accountname: my-account-name
   usernames:
-    - userA
-    - userB
-    - userC
+    - usera
+    - userb
+    - userc

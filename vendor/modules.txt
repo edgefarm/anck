@@ -29,7 +29,7 @@ github.com/cespare/xxhash/v2
 # github.com/davecgh/go-spew v1.1.1
 ## explicit
 github.com/davecgh/go-spew/spew
-# github.com/edgefarm/edgefarm.network v0.1.0
+# github.com/edgefarm/edgefarm.network v0.2.3-dev
 ## explicit; go 1.16
 github.com/edgefarm/edgefarm.network/pkg/apis/config/v1alpha1
 # github.com/evanphx/json-patch v4.11.0+incompatible

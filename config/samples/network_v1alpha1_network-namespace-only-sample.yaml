@@ -5,6 +5,7 @@ metadata:
 spec:
   namespace: my-namespace-only
   usernames:
-    - userA
-    - userB
-    - userC
+    - usera
+    - userb
+    - userc
+    - userd

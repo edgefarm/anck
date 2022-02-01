@@ -29,6 +29,7 @@ import (
 
 	networkv1alpha1 "github.com/edgefarm/edgefarm-network-operator/api/v1alpha1"
 	"github.com/edgefarm/edgefarm-network-operator/controllers"
+	"github.com/edgefarm/edgefarm-network-operator/pkg/additional"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -93,6 +94,27 @@ func main() {
 	}
 
 	setupLog.Info("starting manager")
+	setupLog.Info("applying DaemonSet for 'node-dns'")
+	err = additional.ApplyNodeDNS(mgr.GetClient())
+	if err != nil {
+		setupLog.Error(err, "unable to set up node dns")
+		os.Exit(1)
+	}
+
+	setupLog.Info("applying DaemonSet for 'nats'")
+	err = additional.ApplyNats(mgr.GetClient())
+	if err != nil {
+		setupLog.Error(err, "unable to set up node dns")
+		os.Exit(1)
+	}
+
+	setupLog.Info("applying Deployment for 'credsmanager'")
+	err = additional.ApplyCredsmanager(mgr.GetClient())
+	if err != nil {
+		setupLog.Error(err, "unable to set up node dns")
+		os.Exit(1)
+	}
+
 	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
 		setupLog.Error(err, "problem running manager")
 		os.Exit(1)

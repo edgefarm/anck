@@ -16,7 +16,7 @@ dependencies:
     source:
       git: https://github.com/edgefarm/edgefarm.network.git
       subPath: /
-      branch: main
+      branch: user-change
 
 commands:
   - name: init

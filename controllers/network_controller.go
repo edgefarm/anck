@@ -17,6 +17,7 @@ package controllers
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"time"
 
@@ -43,11 +44,12 @@ var (
 )
 
 const (
-	credsmanagerServiceName = "credsmanager"
-	credsmanagerServicePort = 6000
-	credsmanagerNamespace   = "edgefarm-network"
-	timeoutSeconds          = 10
-	natsCredsSecretName     = "nats-credentials"
+	credsmanagerServiceName          = "credsmanager"
+	credsmanagerServicePort          = 6000
+	credsmanagerNamespace            = "edgefarm-network"
+	timeoutSeconds                   = 10
+	natsCredsSecretName              = "nats-credentials"
+	edgefarmNetworkAccountNameSecret = "edgefarm.network-natsUserData"
 )
 
 // NetworkReconciler reconciles a Network object
@@ -115,8 +117,8 @@ func (r *NetworkReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	client := credsmanager.NewConfigServiceClient(cc)
 	fmt.Printf("Requesting credentials for account name '%s'\n", accountName)
 	resp, err := client.DesiredState(grpcContext, &credsmanager.DesiredStateRequest{
-		Account:  accountName,
-		Username: network.Spec.Usernames,
+		AccountName: accountName,
+		Username:    network.Spec.Usernames,
 	})
 	if err != nil {
 		errorText := "Error setting desired state"
@@ -149,8 +151,8 @@ func (r *NetworkReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 		}, fmt.Errorf("%s", errorText)
 	}
 
-	fmt.Printf("Create or update secret '%s' in namespace '%s'\n", natsCredsSecretName, namespace)
-	err = createOrUpdateSecret(accountName, natsCredsSecretName, namespace, resp.Credentials)
+	// fmt.Printf("Create or update secret '%s' in namespace '%s'\n", natsCredsSecretName, namespace)
+	err = createOrUpdateSecrets(accountName, namespace, resp)
 	if err != nil {
 		errorText := "Error creating or updating secret"
 		setupLog.Error(err, errorText)
@@ -192,20 +194,7 @@ func createNamespace(namespace string) error {
 	return nil
 }
 
-func createOrUpdateSecret(accountName string, name string, namespace string, users map[string]string) error {
-	secret := &v1.Secret{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      name,
-			Namespace: namespace,
-			Labels:    map[string]string{"account": accountName},
-		},
-	}
-	secret.Data = make(map[string][]byte)
-
-	for key, value := range users {
-		secret.Data[key] = []byte(value)
-	}
-
+func createOrUpdateSecrets(accountName string, namespace string, creds *credsmanager.DesiredStateResponse) error {
 	c, err := rest.InClusterConfig()
 	if err != nil {
 		setupLog.Error(err, "error getting cluster config")
@@ -217,22 +206,54 @@ func createOrUpdateSecret(accountName string, name string, namespace string, use
 		return err
 	}
 
-	_, err = clientset.CoreV1().Secrets(namespace).Create(context.Background(), secret, metav1.CreateOptions{})
-	if err != nil {
-		if apierrors.IsAlreadyExists(err) {
-			fmt.Printf("Secret '%s' already exists in namespace '%s'. Updating.\n", name, namespace)
-			_, err = clientset.CoreV1().Secrets(namespace).Update(context.Background(), secret, metav1.UpdateOptions{})
-			if err != nil {
-				setupLog.Error(err, "error updating secret")
-				return err
-			}
-			return nil
+	for _, userCred := range creds.Creds {
+		secretName := userCred.UserAccountName
+		fmt.Printf("Create or update secret '%s' in namespace '%s'\n", secretName, namespace)
+
+		secret := &v1.Secret{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      secretName,
+				Namespace: namespace,
+				Labels:    map[string]string{"account": accountName},
+			},
 		}
 
-		setupLog.Error(err, "error creating secret")
-		return err
+		secret.Data = make(map[string][]byte)
+		j, err := json.Marshal(userCred)
+		if err != nil {
+			setupLog.Error(err, "error marshalling json")
+			return err
+		}
+		secret.Data[edgefarmNetworkAccountNameSecret] = j
+
+		_, err = clientset.CoreV1().Secrets(namespace).Create(context.Background(), secret, metav1.CreateOptions{})
+		if err != nil {
+			if apierrors.IsAlreadyExists(err) {
+				fmt.Printf("Secret '%s' already exists in namespace '%s'. Updating.\n", secretName, namespace)
+				_, err = clientset.CoreV1().Secrets(namespace).Update(context.Background(), secret, metav1.UpdateOptions{})
+				if err != nil {
+					setupLog.Error(err, "error updating secret")
+				}
+				continue
+			}
+
+			setupLog.Error(err, "error creating secret")
+			continue
+		}
 	}
 
+	for _, deletedUserAccountName := range creds.DeletedUserAccountNames {
+		fmt.Printf("Delete secret '%s' in namespace '%s'\n", deletedUserAccountName, namespace)
+
+		err = clientset.CoreV1().Secrets(namespace).Delete(context.Background(), deletedUserAccountName, metav1.DeleteOptions{})
+		if err != nil {
+			if apierrors.IsNotFound(err) {
+				continue
+			}
+			setupLog.Error(err, "error deleting secret")
+			continue
+		}
+	}
 	return nil
 }
 
@@ -288,7 +309,7 @@ func (r *NetworkReconciler) SetupWithManager(mgr ctrl.Manager) error {
 
 				fmt.Printf("Deleting network account %s\n", e.Object.(*networkv1alpha1.Network).Spec.Accountname)
 				_, err = client.DeleteAccount(grpcContext, &credsmanager.DeleteAccountRequest{
-					Account: accountName,
+					AccountName: accountName,
 				})
 				if err != nil {
 					errorText := fmt.Sprintf("Cannot deleted network account %s", accountName)
@@ -307,12 +328,15 @@ func (r *NetworkReconciler) SetupWithManager(mgr ctrl.Manager) error {
 					// third case: create secret within the namespace the resource was defined 'network.Namespace'.
 					namespace = e.Object.(*networkv1alpha1.Network).Namespace
 				}
-				fmt.Printf("Deleting network secret %s from namespace %s\n", natsCredsSecretName, namespace)
-				err = deleteSecret(natsCredsSecretName, namespace)
-				if err != nil {
-					errorText := fmt.Sprintf("Cannot deleted network secret %s from namespace %s", natsCredsSecretName, namespace)
-					fmt.Println(errorText)
-					return false
+				for _, user := range e.Object.(*networkv1alpha1.Network).Spec.Usernames {
+					secretName := fmt.Sprintf("%s.%s", accountName, user)
+					fmt.Printf("Deleting network secret %s from namespace %s\n", secretName, namespace)
+					err = deleteSecret(secretName, namespace)
+					if err != nil {
+						errorText := fmt.Sprintf("Cannot deleted network secret %s from namespace %s", secretName, namespace)
+						fmt.Println(errorText)
+						continue
+					}
 				}
 				return false
 			},
