@@ -182,7 +182,7 @@ func ApplyNats(client client.Client) error {
 						},
 						{
 							Name:    "nats-leafnode-registry",
-							Image:   "ci4rail/dev-nats-leafnode-registry:03bd7bee",
+							Image:   "ci4rail/nats-leafnode-registry:46c637d4",
 							Command: []string{"/registry"},
 							Args:    []string{"--natsuri", "nats://localhost:4222"},
 							VolumeMounts: []corev1.VolumeMount{
