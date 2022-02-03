@@ -205,7 +205,7 @@ func ApplyNats(client client.Client) error {
 						},
 						{
 							Name:            "nats-config-reloader",
-							Image:           "ci4rail/nats-server-config-reloader:0.6.2-customsignal1",
+							Image:           "ci4rail/nats-server-config-reloader:7fc8210",
 							ImagePullPolicy: corev1.PullIfNotPresent,
 							Command:         []string{"nats-server-config-reloader"},
 							Args: []string{
