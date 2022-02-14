@@ -2,7 +2,7 @@ version: v1beta11
 
 vars:
   - name: IMAGE
-    value: ci4rail/edgefarm-network-operator
+    value: ci4rail/anck
   - name: IMAGE-CREDSMANAGER
     value: ci4rail/credsmanager
 
@@ -14,7 +14,7 @@ dependencies:
       branch: main
   - name: credsmanager
     source:
-      git: https://github.com/edgefarm/edgefarm.network.git
+      git: https://github.com/edgefarm/anck-credentials.git
       subPath: /
       branch: user-change
 
@@ -58,7 +58,7 @@ dev:
         - .git/
     - imageSelector: ${IMAGE-CREDSMANAGER} # Select the Pod that runs our `${IMAGE}`
       namespace: edgefarm-network
-      localSubPath: ../edgefarm.network/
+      localSubPath: ../anck-credentials/
       excludePaths:
         - .git/
   # `dev.terminal` tells DevSpace to open a terminal as a last step during `devspace dev`
@@ -110,20 +110,20 @@ dev:
             - "9999999"
         - op: remove
           path: spec.containers[0].securityContext
-#   - name: network-operator
+#   - name: anck
 #     kubectl:
 #     kustomize: true
 #       manifests:
-#         - ../edgefarm-network-operator/manifests/crds
+#         - ../anck/manifests/crds
 
 deployments:
-  - name: network-operator
-    namespace: network-operator
+  - name: anck
+    namespace: anck
     kubectl:
       kustomize: true
       manifests:
         - config/default
-  # - name: network-operator-rbac
+  # - name: anck-rbac
   #   namespace: system
   #   kubectl:
   #     manifests:

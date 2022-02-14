@@ -34,9 +34,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
-	networkv1alpha1 "github.com/edgefarm/edgefarm-network-operator/api/v1alpha1"
+	networkv1alpha1 "github.com/edgefarm/anck/api/v1alpha1"
 
-	credsmanager "github.com/edgefarm/edgefarm.network/pkg/apis/config/v1alpha1"
+	credsmanager "github.com/edgefarm/anck-credentials/pkg/apis/config/v1alpha1"
 )
 
 var (
@@ -49,7 +49,7 @@ const (
 	credsmanagerNamespace            = "edgefarm-network"
 	timeoutSeconds                   = 10
 	natsCredsSecretName              = "nats-credentials"
-	edgefarmNetworkAccountNameSecret = "edgefarm.network-natsUserData"
+	edgefarmNetworkAccountNameSecret = "anck-credentials-natsUserData"
 )
 
 // NetworkReconciler reconciles a Network object

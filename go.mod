@@ -1,9 +1,9 @@
-module github.com/edgefarm/edgefarm-network-operator
+module github.com/edgefarm/anck
 
 go 1.17
 
 require (
-	github.com/edgefarm/edgefarm.network v0.2.3-dev
+	github.com/edgefarm/anck-credentials v0.2.3-dev
 	github.com/onsi/ginkgo v1.16.4
 	github.com/onsi/gomega v1.15.0
 	google.golang.org/grpc v1.42.0

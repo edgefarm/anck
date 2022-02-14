@@ -27,8 +27,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
+	"github.com/edgefarm/anck/controllers"
 	networkv1alpha1 "github.com/edgefarm/edgefarm-network-operator/api/v1alpha1"
-	"github.com/edgefarm/edgefarm-network-operator/controllers"
 	"github.com/edgefarm/edgefarm-network-operator/pkg/additional"
 	//+kubebuilder:scaffold:imports
 )

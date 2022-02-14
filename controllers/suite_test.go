@@ -29,7 +29,7 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	networkv1alpha1 "github.com/edgefarm/edgefarm-network-operator/api/v1alpha1"
+	networkv1alpha1 "github.com/edgefarm/anck/api/v1alpha1"
 	//+kubebuilder:scaffold:imports
 )
 
