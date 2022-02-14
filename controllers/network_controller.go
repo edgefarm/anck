@@ -40,11 +40,11 @@ import (
 )
 
 var (
-	setupLog = ctrl.Log.WithName("network-controller")
+	setupLog = ctrl.Log.WithName("anck-controller")
 )
 
 const (
-	anckcredentialsServiceName       = "anckcredentials"
+	anckcredentialsServiceName       = "anck-credentials"
 	anckcredentialsServicePort       = 6000
 	anckcredentialsNamespace         = "anck"
 	timeoutSeconds                   = 10
