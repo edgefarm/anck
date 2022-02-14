@@ -27,9 +27,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
+	networkv1alpha1 "github.com/edgefarm/anck/api/v1alpha1"
 	"github.com/edgefarm/anck/controllers"
-	networkv1alpha1 "github.com/edgefarm/edgefarm-network-operator/api/v1alpha1"
-	"github.com/edgefarm/edgefarm-network-operator/pkg/additional"
+	"github.com/edgefarm/anck/pkg/additional"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -109,7 +109,7 @@ func main() {
 	}
 
 	setupLog.Info("applying Deployment for 'credsmanager'")
-	err = additional.ApplyCredsmanager(mgr.GetClient())
+	err = additional.ApplyAnckCredentials(mgr.GetClient())
 	if err != nil {
 		setupLog.Error(err, "unable to set up node dns")
 		os.Exit(1)
