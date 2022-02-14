@@ -30,7 +30,7 @@ spec:
             - /manager
           args:
             - --leader-elect
-          image: ci4rail/edgefarm-network-operator
+          image: ci4rail/anck
           name: manager
           # TODO: patch for dev using kustomize
           # securityContext:

@@ -2,9 +2,9 @@ version: v1beta11
 
 vars:
   - name: IMAGE
-    value: ci4rail/edgefarm-network-operator
-  - name: IMAGE-CREDSMANAGER
-    value: ci4rail/credsmanager
+    value: ci4rail/anck
+  - name: IMAGE-ANCKCREDENTIALS
+    value: ci4rail/anckcredentials
 
 dependencies:
   - name: k3d
@@ -12,9 +12,9 @@ dependencies:
       git: https://github.com/edgefarm/devspace.base
       subPath: /environments/k3d
       branch: main
-  - name: credsmanager
+  - name: anckcredentials
     source:
-      git: https://github.com/edgefarm/edgefarm.network.git
+      git: https://github.com/edgefarm/anck-credentials.git
       subPath: /
       branch: user-change
 
@@ -44,8 +44,8 @@ dev:
       forward:
         - port: 23451 # Forward the port from the Pod to localhost:23451
           remotePort: 2345
-    - imageSelector: ${IMAGE-CREDSMANAGER} # Select the Pod that runs our `${IMAGE}`
-      namespace: edgefarm-network
+    - imageSelector: ${IMAGE-ANCKCREDENTIALS} # Select the Pod that runs our `${IMAGE}`
+      namespace: anck
       forward:
         - port: 6000
         - port: 23450 # Forward the port from the Pod to localhost:23450
@@ -56,9 +56,9 @@ dev:
       localSubPath: ./
       excludePaths:
         - .git/
-    - imageSelector: ${IMAGE-CREDSMANAGER} # Select the Pod that runs our `${IMAGE}`
-      namespace: edgefarm-network
-      localSubPath: ../edgefarm.network/
+    - imageSelector: ${IMAGE-ANCKCREDENTIALS} # Select the Pod that runs our `${IMAGE}`
+      namespace: anck
+      localSubPath: ../anck-credentials/
       excludePaths:
         - .git/
   # `dev.terminal` tells DevSpace to open a terminal as a last step during `devspace dev`
@@ -91,14 +91,14 @@ dev:
             - "9999999"
         - op: remove
           path: spec.containers[1].securityContext
-    - imageSelector: ${IMAGE-CREDSMANAGER} # Select the Pod that runs our `${IMAGE}`
+    - imageSelector: ${IMAGE-ANCKCREDENTIALS} # Select the Pod that runs our `${IMAGE}`
       # Since the `${IMAGE}` used to start our main application pod may be distroless or not have any dev tooling, let's replace it with a dev-optimized image
       # DevSpace provides a sample image here but you can use any image for your specific needs
       replaceImage: loftsh/go:latest
       # Besides replacing the container image, let's also apply some patches to the `spec` of our Pod
       # We are overwriting `command` + `args` for the first container in our selected Pod, so it starts with `sleep 9999999`
       # Using `sleep 9999999` as PID 1 (instead of the regular ENTRYPOINT), allows you to start the application manually
-      namespace: edgefarm-network
+      namespace: anck
       patches:
         - op: replace
           path: spec.containers[0].command
@@ -110,20 +110,20 @@ dev:
             - "9999999"
         - op: remove
           path: spec.containers[0].securityContext
-#   - name: network-operator
+#   - name: anck
 #     kubectl:
 #     kustomize: true
 #       manifests:
-#         - ../edgefarm-network-operator/manifests/crds
+#         - ../anck/manifests/crds
 
 deployments:
-  - name: network-operator
-    namespace: network-operator
+  - name: anck
+    namespace: anck
     kubectl:
       kustomize: true
       manifests:
         - config/default
-  # - name: network-operator-rbac
+  # - name: anck-rbac
   #   namespace: system
   #   kubectl:
   #     manifests:

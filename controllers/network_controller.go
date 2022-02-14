@@ -34,22 +34,22 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
-	networkv1alpha1 "github.com/edgefarm/edgefarm-network-operator/api/v1alpha1"
+	networkv1alpha1 "github.com/edgefarm/anck/api/v1alpha1"
 
-	credsmanager "github.com/edgefarm/edgefarm.network/pkg/apis/config/v1alpha1"
+	anckcredentials "github.com/edgefarm/anck-credentials/pkg/apis/config/v1alpha1"
 )
 
 var (
-	setupLog = ctrl.Log.WithName("network-controller")
+	setupLog = ctrl.Log.WithName("anck-controller")
 )
 
 const (
-	credsmanagerServiceName          = "credsmanager"
-	credsmanagerServicePort          = 6000
-	credsmanagerNamespace            = "edgefarm-network"
+	anckcredentialsServiceName       = "anck-credentials"
+	anckcredentialsServicePort       = 6000
+	anckcredentialsNamespace         = "anck"
 	timeoutSeconds                   = 10
 	natsCredsSecretName              = "nats-credentials"
-	edgefarmNetworkAccountNameSecret = "edgefarm.network-natsUserData"
+	edgefarmNetworkAccountNameSecret = "anck-credentials-natsUserData"
 )
 
 // NetworkReconciler reconciles a Network object
@@ -94,9 +94,9 @@ func (r *NetworkReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	grpcContext, cancel := context.WithTimeout(context.Background(), timeoutSeconds*time.Second)
 	defer cancel()
 
-	cc, err := grpc.Dial(fmt.Sprintf("%s.%s.svc.cluster.local:%d", credsmanagerServiceName, credsmanagerNamespace, credsmanagerServicePort), grpc.WithInsecure())
+	cc, err := grpc.Dial(fmt.Sprintf("%s.%s.svc.cluster.local:%d", anckcredentialsServiceName, anckcredentialsNamespace, anckcredentialsServicePort), grpc.WithInsecure())
 	if err != nil {
-		errorText := "Error connecting to credsmanager"
+		errorText := "Error connecting to anckcredentials"
 		setupLog.Error(err, errorText)
 		return ctrl.Result{
 			Requeue:      false,
@@ -114,9 +114,9 @@ func (r *NetworkReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 		accountName = network.Namespace
 	}
 
-	client := credsmanager.NewConfigServiceClient(cc)
+	client := anckcredentials.NewConfigServiceClient(cc)
 	fmt.Printf("Requesting credentials for account name '%s'\n", accountName)
-	resp, err := client.DesiredState(grpcContext, &credsmanager.DesiredStateRequest{
+	resp, err := client.DesiredState(grpcContext, &anckcredentials.DesiredStateRequest{
 		AccountName: accountName,
 		Username:    network.Spec.Usernames,
 	})
@@ -194,7 +194,7 @@ func createNamespace(namespace string) error {
 	return nil
 }
 
-func createOrUpdateSecrets(accountName string, namespace string, creds *credsmanager.DesiredStateResponse) error {
+func createOrUpdateSecrets(accountName string, namespace string, creds *anckcredentials.DesiredStateResponse) error {
 	c, err := rest.InClusterConfig()
 	if err != nil {
 		setupLog.Error(err, "error getting cluster config")
@@ -289,14 +289,14 @@ func (r *NetworkReconciler) SetupWithManager(mgr ctrl.Manager) error {
 				grpcContext, cancel := context.WithTimeout(context.Background(), timeoutSeconds*time.Second)
 				defer cancel()
 
-				cc, err := grpc.Dial(fmt.Sprintf("%s.%s.svc.cluster.local:%d", credsmanagerServiceName, credsmanagerNamespace, credsmanagerServicePort), grpc.WithInsecure())
+				cc, err := grpc.Dial(fmt.Sprintf("%s.%s.svc.cluster.local:%d", anckcredentialsServiceName, anckcredentialsNamespace, anckcredentialsServicePort), grpc.WithInsecure())
 				if err != nil {
-					errorText := "Error connecting to credsmanager"
+					errorText := "Error connecting to anckcredentials"
 					fmt.Println(errorText)
 					return false
 				}
 				defer cc.Close()
-				client := credsmanager.NewConfigServiceClient(cc)
+				client := anckcredentials.NewConfigServiceClient(cc)
 
 				accountName := ""
 				if e.Object.(*networkv1alpha1.Network).Spec.Accountname != "" {
@@ -308,7 +308,7 @@ func (r *NetworkReconciler) SetupWithManager(mgr ctrl.Manager) error {
 				}
 
 				fmt.Printf("Deleting network account %s\n", e.Object.(*networkv1alpha1.Network).Spec.Accountname)
-				_, err = client.DeleteAccount(grpcContext, &credsmanager.DeleteAccountRequest{
+				_, err = client.DeleteAccount(grpcContext, &anckcredentials.DeleteAccountRequest{
 					AccountName: accountName,
 				})
 				if err != nil {
