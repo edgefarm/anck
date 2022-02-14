@@ -1,0 +1,43 @@
+/*
+Copyright © 2021 Ci4Rail GmbH <engineering@ci4rail.com>
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+syntax = "proto3";
+
+package v1alpha1;
+option go_package = ".;v1alpha1";
+
+message DesiredStateRequest {
+  string accountName = 1;
+  repeated string username = 2;
+}
+
+message Credentials {
+  string userAccountName = 1;
+  string username = 2;
+  string password = 3;
+  string creds = 4;
+}
+
+message DesiredStateResponse {
+  repeated Credentials creds = 1;
+  repeated string deletedUserAccountNames = 2;
+}
+
+message DeleteAccountRequest { string accountName = 1; }
+
+message DeleteAccountResponse {}
+
+service ConfigService {
+  rpc DesiredState(DesiredStateRequest) returns (DesiredStateResponse);
+  rpc DeleteAccount(DeleteAccountRequest) returns (DeleteAccountResponse);
+}
