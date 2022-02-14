@@ -11,16 +11,16 @@ import (
 )
 
 const (
-	credsmanagerImage     = "ci4rail/credsmanager:latest"
-	credsmanagerNamespace = "edgefarm-network"
-	credsmanagerGrpcPort  = 6000
+	anckcredentialsImage     = "ci4rail/anck-credentials:latest"
+	anckcredentialsNamespace = "anck"
+	anckcredentialsGrpcPort  = 6000
 )
 
-// ApplyCredsmanager creates the nats DaemonSet and necessary namespace and configmap
-func ApplyCredsmanager(client client.Client) error {
+// ApplyAnckCredentials creates the nats DaemonSet and necessary namespace and configmap
+func ApplyAnckCredentials(client client.Client) error {
 	namespace := corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: credsmanagerNamespace,
+			Name: anckcredentialsNamespace,
 		},
 	}
 	err := ApplyIgnoreExisting(client, &namespace)
@@ -34,9 +34,9 @@ func ApplyCredsmanager(client client.Client) error {
 			Kind:       "ClusterRole",
 		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name: "credsmanager",
+			Name: "anck-credentials",
 			Labels: map[string]string{
-				"k8s-app": "credsmanager",
+				"k8s-app": "anck-credentials",
 			},
 		},
 		Rules: []rbacv1.PolicyRule{
@@ -63,21 +63,21 @@ func ApplyCredsmanager(client client.Client) error {
 			Kind:       "ClusterRoleBinding",
 		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name: "credsmanager",
+			Name: "anck-credentials",
 			Labels: map[string]string{
-				"k8s-app": "credsmanager",
+				"k8s-app": "anck-credentials",
 			},
 		},
 		RoleRef: rbacv1.RoleRef{
 			APIGroup: "rbac.authorization.k8s.io",
 			Kind:     "ClusterRole",
-			Name:     "credsmanager",
+			Name:     "anck-credentials",
 		},
 		Subjects: []rbacv1.Subject{
 			{
 				Kind:      "ServiceAccount",
-				Name:      "credsmanager",
-				Namespace: credsmanagerNamespace,
+				Name:      "anck-credentials",
+				Namespace: anckcredentialsNamespace,
 			},
 		},
 	}
@@ -92,10 +92,10 @@ func ApplyCredsmanager(client client.Client) error {
 			Kind:       "Service",
 		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "credsmanager",
-			Namespace: credsmanagerNamespace,
+			Name:      "anck-credentials",
+			Namespace: anckcredentialsNamespace,
 			Labels: map[string]string{
-				"k8s-app": "credsmanager",
+				"k8s-app": "anck-credentials",
 			},
 		},
 		Spec: corev1.ServiceSpec{
@@ -103,12 +103,12 @@ func ApplyCredsmanager(client client.Client) error {
 				{
 					Name:       "grpc",
 					Protocol:   "TCP",
-					Port:       credsmanagerGrpcPort,
-					TargetPort: intstr.FromInt(credsmanagerGrpcPort),
+					Port:       anckcredentialsGrpcPort,
+					TargetPort: intstr.FromInt(anckcredentialsGrpcPort),
 				},
 			},
 			Selector: map[string]string{
-				"k8s-app": "credsmanager",
+				"k8s-app": "anck-credentials",
 			},
 		},
 	}
@@ -123,10 +123,10 @@ func ApplyCredsmanager(client client.Client) error {
 			Kind:       "ServiceAccount",
 		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "credsmanager",
-			Namespace: credsmanagerNamespace,
+			Name:      "anck-credentials",
+			Namespace: anckcredentialsNamespace,
 			Labels: map[string]string{
-				"k8s-app": "credsmanager",
+				"k8s-app": "anck-credentials",
 			},
 		},
 	}
@@ -141,31 +141,31 @@ func ApplyCredsmanager(client client.Client) error {
 			Kind:       "Deployment",
 		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "credsmanager",
-			Namespace: credsmanagerNamespace,
+			Name:      "anck-credentials",
+			Namespace: anckcredentialsNamespace,
 			Labels: map[string]string{
-				"k8s-app": "credsmanager",
+				"k8s-app": "anck-credentials",
 			},
 		},
 		Spec: v1.DeploymentSpec{
 			Replicas: &[]int32{1}[0],
 			Selector: &metav1.LabelSelector{
 				MatchLabels: map[string]string{
-					"k8s-app": "credsmanager",
+					"k8s-app": "anck-credentials",
 				},
 			},
 			Template: corev1.PodTemplateSpec{
 				ObjectMeta: metav1.ObjectMeta{
 					Labels: map[string]string{
-						"k8s-app": "credsmanager",
+						"k8s-app": "anck-credentials",
 					},
 				},
 				Spec: corev1.PodSpec{
-					ServiceAccountName: "credsmanager",
+					ServiceAccountName: "anck-credentials",
 					Containers: []corev1.Container{
 						{
-							Name:  "credsmanager",
-							Image: credsmanagerImage,
+							Name:  "anck-credentials",
+							Image: anckcredentialsImage,
 							Resources: corev1.ResourceRequirements{
 								Requests: corev1.ResourceList{
 									corev1.ResourceCPU:    resource.MustParse("250m"),
