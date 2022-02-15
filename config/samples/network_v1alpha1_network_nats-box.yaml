@@ -1,0 +1,8 @@
+apiVersion: network.edgefarm.io/v1alpha1
+kind: Network
+metadata:
+  name: nats-box-network
+spec:
+  namespace: nats-box
+  accountname: nats-box
+  participants: []

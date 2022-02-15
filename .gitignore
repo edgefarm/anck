@@ -24,3 +24,5 @@ testbin/*
 *~
 
 .devspace
+tools
+.vscode

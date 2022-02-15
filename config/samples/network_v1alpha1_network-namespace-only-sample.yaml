@@ -4,7 +4,7 @@ metadata:
   name: my-namespace-only-sample
 spec:
   namespace: my-namespace-only
-  usernames:
+  participants:
     - usera
     - userb
     - userc

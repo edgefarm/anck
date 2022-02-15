@@ -3,5 +3,5 @@ kind: Network
 metadata:
   name: minimum-network-sample
 spec:
-  usernames:
+  participants:
     - oneuser

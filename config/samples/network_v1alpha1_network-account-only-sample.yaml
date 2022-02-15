@@ -4,7 +4,7 @@ metadata:
   name: my-account-only-sample
 spec:
   accountname: my-account-only
-  usernames:
+  participants:
     - usera
     - userb
     - userc

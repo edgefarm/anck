@@ -5,7 +5,4 @@ metadata:
 spec:
   namespace: my-target-namespace
   accountname: my-account-name
-  usernames:
-    - usera
-    - userb
-    - userc
+  participants: []
