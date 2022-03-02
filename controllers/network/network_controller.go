@@ -90,6 +90,7 @@ func (r *NetworksReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		}, err
 	}
 
+	networkName := network.Name
 	grpcContext, cancel := context.WithTimeout(context.Background(), timeoutSeconds*time.Second)
 	defer cancel()
 
@@ -104,22 +105,13 @@ func (r *NetworksReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	}
 	defer cc.Close()
 
-	accountName := ""
-	if network.Spec.Accountname != "" {
-		accountName = network.Spec.Accountname
-	} else if network.Spec.Namespace != "" {
-		accountName = network.Spec.Namespace
-	} else {
-		accountName = network.Namespace
-	}
-
 	client := anckcredentials.NewConfigServiceClient(cc)
-	setupLog.Info(fmt.Sprintf("Requesting credentials for account name '%s'", accountName))
+	setupLog.Info(fmt.Sprintf("Requesting credentials for network '%s'", networkName))
 
 	participants := network.Spec.Participants
 	participants = append(participants, anckParticipant)
 	resp, err := client.DesiredState(grpcContext, &anckcredentials.DesiredStateRequest{
-		AccountName: accountName,
+		AccountName: networkName,
 		Username:    participants,
 	})
 	if err != nil {
@@ -135,9 +127,6 @@ func (r *NetworksReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	if network.Spec.Namespace != "" {
 		// first Case: create secret within that namespace.
 		namespace = network.Spec.Namespace
-	} else if network.Spec.Accountname != "" {
-		// second Case: create secret within a namespaced with name of accountname. If this namespace does not exist, create it.
-		namespace = network.Spec.Accountname
 	} else {
 		// third case: create secret within the namespace the resource was defined 'network.Namespace'.
 		namespace = network.Namespace
@@ -153,7 +142,7 @@ func (r *NetworksReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		}, fmt.Errorf("%s", errorText)
 	}
 
-	err = createOrUpdateSecrets(accountName, namespace, resp)
+	err = createOrUpdateSecrets(networkName, namespace, resp)
 	if err != nil {
 		errorText := "Error creating or updating secret"
 		setupLog.Error(err, errorText)
@@ -163,7 +152,7 @@ func (r *NetworksReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		}, fmt.Errorf("%s", errorText)
 	}
 
-	anckCreds, err := readCredentialsFromSecret(fmt.Sprintf("%s.%s", accountName, anckParticipant), namespace)
+	anckCreds, err := readCredentialsFromSecret(fmt.Sprintf("%s.%s", networkName, anckParticipant), namespace)
 	if err != nil {
 		errorText := "Error reading credentials from secret"
 		setupLog.Error(err, errorText)
@@ -210,7 +199,7 @@ func (r *NetworksReconciler) SetupWithManager(mgr ctrl.Manager) error {
 					return names
 				}(e.Object.(*networkv1alpha1.Network).Spec.Streams)
 
-				anckCreds, err := readCredentialsFromSecret(fmt.Sprintf("%s.%s", e.Object.(*networkv1alpha1.Network).Spec.Accountname, anckParticipant), e.Object.(*networkv1alpha1.Network).Spec.Namespace)
+				anckCreds, err := readCredentialsFromSecret(fmt.Sprintf("%s.%s", e.Object.(*networkv1alpha1.Network).Name, anckParticipant), e.Object.(*networkv1alpha1.Network).Spec.Namespace)
 				if err != nil {
 					errorText := "Error reading credentials from secret"
 					setupLog.Error(err, errorText)
@@ -248,21 +237,12 @@ func (r *NetworksReconciler) SetupWithManager(mgr ctrl.Manager) error {
 				defer cc.Close()
 				client := anckcredentials.NewConfigServiceClient(cc)
 
-				accountName := ""
-				if e.Object.(*networkv1alpha1.Network).Spec.Accountname != "" {
-					accountName = e.Object.(*networkv1alpha1.Network).Spec.Accountname
-				} else if e.Object.(*networkv1alpha1.Network).Spec.Namespace != "" {
-					accountName = e.Object.(*networkv1alpha1.Network).Spec.Namespace
-				} else {
-					accountName = e.Object.(*networkv1alpha1.Network).Namespace
-				}
-
-				setupLog.Info(fmt.Sprintf("Deleting network account %s", e.Object.(*networkv1alpha1.Network).Spec.Accountname))
+				setupLog.Info(fmt.Sprintf("Deleting network '%s'", e.Object.(*networkv1alpha1.Network).Name))
 				_, err = client.DeleteAccount(grpcContext, &anckcredentials.DeleteAccountRequest{
-					AccountName: accountName,
+					AccountName: e.Object.(*networkv1alpha1.Network).Name,
 				})
 				if err != nil {
-					errorText := fmt.Sprintf("Cannot deleted network account %s", accountName)
+					errorText := fmt.Sprintf("Cannot delete network '%s'", e.Object.(*networkv1alpha1.Network).Name)
 					fmt.Println(errorText)
 					return false
 				}
@@ -271,15 +251,15 @@ func (r *NetworksReconciler) SetupWithManager(mgr ctrl.Manager) error {
 				if e.Object.(*networkv1alpha1.Network).Spec.Namespace != "" {
 					// first Case: create secret within that namespace.
 					namespace = e.Object.(*networkv1alpha1.Network).Spec.Namespace
-				} else if e.Object.(*networkv1alpha1.Network).Spec.Accountname != "" {
-					// second Case: create secret within a namespaced with name of accountname. If this namespace does not exist, create it.
-					namespace = e.Object.(*networkv1alpha1.Network).Spec.Accountname
 				} else {
 					// third case: create secret within the namespace the resource was defined 'network.Namespace'.
 					namespace = e.Object.(*networkv1alpha1.Network).Namespace
 				}
-				for _, user := range e.Object.(*networkv1alpha1.Network).Spec.Participants {
-					secretName := fmt.Sprintf("%s.%s", accountName, user)
+				networkParticipants := e.Object.(*networkv1alpha1.Network).Spec.Participants
+				networkParticipants = append(networkParticipants, anckParticipant)
+
+				for _, component := range networkParticipants {
+					secretName := fmt.Sprintf("%s.%s", e.Object.(*networkv1alpha1.Network).Name, component)
 					setupLog.Info(fmt.Sprintf("Deleting network secret %s from namespace %s", secretName, namespace))
 					err = deleteSecret(secretName, namespace)
 					if err != nil {
@@ -300,6 +280,7 @@ func (r *NetworksReconciler) SetupWithManager(mgr ctrl.Manager) error {
 				// not metadata or status
 				// Filter out events where the generation hasn't changed to
 				// avoid being triggered by status updates
+
 				return oldGeneration != newGeneration
 			},
 		}).

@@ -91,9 +91,6 @@ type NetworkSpec struct {
 	// Namespace is the namespace the credentials shall be stored in. If empty, the accountname is used for credential deplyoment.
 	Namespace string `json:"namespace,omitempty"`
 
-	// Accountname is the name of the nats account. If empty, the namespace, where the Network ressource was deployed is used.
-	Accountname string `json:"accountname,omitempty"`
-
 	// Participants is a list of participating components in the network.
 	Participants []string `json:"participants"`
 

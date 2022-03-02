@@ -91,7 +91,7 @@ func deleteSecret(name string, namespace string) error {
 	return nil
 }
 
-func createOrUpdateSecrets(accountName string, namespace string, creds *anckcredentials.DesiredStateResponse) error {
+func createOrUpdateSecrets(networkName string, namespace string, creds *anckcredentials.DesiredStateResponse) error {
 	c, err := rest.InClusterConfig()
 	if err != nil {
 		setupLog.Error(err, "error getting cluster config")
@@ -111,7 +111,10 @@ func createOrUpdateSecrets(accountName string, namespace string, creds *anckcred
 			ObjectMeta: metav1.ObjectMeta{
 				Name:      secretName,
 				Namespace: namespace,
-				Labels:    map[string]string{"account": accountName},
+				Labels: map[string]string{
+					"network":   networkName,
+					"component": userCred.Username,
+				},
 			},
 		}
 
@@ -149,10 +152,10 @@ func createOrUpdateSecrets(accountName string, namespace string, creds *anckcred
 		}
 	}
 
-	for _, deletedUserAccountName := range creds.DeletedUserAccountNames {
-		setupLog.Info(fmt.Sprintf("Delete secret '%s' in namespace '%s'", deletedUserAccountName, namespace))
+	for _, secret := range creds.DeletedUserAccountNames {
+		setupLog.Info(fmt.Sprintf("Delete secret '%s' in namespace '%s'", secret, namespace))
 
-		err = clientset.CoreV1().Secrets(namespace).Delete(context.Background(), deletedUserAccountName, metav1.DeleteOptions{})
+		err = clientset.CoreV1().Secrets(namespace).Delete(context.Background(), secret, metav1.DeleteOptions{})
 		if err != nil {
 			if apierrors.IsNotFound(err) {
 				continue

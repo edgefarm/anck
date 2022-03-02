@@ -76,6 +76,7 @@ func (r *ParticipantsReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		setupLog.Error(err, "error getting client for cluster")
 		return ctrl.Result{}, err
 	}
+
 	setupLog.Info(fmt.Sprintf("Reconceiling participant '%s' in network '%s' in namespace '%s'", participant.Spec.Component, participant.Spec.Network, participant.Namespace))
 	desiredNetwork := participant.Spec.Network
 	if networkExists(desiredNetwork, participant.Namespace) {
