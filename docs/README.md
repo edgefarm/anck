@@ -50,6 +50,12 @@ The global stream can be configured with the following parameters:
 - **Discard**: defines if once the Stream reach it's limits of size or messages the 'new' policy will prevent further messages from being added while 'old' will delete old messages.
     Allowed values are: new, old
 
+## dapr.io integration
+
+EdgeFarm.Network integrates with dapr.io to provide a Dapr.io compatible API for the network. `anck` provides a secret for each component containing all pubsub configurations for each network the component is a participant of.
+
+![](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/edgefarm/anck/main/docs/images/dapr.puml)
+
 ## Developing and debugging
 
 See the [developing docs](DEVELOPMENT.md).
