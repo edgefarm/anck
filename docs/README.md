@@ -52,7 +52,9 @@ The global stream can be configured with the following parameters:
 
 ## dapr.io integration
 
-EdgeFarm.Network integrates with dapr.io to provide a Dapr.io compatible API for the network. `anck` provides a secret for each component containing all pubsub configurations for each network the component is a participant of.
+`EdgeFarm.network` integrates with `dapr.io` to provide a dapr compatible API for the network.
+`anck` provides a secret for each component containing all pubsub configurations for each network the component is a participant of.
+The secret can be mounted by a dapr container allowing an application to connect to EdgeFarm.network.
 
 ![](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/edgefarm/anck/main/docs/images/dapr.puml)
 
