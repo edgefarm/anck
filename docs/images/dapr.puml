@@ -1,0 +1,60 @@
+@startuml
+
+package "Application Component specification" as application {
+    package "Component1" as Component1 {
+        [network-participant: myNetwork1] as Component1_participant_myNetwork1
+        [network-participant: myNetwork2] as Component1_participant_myNetwork2
+        Component1_participant_myNetwork1 -[hidden]d- Component1_participant_myNetwork2
+    }
+
+    package "Component2" as Component2{
+        [network-participant: myNetwork2] as Component2_participant_myNetwork2
+    }
+    ' Component1 -[hidden]l- Component2
+}
+
+package "secret: Component1.dapr" as secret_Component1_dapr {
+    [myNetwork1.myJetstream1] as n1j1
+    [myNetwork1.myJetstream2] as n1j2
+    [myNetwork2.myJetstream1] as n2j1
+    n1j2 -[hidden]u- n1j1
+    n2j1 -[hidden]u- n1j2
+}
+
+package "secret: Component2.dapr" as secret_Component2_dapr {
+    [myNetwork2.myJetstream2]
+}
+secret_Component1_dapr -[hidden]d- secret_Component2_dapr
+
+
+package "network: myNetwork1" as myNetwork1 {
+    package "streams" as myNetwork1_streams {
+        [myJetstream1] as myNetwork1_jetstream1
+        [myJetstream2] as myNetwork1_jetstream2
+    }
+    package "participants" as myNetwork1_participants {
+        [Component1] as myNetwork1_Component1
+    }
+}
+
+package "network: myNetwork2" as myNetwork2 {
+    package "streams" as myNetwork2_streams {
+        [myJetstream1] as myNetwork2_jetstream1
+    }
+    package "participants" as myNetwork2_participants {
+        [Component1] as myNetwork2_Component1
+        [Component2] as myNetwork2_Component2
+    }
+}
+
+application --> myNetwork1 : creates
+application --> myNetwork2 : creates
+myNetwork1 -[hidden]r- myNetwork2
+Component1_participant_myNetwork1 --> myNetwork1_Component1 : registers
+Component1_participant_myNetwork2 --> myNetwork2_Component1 : registers
+Component2_participant_myNetwork2 --> myNetwork2_Component2 : registers
+secret_Component1_dapr <-u- myNetwork1 : creates
+secret_Component2_dapr <-u- myNetwork2 : creates
+
+
+@enduml

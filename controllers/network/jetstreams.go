@@ -179,6 +179,25 @@ func createCredsFile(creds string) (string, error) {
 	return f.Name(), nil
 }
 
+func parseCredsString(creds string) (string, string, error) {
+	jwt := ""
+	nkey := ""
+	lines := strings.Split(creds, "\n")
+	for i := 1; i < len(lines); i++ {
+		if strings.Contains(lines[i-1], "BEGIN NATS USER JWT") {
+			jwt = lines[i]
+			continue
+		} else if strings.Contains(lines[i-1], "BEGIN USER NKEY SEED") {
+			nkey = lines[i]
+			continue
+		}
+	}
+	if jwt == "" || nkey == "" {
+		return "", "", fmt.Errorf("creds file does not contain both a JWT and a NKEY")
+	}
+	return jwt, nkey, nil
+}
+
 // parseDurationString taken from https://github.com/nats-io/natscli/blob/main/cli/util.go
 func parseDurationString(dstr string) (dur time.Duration, err error) {
 	dstr = strings.TrimSpace(dstr)
