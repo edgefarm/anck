@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "operator localhost:23451",
+            "name": "remote debug localhost:23451",
             "type": "go",
             "request": "attach",
             "mode": "remote",

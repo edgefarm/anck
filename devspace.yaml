@@ -36,66 +36,67 @@ commands:
     command: |-
       devspace update dependencies
 
-dev:
-  ports:
-    - imageSelector: ${IMAGE}
-      forward:
-        - port: 23451 # Forward the port from the Pod to localhost:23451
-          remotePort: 2345
-    # - imageSelector: ${IMAGE-ANCKCREDENTIALS}
-    #   namespace: anck
-    #   forward:
-    #     - port: 6000
-    #     - port: 23450 # Forward the port from the Pod to localhost:23450
-    #       remotePort: 2345
-  sync:
-    - imageSelector: ${IMAGE}
-      localSubPath: ./
-      excludePaths:
-        - .git/
-    # - imageSelector: ${IMAGE-ANCKCREDENTIALS}
-    #   namespace: anck
-    #   localSubPath: ../anck-credentials/
-    #   excludePaths:
-    #     - .git/
-  terminal:
-    imageSelector: ${IMAGE}
-    command:
-      - bash
+# dev:
+#   ports:
+#     - imageSelector: ${IMAGE}
+#       forward:
+#         - port: 23451 # Forward the port from the Pod to localhost:23451
+#           remotePort: 2345
+#     - imageSelector: ${IMAGE-ANCKCREDENTIALS}
+#       namespace: anck
+#       forward:
+#         - port: 6000
+#         - port: 23450 # Forward the port from the Pod to localhost:23450
+#           remotePort: 2345
+#   sync:
+#     - imageSelector: ${IMAGE}
+#       localSubPath: ./
+#       excludePaths:
+#         - .git/
+#     - imageSelector: ${IMAGE-ANCKCREDENTIALS}
+#       namespace: anck
+#       localSubPath: ../anck-credentials/
+#       excludePaths:
+#         - .git/
+#   terminal:
+#     imageSelector: ${IMAGE}
+#     command:
+#       - bash
 
-  replacePods:
-    - imageSelector: ${IMAGE}
-      replaceImage: loftsh/go:latest
-      patches:
-        - op: replace
-          path: spec.containers[1].command
-          value:
-            - sleep
-        - op: replace
-          path: spec.containers[1].args
-          value:
-            - "9999999"
-        - op: remove
-          path: spec.containers[1].securityContext
-    # - imageSelector: ${IMAGE-ANCKCREDENTIALS}
-    #   replaceImage: loftsh/go:latest
-    #   namespace: anck
-    #   patches:
-    #     - op: replace
-    #       path: spec.containers[0].command
-    #       value:
-    #         - sleep
-    #     - op: replace
-    #       path: spec.containers[0].args
-    #       value:
-    #         - "9999999"
-    #     - op: remove
-    #       path: spec.containers[0].securityContext
-#   - name: anck
-#     kubectl:
-#     kustomize: true
-#       manifests:
-#         - ../anck/manifests/crds
+#   replacePods:
+#     - imageSelector: ${IMAGE}
+#       replaceImage: loftsh/go:latest
+#       patches:
+#         - op: replace
+#           path: spec.containers[1].command
+#           value:
+#             - sleep
+#         - op: replace
+#           path: spec.containers[1].args
+#           value:
+#             - "9999999"
+#         - op: remove
+#           path: spec.containers[1].securityContext
+#     # - imageSelector: ${IMAGE-ANCKCREDENTIALS}
+#     #   replaceImage: loftsh/go:latest
+#     #   namespace: anck
+#     #   patches:
+#     #     - op: replace
+#     #       path: spec.containers[0].command
+#     #       value:
+#     #         - sleep
+#     #     - op: replace
+#     #       path: spec.containers[0].args
+#     #       value:
+#     #         - "9999999"
+#     #     - op: remove
+#     #       path: spec.containers[0].securityContext
+
+#   # - name: anck
+#   #   kubectl:
+#   #   kustomize: true
+#   #     manifests:
+#   #       - ../anck/manifests/crds
 
 deployments:
   - name: anck

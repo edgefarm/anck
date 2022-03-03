@@ -3,7 +3,7 @@ module github.com/edgefarm/anck
 go 1.17
 
 require (
-	github.com/edgefarm/anck-credentials v0.3.1
+	github.com/edgefarm/anck-credentials v0.4.0
 	github.com/nats-io/jsm.go v0.0.29
 	github.com/nats-io/nats.go v1.13.1-0.20220216000616-0096b1bfae8d
 	github.com/onsi/ginkgo v1.16.5
