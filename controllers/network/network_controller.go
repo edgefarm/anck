@@ -111,8 +111,8 @@ func (r *NetworksReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	participants := network.Spec.Participants
 	participants = append(participants, anckParticipant)
 	resp, err := client.DesiredState(grpcContext, &anckcredentials.DesiredStateRequest{
-		AccountName: networkName,
-		Username:    participants,
+		Network:      networkName,
+		Participants: participants,
 	})
 	if err != nil {
 		errorText := "Error setting desired state"
@@ -238,8 +238,8 @@ func (r *NetworksReconciler) SetupWithManager(mgr ctrl.Manager) error {
 				client := anckcredentials.NewConfigServiceClient(cc)
 
 				setupLog.Info(fmt.Sprintf("Deleting network '%s'", e.Object.(*networkv1alpha1.Network).Name))
-				_, err = client.DeleteAccount(grpcContext, &anckcredentials.DeleteAccountRequest{
-					AccountName: e.Object.(*networkv1alpha1.Network).Name,
+				_, err = client.DeleteNetwork(grpcContext, &anckcredentials.DeleteNetworkRequest{
+					Network: e.Object.(*networkv1alpha1.Network).Name,
 				})
 				if err != nil {
 					errorText := fmt.Sprintf("Cannot delete network '%s'", e.Object.(*networkv1alpha1.Network).Name)

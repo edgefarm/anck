@@ -104,7 +104,7 @@ func createOrUpdateSecrets(networkName string, namespace string, creds *anckcred
 	}
 
 	for _, userCred := range creds.Creds {
-		secretName := userCred.UserAccountName
+		secretName := userCred.NetworkParticipant
 		setupLog.Info(fmt.Sprintf("Create or update secret '%s' in namespace '%s'", secretName, namespace))
 
 		secret := &v1.Secret{
@@ -113,7 +113,7 @@ func createOrUpdateSecrets(networkName string, namespace string, creds *anckcred
 				Namespace: namespace,
 				Labels: map[string]string{
 					"network":   networkName,
-					"component": userCred.Username,
+					"component": userCred.NetworkParticipant,
 				},
 			},
 		}
@@ -125,8 +125,6 @@ func createOrUpdateSecrets(networkName string, namespace string, creds *anckcred
 			return err
 		}
 		secret.Data[edgefarmNetworkAccountNameSecret] = j
-		secret.Data[edgefarmSecretUsernameKey] = []byte(userCred.Username)
-		secret.Data[edgefarmSecretPasswordKey] = []byte(userCred.Password)
 		jwt, nkey, err := parseCredsString(userCred.Creds)
 		if err != nil {
 			setupLog.Error(err, "error parsing creds string")
@@ -152,7 +150,7 @@ func createOrUpdateSecrets(networkName string, namespace string, creds *anckcred
 		}
 	}
 
-	for _, secret := range creds.DeletedUserAccountNames {
+	for _, secret := range creds.DeletedParticipants {
 		setupLog.Info(fmt.Sprintf("Delete secret '%s' in namespace '%s'", secret, namespace))
 
 		err = clientset.CoreV1().Secrets(namespace).Delete(context.Background(), secret, metav1.DeleteOptions{})
