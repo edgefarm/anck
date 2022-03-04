@@ -176,16 +176,21 @@ func (r *ParticipantsReconciler) SetupWithManager(mgr ctrl.Manager) error {
 					return false
 				}
 				participant := e.Object.(*networkv1alpha1.Participants)
-				err = retry.RetryOnConflict(retry.DefaultRetry, func() error {
+				retry.RetryOnConflict(retry.DefaultRetry, func() error {
 					network, err := clientset.NetworkV1alpha1().Networks(participant.Namespace).Get(context.Background(), participant.Spec.Network, metav1.GetOptions{})
 					if err != nil {
 						return err
 					}
 					network = removeParticipant(network, participant.Spec.Component)
 					_, err = clientset.NetworkV1alpha1().Networks(network.Namespace).Update(context.Background(), network, metav1.UpdateOptions{})
+					if err != nil {
+						return err
+					}
+					err = removeParticipantFromComponentSecret(participant.Spec.Component, participant.Spec.Network, participant.Namespace)
 					return err
 				})
-				return err == nil
+
+				return false
 			},
 			CreateFunc: func(e event.CreateEvent) bool {
 				return true

@@ -136,7 +136,6 @@ func (r *NetworksReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		}, fmt.Errorf("%s", errorText)
 	}
 	for _, component := range participants {
-		// _, component, err := splitNetworkParticipant(participant)
 		if err != nil {
 			errorText := "Error splitting network participant"
 			setupLog.Error(err, errorText)
@@ -258,27 +257,13 @@ func (r *NetworksReconciler) SetupWithManager(mgr ctrl.Manager) error {
 				networkParticipants := network.Spec.Participants
 				networkParticipants = append(networkParticipants, anckParticipant)
 
-				for _, participant := range networkParticipants {
-					network, component, err := splitNetworkParticipant(participant)
+				for _, component := range networkParticipants {
 					if err != nil {
 						errorText := "Error splitting network participant"
 						setupLog.Error(err, errorText)
 						return false
 					}
-					secret, err := readComponentSecret(component, namespace)
-					if err != nil {
-						errorText := "Error reading component secret"
-						setupLog.Error(err, errorText)
-						return false
-					}
-
-					if _, ok := secret[network]; ok {
-						delete(secret, network)
-					} else {
-						// component is not participating in this network
-						continue
-					}
-					_, err = updateComponentSecret(component, namespace, &secret)
+					err = removeParticipantFromComponentSecret(component, network.Name, namespace)
 					if err != nil {
 						errorText := "Error updating component secret"
 						setupLog.Error(err, errorText)

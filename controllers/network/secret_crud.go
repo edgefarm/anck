@@ -80,9 +80,11 @@ func updateComponentSecret(component string, namespace string, creds *map[string
 		return nil, err
 	}
 
+	newData := make(map[string][]byte)
 	for network, cred := range *creds {
-		secret.Data[network] = []byte(cred)
+		newData[network] = []byte(cred)
 	}
+	secret.Data = newData
 
 	secret, err = clientset.CoreV1().Secrets(namespace).Update(context.Background(), secret, metav1.UpdateOptions{})
 	if err != nil {

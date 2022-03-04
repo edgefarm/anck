@@ -41,13 +41,15 @@ func createOrUpdateComponentSecrets(component string, namespace string, networkC
 		secret[network] = active.Creds
 	}
 
-	// Delete networks from the secret if the component is no longer
+	// Delete networks from the secret if the component is no longer participating in
 	for _, deleted := range networkCreds.DeletedParticipants {
-		network, _, err := splitNetworkParticipant(deleted)
+		network, participantComponent, err := splitNetworkParticipant(deleted)
 		if err != nil {
 			return err
 		}
-		delete(secret, network)
+		if component == participantComponent {
+			delete(secret, network)
+		}
 	}
 
 	if secretExists {
@@ -86,4 +88,25 @@ func readCredentialsFromSecret(component string, network string, namespace strin
 		return string(val), nil
 	}
 	return "", fmt.Errorf("network %s not found in secret %s", network, component)
+}
+
+func removeParticipantFromComponentSecret(component, network, namespace string) error {
+	secret, err := readComponentSecret(component, namespace)
+	if err != nil {
+		return err
+	}
+
+	if _, ok := secret[network]; ok {
+		delete(secret, network)
+	} else {
+		// component is not participating in this network
+		return nil
+	}
+
+	_, err = updateComponentSecret(component, namespace, &secret)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
