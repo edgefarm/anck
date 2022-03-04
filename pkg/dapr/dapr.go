@@ -3,7 +3,7 @@ package dapr
 import "gopkg.in/yaml.v2"
 
 const (
-	natsURLValue string = "nats://nats.nats:4222"
+	defaultNatsURL string = "nats://nats.nats:4222"
 )
 
 // Config is a type that represents a Config instance
@@ -32,9 +32,41 @@ type Spec struct {
 	SpecMetadata []SpecMetadata `yaml:"metadata"`
 }
 
+// Option is a type that represents a DaprConfig option
+type Option func(*Config)
+
+// WithCreds sets the credentials for the DaprConfig
+func WithCreds(jwt string, nkey string) Option {
+	return func(c *Config) {
+		c.Spec.SpecMetadata = append(c.Spec.SpecMetadata, SpecMetadata{
+			Name:  "jwt",
+			Value: jwt,
+		})
+		c.Spec.SpecMetadata = append(c.Spec.SpecMetadata, SpecMetadata{
+			Name:  "seedkey",
+			Value: nkey,
+		})
+	}
+}
+
+// WithNatsURL sets the NATS URL for the DaprConfig
+func WithNatsURL(url string) Option {
+	return func(c *Config) {
+		urlIndex := 0
+		for i, m := range c.Spec.SpecMetadata {
+			if m.Name == "natsURL" {
+				urlIndex = i
+				break
+			}
+		}
+		c.Spec.SpecMetadata[urlIndex].Value = url
+	}
+}
+
 // NewDapr creates a new Config instance
-func NewDapr(name, jwt, seedkey string) *Config {
-	return &Config{
+func NewDapr(name string, opts ...Option) *Config {
+	// Default config
+	config := &Config{
 		APIVersion: "dapr.io/v1alpha1",
 		Kind:       "Component",
 		Metadata: Metadata{
@@ -46,19 +78,17 @@ func NewDapr(name, jwt, seedkey string) *Config {
 			SpecMetadata: []SpecMetadata{
 				{
 					Name:  "natsURL",
-					Value: natsURLValue,
-				},
-				{
-					Name:  "jwt",
-					Value: jwt,
-				},
-				{
-					Name:  "seedkey",
-					Value: seedkey,
+					Value: defaultNatsURL,
 				},
 			},
 		},
 	}
+
+	// Loop through each option
+	for _, opt := range opts {
+		opt(config)
+	}
+	return config
 }
 
 // DaprConfigToYaml converts a DaprConfig instance to YAML

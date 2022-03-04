@@ -38,17 +38,11 @@ var (
 )
 
 const (
-	anckcredentialsServiceName       = "anck-credentials"
-	anckcredentialsServicePort       = 6000
-	anckcredentialsNamespace         = "anck"
-	timeoutSeconds                   = 10
-	edgefarmNetworkAccountNameSecret = "anck-credentials-natsUserData"
-	edgefarmSecretUsernameKey        = "username"
-	edgefarmSecretPasswordKey        = "password"
-	edgefarmSecretNKeyKey            = "nkey"
-	edgefarmSecretJWTKey             = "jwt"
-	edgefarmSecretCredsfileKey       = "credsfile"
-	anckParticipant                  = "anck-this-name-shall-never-be-used"
+	anckcredentialsServiceName = "anck-credentials"
+	anckcredentialsServicePort = 6000
+	anckcredentialsNamespace   = "anck"
+	timeoutSeconds             = 10
+	anckParticipant            = "anck-this-name-shall-never-be-used"
 )
 
 // NetworksReconciler reconciles a Network object
@@ -141,24 +135,29 @@ func (r *NetworksReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 			RequeueAfter: 0,
 		}, fmt.Errorf("%s", errorText)
 	}
-
-	err = createOrUpdateSecrets(networkName, namespace, resp)
-	if err != nil {
-		errorText := "Error creating or updating secret"
-		setupLog.Error(err, errorText)
-		return ctrl.Result{
-			Requeue:      false,
-			RequeueAfter: 0,
-		}, fmt.Errorf("%s", errorText)
+	for _, component := range participants {
+		// _, component, err := splitNetworkParticipant(participant)
+		if err != nil {
+			errorText := "Error splitting network participant"
+			setupLog.Error(err, errorText)
+			return ctrl.Result{}, fmt.Errorf("%s", errorText)
+		}
+		err = createOrUpdateComponentSecrets(component, namespace, resp)
+		if err != nil {
+			errorText := "Error creating or updating component secrets"
+			setupLog.Error(err, errorText)
+			return ctrl.Result{}, fmt.Errorf("%s", errorText)
+		}
 	}
 
-	anckCreds, err := readCredentialsFromSecret(fmt.Sprintf("%s.%s", networkName, anckParticipant), namespace)
+	anckCreds, err := readCredentialsFromSecret(anckParticipant, network.Name, namespace)
 	if err != nil {
 		errorText := "Error reading credentials from secret"
 		setupLog.Error(err, errorText)
+		return ctrl.Result{}, fmt.Errorf("%s", errorText)
 	}
 
-	jetstream, err := NewJetstream(anckCreds.Creds)
+	jetstream, err := NewJetstream(anckCreds)
 	if err != nil {
 		errorText := "Error creating jetstream"
 		setupLog.Error(err, errorText)
@@ -191,21 +190,22 @@ func (r *NetworksReconciler) SetupWithManager(mgr ctrl.Manager) error {
 			DeleteFunc: func(e event.DeleteEvent) bool {
 				setupLog.Info("Delete handler for network called")
 
+				network := e.Object.(*networkv1alpha1.Network)
 				streamNames := func(streams []networkv1alpha1.StreamSpec) []string {
 					var names []string
 					for _, stream := range streams {
 						names = append(names, stream.Name)
 					}
 					return names
-				}(e.Object.(*networkv1alpha1.Network).Spec.Streams)
+				}(network.Spec.Streams)
 
-				anckCreds, err := readCredentialsFromSecret(fmt.Sprintf("%s.%s", e.Object.(*networkv1alpha1.Network).Name, anckParticipant), e.Object.(*networkv1alpha1.Network).Spec.Namespace)
+				anckCreds, err := readCredentialsFromSecret(anckParticipant, network.Name, network.Spec.Namespace)
 				if err != nil {
 					errorText := "Error reading credentials from secret"
 					setupLog.Error(err, errorText)
 				}
 
-				js, err := NewJetstream(anckCreds.Creds)
+				js, err := NewJetstream(anckCreds)
 				if err != nil {
 					setupLog.Error(err, "Error creating jetstream")
 					return false
@@ -237,35 +237,52 @@ func (r *NetworksReconciler) SetupWithManager(mgr ctrl.Manager) error {
 				defer cc.Close()
 				client := anckcredentials.NewConfigServiceClient(cc)
 
-				setupLog.Info(fmt.Sprintf("Deleting network '%s'", e.Object.(*networkv1alpha1.Network).Name))
+				setupLog.Info(fmt.Sprintf("Deleting network '%s'", network.Name))
 				_, err = client.DeleteNetwork(grpcContext, &anckcredentials.DeleteNetworkRequest{
-					Network: e.Object.(*networkv1alpha1.Network).Name,
+					Network: network.Name,
 				})
 				if err != nil {
-					errorText := fmt.Sprintf("Cannot delete network '%s'", e.Object.(*networkv1alpha1.Network).Name)
+					errorText := fmt.Sprintf("Cannot delete network '%s'", network.Name)
 					fmt.Println(errorText)
 					return false
 				}
 
 				namespace := ""
-				if e.Object.(*networkv1alpha1.Network).Spec.Namespace != "" {
+				if network.Spec.Namespace != "" {
 					// first Case: create secret within that namespace.
-					namespace = e.Object.(*networkv1alpha1.Network).Spec.Namespace
+					namespace = network.Spec.Namespace
 				} else {
 					// third case: create secret within the namespace the resource was defined 'network.Namespace'.
-					namespace = e.Object.(*networkv1alpha1.Network).Namespace
+					namespace = network.Namespace
 				}
-				networkParticipants := e.Object.(*networkv1alpha1.Network).Spec.Participants
+				networkParticipants := network.Spec.Participants
 				networkParticipants = append(networkParticipants, anckParticipant)
 
-				for _, component := range networkParticipants {
-					secretName := fmt.Sprintf("%s.%s", e.Object.(*networkv1alpha1.Network).Name, component)
-					setupLog.Info(fmt.Sprintf("Deleting network secret %s from namespace %s", secretName, namespace))
-					err = deleteSecret(secretName, namespace)
+				for _, participant := range networkParticipants {
+					network, component, err := splitNetworkParticipant(participant)
 					if err != nil {
-						errorText := fmt.Sprintf("Cannot deleted network secret %s from namespace %s", secretName, namespace)
-						setupLog.Info(errorText)
+						errorText := "Error splitting network participant"
+						setupLog.Error(err, errorText)
+						return false
+					}
+					secret, err := readComponentSecret(component, namespace)
+					if err != nil {
+						errorText := "Error reading component secret"
+						setupLog.Error(err, errorText)
+						return false
+					}
+
+					if _, ok := secret[network]; ok {
+						delete(secret, network)
+					} else {
+						// component is not participating in this network
 						continue
+					}
+					_, err = updateComponentSecret(component, namespace, &secret)
+					if err != nil {
+						errorText := "Error updating component secret"
+						setupLog.Error(err, errorText)
+						return false
 					}
 				}
 				return false

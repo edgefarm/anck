@@ -2,165 +2,88 @@ package network
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
+	"strings"
 
 	anckcredentials "github.com/edgefarm/anck-credentials/pkg/apis/config/v1alpha1"
-	v1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 )
 
-func createNamespace(namespace string) error {
-	c, err := rest.InClusterConfig()
-	if err != nil {
-		setupLog.Error(err, "error getting cluster config")
-		return err
+// splitNetworkParticipant extracts the component and network name from the network participant name.
+// The format of networkParticipant is <network>.<component>
+func splitNetworkParticipant(networkParticipant string) (string, string, error) {
+	parts := strings.Split(networkParticipant, ".")
+	if len(parts) != 2 {
+		return "", "", fmt.Errorf("invalid network participant name: %s", networkParticipant)
 	}
-	clientset, err := kubernetes.NewForConfig(c)
-	if err != nil {
-		setupLog.Error(err, "error getting client for cluster")
-		return err
-	}
-	_, err = clientset.CoreV1().Namespaces().Create(context.Background(), &v1.Namespace{
-		ObjectMeta: metav1.ObjectMeta{
-			Name: namespace,
-		},
-	}, metav1.CreateOptions{})
-	if err != nil {
-		if apierrors.IsAlreadyExists(err) {
-			return nil
-		}
-		setupLog.Error(err, "error creating namespace")
-		return err
-	}
-	return nil
+	return parts[0], parts[1], nil
 }
 
-func readCredentialsFromSecret(username string, namespace string) (*anckcredentials.Credentials, error) {
-	c, err := rest.InClusterConfig()
-	if err != nil {
-		setupLog.Error(err, "error getting cluster config")
-		return nil, err
-	}
-	clientset, err := kubernetes.NewForConfig(c)
-	if err != nil {
-		setupLog.Error(err, "error getting client for cluster")
-		return nil, err
-	}
-	secret, err := clientset.CoreV1().Secrets(namespace).Get(context.Background(), username, metav1.GetOptions{})
-	if err != nil {
-		if apierrors.IsNotFound(err) {
-			return nil, nil
-		}
-		setupLog.Error(err, "error deleting secret")
-		return nil, err
-	}
-
-	creds := &anckcredentials.Credentials{}
-	err = json.Unmarshal(secret.Data[edgefarmNetworkAccountNameSecret], creds)
-	if err != nil {
-		setupLog.Error(err, "error unmarshalling json")
-		return nil, err
-	}
-
-	return creds, nil
-}
-
-func deleteSecret(name string, namespace string) error {
-	c, err := rest.InClusterConfig()
-	if err != nil {
-		setupLog.Error(err, "error getting cluster config")
-		return err
-	}
-	clientset, err := kubernetes.NewForConfig(c)
-	if err != nil {
-		setupLog.Error(err, "error getting client for cluster")
-		return err
-	}
-	err = clientset.CoreV1().Secrets(namespace).Delete(context.Background(), name, metav1.DeleteOptions{})
-	if err != nil {
-		if apierrors.IsNotFound(err) {
-			return nil
-		}
-		setupLog.Error(err, "error deleting secret")
-		return err
-	}
-	return nil
-}
-
-func createOrUpdateSecrets(networkName string, namespace string, creds *anckcredentials.DesiredStateResponse) error {
-	c, err := rest.InClusterConfig()
-	if err != nil {
-		setupLog.Error(err, "error getting cluster config")
-		return err
-	}
-	clientset, err := kubernetes.NewForConfig(c)
-	if err != nil {
-		setupLog.Error(err, "error getting client for cluster")
+func createOrUpdateComponentSecrets(component string, namespace string, networkCreds *anckcredentials.DesiredStateResponse) error {
+	secretExists := true
+	secret, err := readComponentSecret(component, namespace)
+	if apierrors.IsNotFound(err) {
+		setupLog.Info(fmt.Sprintf("secret not found. Creating new secret: %s", err))
+		secretExists = false
+	} else if err != nil {
 		return err
 	}
 
-	for _, userCred := range creds.Creds {
-		secretName := userCred.NetworkParticipant
-		setupLog.Info(fmt.Sprintf("Create or update secret '%s' in namespace '%s'", secretName, namespace))
-
-		secret := &v1.Secret{
-			ObjectMeta: metav1.ObjectMeta{
-				Name:      secretName,
-				Namespace: namespace,
-				Labels: map[string]string{
-					"network":   networkName,
-					"component": userCred.NetworkParticipant,
-				},
-			},
-		}
-
-		secret.Data = make(map[string][]byte)
-		j, err := json.Marshal(userCred)
+	// Update the secret if it exists or create a new one if it doesn't
+	for _, active := range networkCreds.Creds {
+		network, _, err := splitNetworkParticipant(active.NetworkParticipant)
 		if err != nil {
-			setupLog.Error(err, "error marshalling json")
 			return err
 		}
-		secret.Data[edgefarmNetworkAccountNameSecret] = j
-		jwt, nkey, err := parseCredsString(userCred.Creds)
+		secret[network] = active.Creds
+	}
+
+	// Delete networks from the secret if the component is no longer
+	for _, deleted := range networkCreds.DeletedParticipants {
+		network, _, err := splitNetworkParticipant(deleted)
 		if err != nil {
-			setupLog.Error(err, "error parsing creds string")
 			return err
 		}
-		secret.Data[edgefarmSecretNKeyKey] = []byte(nkey)
-		secret.Data[edgefarmSecretJWTKey] = []byte(jwt)
-		secret.Data[edgefarmSecretCredsfileKey] = []byte(userCred.Creds)
-
-		_, err = clientset.CoreV1().Secrets(namespace).Create(context.Background(), secret, metav1.CreateOptions{})
-		if err != nil {
-			if apierrors.IsAlreadyExists(err) {
-				setupLog.Info(fmt.Sprintf("Secret '%s' already exists in namespace '%s'. Updating.", secretName, namespace))
-				_, err = clientset.CoreV1().Secrets(namespace).Update(context.Background(), secret, metav1.UpdateOptions{})
-				if err != nil {
-					setupLog.Error(err, "error updating secret")
-				}
-				continue
-			}
-
-			setupLog.Error(err, "error creating secret")
-			continue
-		}
+		delete(secret, network)
 	}
 
-	for _, secret := range creds.DeletedParticipants {
-		setupLog.Info(fmt.Sprintf("Delete secret '%s' in namespace '%s'", secret, namespace))
-
-		err = clientset.CoreV1().Secrets(namespace).Delete(context.Background(), secret, metav1.DeleteOptions{})
-		if err != nil {
-			if apierrors.IsNotFound(err) {
-				continue
-			}
-			setupLog.Error(err, "error deleting secret")
-			continue
-		}
+	if secretExists {
+		_, err = updateComponentSecret(component, namespace, &secret)
+	} else {
+		_, err = createComponentSecret(component, namespace, &secret)
 	}
+	if err != nil {
+		return err
+	}
+
 	return nil
+}
+
+func readCredentialsFromSecret(component string, network string, namespace string) (string, error) {
+	c, err := rest.InClusterConfig()
+	if err != nil {
+		setupLog.Error(err, "error getting cluster config")
+		return "", err
+	}
+	clientset, err := kubernetes.NewForConfig(c)
+	if err != nil {
+		setupLog.Error(err, "error getting client for cluster")
+		return "", err
+	}
+	secret, err := clientset.CoreV1().Secrets(namespace).Get(context.Background(), component, metav1.GetOptions{})
+	if err != nil {
+		if apierrors.IsNotFound(err) {
+			return "", nil
+		}
+		setupLog.Error(err, "error deleting secret")
+		return "", err
+	}
+
+	if val, ok := secret.Data[network]; ok {
+		return string(val), nil
+	}
+	return "", fmt.Errorf("network %s not found in secret %s", network, component)
 }

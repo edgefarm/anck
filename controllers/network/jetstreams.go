@@ -202,7 +202,7 @@ func parseCredsString(creds string) (string, string, error) {
 func parseDurationString(dstr string) (dur time.Duration, err error) {
 	dstr = strings.TrimSpace(dstr)
 
-	if len(dstr) <= 0 {
+	if len(dstr) == 0 {
 		return dur, nil
 	}
 

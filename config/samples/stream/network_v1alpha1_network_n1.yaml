@@ -1,11 +1,10 @@
 apiVersion: network.edgefarm.io/v1alpha1
 kind: Network
 metadata:
-  name: mystream-network
+  name: mystream-network1
   namespace: stream
 spec:
   namespace: stream
-  accountname: streams-account
   participants: []
   streams:
     - name: myStream
