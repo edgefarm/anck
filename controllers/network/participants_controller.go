@@ -18,6 +18,7 @@ package network
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -187,6 +188,10 @@ func (r *ParticipantsReconciler) SetupWithManager(mgr ctrl.Manager) error {
 						return err
 					}
 					err = removeParticipantFromComponentSecret(participant.Spec.Component, participant.Spec.Network, participant.Namespace)
+					if err != nil {
+						return err
+					}
+					err = removeParticipantFromDaprSecret(participant.Spec.Component, participant.Spec.Network, participant.Namespace)
 					return err
 				})
 
@@ -206,4 +211,14 @@ func (r *ParticipantsReconciler) SetupWithManager(mgr ctrl.Manager) error {
 			},
 		}).
 		Complete(r)
+}
+
+// splitNetworkParticipant extracts the component and network name from the network participant name.
+// The format of networkParticipant is <network>.<component>
+func splitNetworkParticipant(networkParticipant string) (string, string, error) {
+	parts := strings.Split(networkParticipant, ".")
+	if len(parts) != 2 {
+		return "", "", fmt.Errorf("invalid network participant name: %s", networkParticipant)
+	}
+	return parts[0], parts[1], nil
 }

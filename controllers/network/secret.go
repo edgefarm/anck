@@ -3,40 +3,30 @@ package network
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	anckcredentials "github.com/edgefarm/anck-credentials/pkg/apis/config/v1alpha1"
+	v1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 )
 
-// splitNetworkParticipant extracts the component and network name from the network participant name.
-// The format of networkParticipant is <network>.<component>
-func splitNetworkParticipant(networkParticipant string) (string, string, error) {
-	parts := strings.Split(networkParticipant, ".")
-	if len(parts) != 2 {
-		return "", "", fmt.Errorf("invalid network participant name: %s", networkParticipant)
-	}
-	return parts[0], parts[1], nil
-}
-
-func createOrUpdateComponentSecrets(component string, namespace string, networkCreds *anckcredentials.DesiredStateResponse) error {
+func createOrUpdateComponentSecrets(component string, namespace string, networkCreds *anckcredentials.DesiredStateResponse) (*v1.Secret, error) {
 	secretExists := true
-	secret, err := readComponentSecret(component, namespace)
+	secret, err := readSecret(component, namespace)
 	if apierrors.IsNotFound(err) {
 		setupLog.Info(fmt.Sprintf("secret not found. Creating new secret: %s", err))
 		secretExists = false
 	} else if err != nil {
-		return err
+		return nil, err
 	}
 
 	// Update the secret if it exists or create a new one if it doesn't
 	for _, active := range networkCreds.Creds {
 		network, _, err := splitNetworkParticipant(active.NetworkParticipant)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		secret[network] = active.Creds
 	}
@@ -45,23 +35,24 @@ func createOrUpdateComponentSecrets(component string, namespace string, networkC
 	for _, deleted := range networkCreds.DeletedParticipants {
 		network, participantComponent, err := splitNetworkParticipant(deleted)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		if component == participantComponent {
 			delete(secret, network)
 		}
 	}
 
+	secretv1 := &v1.Secret{}
 	if secretExists {
-		_, err = updateComponentSecret(component, namespace, &secret)
+		secretv1, err = updateSecret(component, namespace, &secret)
 	} else {
-		_, err = createComponentSecret(component, namespace, &secret)
+		secretv1, err = createSecret(component, namespace, &secret)
 	}
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return secretv1, nil
 }
 
 func readCredentialsFromSecret(component string, network string, namespace string) (string, error) {
@@ -91,7 +82,7 @@ func readCredentialsFromSecret(component string, network string, namespace strin
 }
 
 func removeParticipantFromComponentSecret(component, network, namespace string) error {
-	secret, err := readComponentSecret(component, namespace)
+	secret, err := readSecret(component, namespace)
 	if err != nil {
 		return err
 	}
@@ -103,7 +94,7 @@ func removeParticipantFromComponentSecret(component, network, namespace string) 
 		return nil
 	}
 
-	_, err = updateComponentSecret(component, namespace, &secret)
+	_, err = updateSecret(component, namespace, &secret)
 	if err != nil {
 		return err
 	}

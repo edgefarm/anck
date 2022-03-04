@@ -141,9 +141,16 @@ func (r *NetworksReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 			setupLog.Error(err, errorText)
 			return ctrl.Result{}, fmt.Errorf("%s", errorText)
 		}
-		err = createOrUpdateComponentSecrets(component, namespace, resp)
+		secret, err := createOrUpdateComponentSecrets(component, namespace, resp)
 		if err != nil {
-			errorText := "Error creating or updating component secrets"
+			errorText := "Error creating or updating component secret"
+			setupLog.Error(err, errorText)
+			return ctrl.Result{}, fmt.Errorf("%s", errorText)
+		}
+
+		err = createOrUpdateComponentDaprSecrets(secret)
+		if err != nil {
+			errorText := "Error creating or updating component dapr secret"
 			setupLog.Error(err, errorText)
 			return ctrl.Result{}, fmt.Errorf("%s", errorText)
 		}

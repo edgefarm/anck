@@ -3,7 +3,7 @@ package dapr
 import "gopkg.in/yaml.v2"
 
 const (
-	defaultNatsURL string = "nats://nats.nats:4222"
+	defaultNatsURL string = "nats://connect.ngs.global:4222"
 )
 
 // Config is a type that represents a Config instance
@@ -91,8 +91,8 @@ func NewDapr(name string, opts ...Option) *Config {
 	return config
 }
 
-// DaprConfigToYaml converts a DaprConfig instance to YAML
-func (d *Config) DaprConfigToYaml() (string, error) {
+// ToYaml converts a DaprConfig instance to YAML
+func (d *Config) ToYaml() (string, error) {
 	yaml, err := yaml.Marshal(*d)
 	if err != nil {
 		return "", err

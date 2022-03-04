@@ -14,12 +14,7 @@ import (
 
 // Currently unused. Needed later when deleting complete components
 func deleteComponentSecret(name string, namespace string) error {
-	c, err := rest.InClusterConfig()
-	if err != nil {
-		setupLog.Error(err, "error getting cluster config")
-		return err
-	}
-	clientset, err := kubernetes.NewForConfig(c)
+	clientset, err := clientset()
 	if err != nil {
 		setupLog.Error(err, "error getting client for cluster")
 		return err
@@ -35,43 +30,53 @@ func deleteComponentSecret(name string, namespace string) error {
 	return nil
 }
 
-func readComponentSecret(component string, namespace string) (map[string]string, error) {
-	c, err := rest.InClusterConfig()
-	if err != nil {
-		setupLog.Error(err, "error getting cluster config")
-		return nil, err
-	}
-	clientset, err := kubernetes.NewForConfig(c)
+func readSecret(name string, namespace string) (map[string]string, error) {
+	clientset, err := clientset()
 	if err != nil {
 		setupLog.Error(err, "error getting client for cluster")
 		return nil, err
 	}
 	creds := make(map[string]string)
-	secret, err := clientset.CoreV1().Secrets(namespace).Get(context.Background(), component, metav1.GetOptions{})
+	secret, err := clientset.CoreV1().Secrets(namespace).Get(context.Background(), name, metav1.GetOptions{})
 	if err != nil {
 		setupLog.Info(fmt.Sprintf("error getting secret: %s", err))
 		return creds, err
 	}
 
-	for network, networkCred := range secret.Data {
-		creds[network] = string(networkCred)
+	for key, value := range secret.Data {
+		creds[key] = string(value)
 	}
 
 	return creds, nil
 }
 
-func updateComponentSecret(component string, namespace string, creds *map[string]string) (*v1.Secret, error) {
-	c, err := rest.InClusterConfig()
+func existsSecret(name string, namespace string) (bool, error) {
+	clientset, err := clientset()
 	if err != nil {
-		setupLog.Error(err, "error getting cluster config")
-		return nil, err
+		setupLog.Error(err, "error getting client for cluster")
+		return false, err
 	}
-	clientset, err := kubernetes.NewForConfig(c)
+	secretList, err := clientset.CoreV1().Secrets(namespace).List(context.Background(), metav1.ListOptions{})
+	if err != nil {
+		setupLog.Info(fmt.Sprintf("error listing secret: %s", err))
+		return false, err
+	}
+
+	for _, s := range secretList.Items {
+		if s.Name == name {
+			return true, nil
+		}
+	}
+	return false, nil
+}
+
+func updateSecret(name string, namespace string, data *map[string]string) (*v1.Secret, error) {
+	clientset, err := clientset()
 	if err != nil {
 		setupLog.Error(err, "error getting client for cluster")
 		return nil, err
 	}
-	secret, err := clientset.CoreV1().Secrets(namespace).Get(context.Background(), component, metav1.GetOptions{})
+	secret, err := clientset.CoreV1().Secrets(namespace).Get(context.Background(), name, metav1.GetOptions{})
 	if err != nil {
 		if apierrors.IsNotFound(err) {
 			return nil, nil
@@ -81,7 +86,7 @@ func updateComponentSecret(component string, namespace string, creds *map[string
 	}
 
 	newData := make(map[string][]byte)
-	for network, cred := range *creds {
+	for network, cred := range *data {
 		newData[network] = []byte(cred)
 	}
 	secret.Data = newData
@@ -95,31 +100,23 @@ func updateComponentSecret(component string, namespace string, creds *map[string
 	return secret, nil
 }
 
-func createComponentSecret(component string, namespace string, creds *map[string]string) (*v1.Secret, error) {
-	c, err := rest.InClusterConfig()
-	if err != nil {
-		setupLog.Error(err, "error getting cluster config")
-		return nil, err
-	}
-	clientset, err := kubernetes.NewForConfig(c)
+func createSecret(name string, namespace string, data *map[string]string) (*v1.Secret, error) {
+	clientset, err := clientset()
 	if err != nil {
 		setupLog.Error(err, "error getting client for cluster")
 		return nil, err
 	}
 	secret := &v1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      component,
+			Name:      name,
 			Namespace: namespace,
-			Labels: map[string]string{
-				"component": component,
-			},
 		},
 		Type: v1.SecretTypeOpaque,
 		Data: make(map[string][]byte),
 	}
 
-	for network, cred := range *creds {
-		secret.Data[network] = []byte(cred)
+	for key, value := range *data {
+		secret.Data[key] = []byte(value)
 	}
 	writtenSecret := &v1.Secret{}
 
@@ -139,12 +136,7 @@ func createComponentSecret(component string, namespace string, creds *map[string
 }
 
 func createNamespace(namespace string) error {
-	c, err := rest.InClusterConfig()
-	if err != nil {
-		setupLog.Error(err, "error getting cluster config")
-		return err
-	}
-	clientset, err := kubernetes.NewForConfig(c)
+	clientset, err := clientset()
 	if err != nil {
 		setupLog.Error(err, "error getting client for cluster")
 		return err
@@ -162,4 +154,18 @@ func createNamespace(namespace string) error {
 		return err
 	}
 	return nil
+}
+
+func clientset() (*kubernetes.Clientset, error) {
+	c, err := rest.InClusterConfig()
+	if err != nil {
+		setupLog.Error(err, "error getting cluster config")
+		return nil, err
+	}
+	clientset, err := kubernetes.NewForConfig(c)
+	if err != nil {
+		setupLog.Error(err, "error getting client for cluster")
+		return nil, err
+	}
+	return clientset, nil
 }

@@ -9,7 +9,7 @@ import (
 func TestCreateDaprConfig(t *testing.T) {
 	assert := assert.New(t)
 	config := NewDapr("myPubsub")
-	str, err := config.DaprConfigToYaml()
+	str, err := config.ToYaml()
 	assert.Nil(err)
 	assert.Equal(`apiVersion: dapr.io/v1alpha1
 kind: Component
@@ -27,7 +27,7 @@ spec:
 func TestCreateDaprConfigWithCreds(t *testing.T) {
 	assert := assert.New(t)
 	config := NewDapr("myPubsub", WithCreds("myJwt", "mySeedkey"))
-	str, err := config.DaprConfigToYaml()
+	str, err := config.ToYaml()
 	assert.Nil(err)
 	assert.Equal(`apiVersion: dapr.io/v1alpha1
 kind: Component
@@ -49,7 +49,7 @@ spec:
 func TestCreateDaprConfigWithCredsAndNatsURL(t *testing.T) {
 	assert := assert.New(t)
 	config := NewDapr("myPubsub", WithCreds("myJwt", "mySeedkey"), WithNatsURL("nats://mynats.example.com:4222"))
-	str, err := config.DaprConfigToYaml()
+	str, err := config.ToYaml()
 	assert.Nil(err)
 	assert.Equal(`apiVersion: dapr.io/v1alpha1
 kind: Component
@@ -71,7 +71,7 @@ spec:
 func TestCreateDaprConfigWithNatsURL(t *testing.T) {
 	assert := assert.New(t)
 	config := NewDapr("myPubsub", WithNatsURL("nats://mynats.example.com:4222"))
-	str, err := config.DaprConfigToYaml()
+	str, err := config.ToYaml()
 	assert.Nil(err)
 	assert.Equal(`apiVersion: dapr.io/v1alpha1
 kind: Component
