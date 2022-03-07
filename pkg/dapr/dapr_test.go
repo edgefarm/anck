@@ -20,7 +20,7 @@ spec:
   version: v1
   metadata:
   - name: natsURL
-    value: nats://nats.nats:4222
+    value: nats://connect.ngs.global:4222
 `, str)
 }
 
@@ -38,7 +38,7 @@ spec:
   version: v1
   metadata:
   - name: natsURL
-    value: nats://nats.nats:4222
+    value: nats://connect.ngs.global:4222
   - name: jwt
     value: myJwt
   - name: seedkey

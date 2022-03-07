@@ -36,10 +36,6 @@ spec:
           spec:
             description: NetworkSpec defines the desired state of Network
             properties:
-              accountname:
-                description: Accountname is the name of the nats account. If empty,
-                  the namespace, where the Network ressource was deployed is used.
-                type: string
               imports:
                 description: Imports is a list of streams to import from other networks.
                 items:
