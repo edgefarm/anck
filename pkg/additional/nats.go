@@ -37,14 +37,6 @@ func ApplyNats(client client.Client) error {
 		},
 		Data: map[string]string{
 			"nats.json": `{
-	"accounts": {
-		"default": {
-			"users": [{
-				"user": "default",
-				"password": ""
-				}]
-		}
-	},
 	"http": 8222,
 	"leafnodes": {
 		"remotes": []
@@ -201,6 +193,11 @@ func ApplyNats(client client.Client) error {
 									MountPath: "/etc/resolv.conf",
 									ReadOnly:  false,
 								},
+								{
+									Name:      "state",
+									MountPath: "/state",
+									ReadOnly:  false,
+								},
 							},
 						},
 						{
@@ -271,6 +268,15 @@ func ApplyNats(client client.Client) error {
 								HostPath: &corev1.HostPathVolumeSource{
 									Path: "/etc/resolv.conf",
 									Type: &hostPathFile,
+								},
+							},
+						},
+						{
+							Name: "state",
+							VolumeSource: corev1.VolumeSource{
+								HostPath: &corev1.HostPathVolumeSource{
+									Path: "/data/nats/registry-state",
+									Type: &hostPathDirectoryOrCreate,
 								},
 							},
 						},
