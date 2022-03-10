@@ -109,7 +109,6 @@ root@anck-controller-manager-666cb6bf45-gztcs-2rr9m:/app# go run main.go
 
 ## Debugging while developing
 
-The steps are quite the same as above, but you can use delve instead of dlv.
 Choose which component you want to debug and start it whith dlv.
 
 ```bash

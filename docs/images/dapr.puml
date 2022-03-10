@@ -14,15 +14,14 @@ package "Application Component specification" as application {
 }
 
 package "secret: Component1.dapr" as secret_Component1_dapr {
-    [myNetwork1.myJetstream1] as n1j1
-    [myNetwork1.myJetstream2] as n1j2
-    [myNetwork2.myJetstream1] as n2j1
-    n1j2 -[hidden]u- n1j1
-    n2j1 -[hidden]u- n1j2
+    [mystream.myNetwork1] as sn1
+    [mystream.myNetwork2] as sn2
+    sn1 -[hidden]u- sn2
+    sn2 -[hidden]u- sn1
 }
 
 package "secret: Component2.dapr" as secret_Component2_dapr {
-    [myNetwork2.myJetstream2]
+    [mystream.myNetwork2]
 }
 secret_Component1_dapr -[hidden]d- secret_Component2_dapr
 
