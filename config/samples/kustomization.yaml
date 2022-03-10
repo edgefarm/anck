@@ -1,8 +1,0 @@
-## Append samples you want in your CSV to this file as resources ##
-resources:
-  - network_v1alpha1_network-full-sample.yaml
-  - network_v1alpha1_network-minimum-sample.yaml
-  - networks_v1alpha1_participants.yaml
-  - stream/network_v1alpha1_network_stream.yaml
-  - stream/network_v1alpha1_participants_stream.yaml
-#+kubebuilder:scaffold:manifestskustomizesamples
