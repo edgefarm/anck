@@ -41,7 +41,7 @@ spec:
     value: nats://connect.ngs.global:4222
   - name: jwt
     value: myJwt
-  - name: seedkey
+  - name: seedKey
     value: mySeedkey
 `, str)
 }
@@ -63,7 +63,7 @@ spec:
     value: nats://mynats.example.com:4222
   - name: jwt
     value: myJwt
-  - name: seedkey
+  - name: seedKey
     value: mySeedkey
 `, str)
 }

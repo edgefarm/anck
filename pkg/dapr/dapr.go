@@ -43,7 +43,7 @@ func WithCreds(jwt string, nkey string) Option {
 			Value: jwt,
 		})
 		c.Spec.SpecMetadata = append(c.Spec.SpecMetadata, SpecMetadata{
-			Name:  "seedkey",
+			Name:  "seedKey",
 			Value: nkey,
 		})
 	}
