@@ -51,6 +51,10 @@ func removeParticipantFromDaprSecret(component, network, namespace string) error
 
 	daprComponentName := fmt.Sprintf("%s.yaml", network)
 	if _, ok := secret[daprComponentName]; ok {
+		if len(secret) == 1 {
+			// delete secret if it's the only network
+			return deleteSecret(daprSecret, namespace)
+		}
 		delete(secret, daprComponentName)
 	} else {
 		// component is not participating in this network
