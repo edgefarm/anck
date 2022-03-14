@@ -12,8 +12,7 @@ import (
 	"k8s.io/client-go/util/retry"
 )
 
-// Currently unused. Needed later when deleting complete components
-func deleteComponentSecret(name string, namespace string) error {
+func deleteSecret(name string, namespace string) error {
 	clientset, err := clientset()
 	if err != nil {
 		setupLog.Error(err, "error getting client for cluster")

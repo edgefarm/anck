@@ -88,6 +88,10 @@ func removeParticipantFromComponentSecret(component, network, namespace string) 
 	}
 
 	if _, ok := secret[network]; ok {
+		if len(secret) == 1 {
+			// delete secret if it's the only network
+			return deleteSecret(component, namespace)
+		}
 		delete(secret, network)
 	} else {
 		// component is not participating in this network
