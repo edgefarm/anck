@@ -2,9 +2,16 @@ package network
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/edgefarm/anck/pkg/dapr"
+	resources "github.com/edgefarm/anck/pkg/resources"
 	v1 "k8s.io/api/core/v1"
+	ctrl "sigs.k8s.io/controller-runtime"
+)
+
+var (
+	daprLog = ctrl.Log.WithName("dapr")
 )
 
 func createOrUpdateComponentDaprSecrets(secret *v1.Secret) error {
@@ -12,12 +19,24 @@ func createOrUpdateComponentDaprSecrets(secret *v1.Secret) error {
 
 	// Update the secret if it exists or create a new one if it doesn't
 	for network, cred := range secret.Data {
-		daprComponentName := fmt.Sprintf("%s.yaml", network)
+		skip := false
+		// skip ignored files
+		for _, ignored := range ignoredSecretEntries {
+			if strings.Contains(network, ignored) {
+				skip = true
+				break
+			}
+		}
+		if skip {
+			continue
+		}
+		rawNetworkName := strings.TrimSuffix(network, ".creds")
+		daprComponentName := fmt.Sprintf("%s.yaml", rawNetworkName)
 		jwt, nkey, err := parseCredsString(string(cred))
 		if err != nil {
 			return err
 		}
-		config := dapr.NewDapr(network, dapr.WithCreds(jwt, nkey), dapr.WithNatsURL("nats://nats.nats:4222"))
+		config := dapr.NewDapr(rawNetworkName, dapr.WithCreds(jwt, nkey), dapr.WithNatsURL("nats://nats.nats:4222"))
 		str, err := config.ToYaml()
 		if err != nil {
 			return err
@@ -26,14 +45,14 @@ func createOrUpdateComponentDaprSecrets(secret *v1.Secret) error {
 	}
 
 	daprSecretName := fmt.Sprintf("%s.dapr", secret.Name)
-	secretExists, err := existsSecret(daprSecretName, secret.Namespace)
+	secretExists, err := resources.ExistsSecret(daprSecretName, secret.Namespace)
 	if err != nil {
 		return err
 	}
 	if secretExists {
-		_, err = updateSecret(daprSecretName, secret.Namespace, &items)
+		_, err = resources.UpdateSecret(daprSecretName, secret.Namespace, &items)
 	} else {
-		_, err = createSecret(daprSecretName, secret.Namespace, &items)
+		_, err = resources.CreateSecret(daprSecretName, secret.Namespace, &items)
 	}
 	if err != nil {
 		return err
@@ -42,18 +61,29 @@ func createOrUpdateComponentDaprSecrets(secret *v1.Secret) error {
 	return nil
 }
 
-func removeParticipantFromDaprSecret(component, network, namespace string) error {
+func removeNetworkFromDaprSecret(component, network, namespace string) error {
+	rawNetworkName := strings.TrimSuffix(network, ".creds")
+	daprLog.Info(fmt.Sprintf("Removing network '%s' from dapr secret '%s' in namespace '%s'", rawNetworkName, component, namespace))
 	daprSecret := fmt.Sprintf("%s.dapr", component)
-	secret, err := readSecret(daprSecret, namespace)
+	secret, err := resources.ReadSecret(daprSecret, namespace)
 	if err != nil {
 		return err
 	}
 
-	daprComponentName := fmt.Sprintf("%s.yaml", network)
+	// ignore default creds in secret to get the real length
+	filteredSecret := make(map[string]string)
+	for _, ignored := range ignoredSecretEntries {
+		if strings.Contains(network, ignored) {
+			continue
+		}
+		filteredSecret[network] = string(secret[network])
+	}
+
+	daprComponentName := fmt.Sprintf("%s.yaml", rawNetworkName)
 	if _, ok := secret[daprComponentName]; ok {
-		if len(secret) == 1 {
+		if len(filteredSecret) == 1 {
 			// delete secret if it's the only network
-			return deleteSecret(daprSecret, namespace)
+			return resources.DeleteSecret(daprSecret, namespace)
 		}
 		delete(secret, daprComponentName)
 	} else {
@@ -61,10 +91,9 @@ func removeParticipantFromDaprSecret(component, network, namespace string) error
 		return nil
 	}
 
-	_, err = updateSecret(daprSecret, namespace, &secret)
+	_, err = resources.UpdateSecret(daprSecret, namespace, &secret)
 	if err != nil {
 		return err
 	}
-
 	return nil
 }

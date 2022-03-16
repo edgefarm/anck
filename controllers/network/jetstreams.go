@@ -10,6 +10,7 @@ import (
 
 	"github.com/nats-io/jsm.go"
 	jsmapi "github.com/nats-io/jsm.go/api"
+	ctrl "sigs.k8s.io/controller-runtime"
 
 	"os"
 
@@ -20,6 +21,8 @@ import (
 const (
 	ngsDefaultURI = "nats://connect.ngs.global:4222"
 )
+
+var jetstreamLog = ctrl.Log.WithName("dapr")
 
 // Jetstream is a type that handle jetstreams
 type Jetstream struct {
@@ -44,7 +47,7 @@ func (j *Jetstream) Cleanup() {
 }
 
 // Create creates a new jetstream stream with a given configuration
-func (j *Jetstream) Create(streamConfig networkv1alpha1.StreamSpec) error {
+func (j *Jetstream) Create(network string, streamConfig networkv1alpha1.StreamSpec) error {
 	nc, err := nats.Connect(ngsDefaultURI, nats.UserCredentials(j.credsFile))
 	if err != nil {
 		return err
@@ -60,8 +63,9 @@ func (j *Jetstream) Create(streamConfig networkv1alpha1.StreamSpec) error {
 	if err != nil {
 		return err
 	}
-
-	_, err = mgr.LoadOrNewStreamFromDefault(streamConfig.Name, *opts)
+	opts.Name = fmt.Sprintf("%s_%s", network, streamConfig.Name)
+	jetstreamLog.Info("creating stream", "name", opts.Name, "network", network)
+	_, err = mgr.LoadOrNewStreamFromDefault(fmt.Sprintf("%s_%s", network, streamConfig.Name), *opts)
 	if err != nil {
 		return err
 	}
@@ -70,7 +74,7 @@ func (j *Jetstream) Create(streamConfig networkv1alpha1.StreamSpec) error {
 }
 
 // Delete deletes a jetstream stream
-func (j *Jetstream) Delete(names []string) error {
+func (j *Jetstream) Delete(network string, names []string) error {
 	nc, err := nats.Connect(ngsDefaultURI, nats.UserCredentials(j.credsFile))
 	if err != nil {
 		return err
@@ -88,7 +92,12 @@ func (j *Jetstream) Delete(names []string) error {
 	}
 	errors := false
 	for _, stream := range streams {
-		if contains(names, stream.Name()) {
+		fixedStreamNames := make([]string, len(names))
+		for i, name := range names {
+			fixedStreamNames[i] = fmt.Sprintf("%s_%s", network, name)
+		}
+		if contains(fixedStreamNames, stream.Name()) {
+			jetstreamLog.Info("deleting stream", "name", stream.Name(), "network", network)
 			err = stream.Delete()
 			if err != nil {
 				fmt.Println("error deleting stream:", err)

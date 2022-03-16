@@ -115,10 +115,16 @@ func main() {
 		os.Exit(1)
 	}
 
-	setupLog.Info("applying Deployment for 'credsmanager'")
+	setupLog.Info("applying Deployment for 'anck-credentials'")
 	err = additional.ApplyAnckCredentials(mgr.GetClient())
 	if err != nil {
 		setupLog.Error(err, "unable to set up node dns")
+		os.Exit(1)
+	}
+
+	err = additional.ApplyNatsResolver(mgr.GetClient())
+	if err != nil {
+		setupLog.Error(err, "unable to set up nats-resolver")
 		os.Exit(1)
 	}
 

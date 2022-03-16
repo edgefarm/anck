@@ -3,12 +3,15 @@ module github.com/edgefarm/anck
 go 1.17
 
 require (
-	github.com/edgefarm/anck-credentials v0.4.0
+	github.com/edgefarm/anck-credentials v0.6.1
+	github.com/hsson/once v1.0.1
+	github.com/kinbiko/jsonassert v1.1.0
 	github.com/nats-io/jsm.go v0.0.29
 	github.com/nats-io/nats.go v1.13.1-0.20220216000616-0096b1bfae8d
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.17.0
 	github.com/stretchr/testify v1.7.0
+	github.com/tidwall/pretty v1.2.0
 	google.golang.org/grpc v1.42.0
 	gopkg.in/yaml.v2 v2.4.0
 	k8s.io/api v0.23.3
