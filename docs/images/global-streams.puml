@@ -1,16 +1,14 @@
 @startuml
-
 package "global-network" as global_network {
-    [configure streams] as configure_streams
     database "global nats" as global_nats
-    configure_streams --> global_nats
 }
 
 package "anck " {
     [anck] as anck
     [anck-credentials] as anck_credentials
     anck <-l- anck_credentials
-    anck -r-> configure_streams
 }
 
+
+anck -l-> global_nats : configure streams
 @enduml

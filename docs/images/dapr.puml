@@ -1,29 +1,29 @@
 @startuml
 
-package "Application Component specification" as application {
-    package "Component1" as Component1 {
-        [network-participant: myNetwork1] as Component1_participant_myNetwork1
-        [network-participant: myNetwork2] as Component1_participant_myNetwork2
-        Component1_participant_myNetwork1 -[hidden]d- Component1_participant_myNetwork2
+package "Application component specification" as application {
+    package "component1" as component1 {
+        [network-participant: myNetwork1] as component1_participant_myNetwork1
+        [network-participant: myNetwork2] as component1_participant_myNetwork2
+        component1_participant_myNetwork1 -[hidden]d- component1_participant_myNetwork2
     }
 
-    package "Component2" as Component2{
-        [network-participant: myNetwork2] as Component2_participant_myNetwork2
+    package "component2" as component2{
+        [network-participant: myNetwork2] as component2_participant_myNetwork2
     }
-    ' Component1 -[hidden]l- Component2
+    ' component1 -[hidden]l- component2
 }
 
-package "secret: Component1.dapr" as secret_Component1_dapr {
-    [mystream.myNetwork1] as sn1
-    [mystream.myNetwork2] as sn2
+package "secret: component1.dapr" as secret_component1_dapr {
+    [myNetwork1.yaml] as sn1
+    [myNetwork2.yaml] as sn2
     sn1 -[hidden]u- sn2
     sn2 -[hidden]u- sn1
 }
 
-package "secret: Component2.dapr" as secret_Component2_dapr {
-    [mystream.myNetwork2]
+package "secret: component2.dapr" as secret_component2_dapr {
+    [myNetwork2.yaml]
 }
-secret_Component1_dapr -[hidden]d- secret_Component2_dapr
+secret_component1_dapr -[hidden]d- secret_component2_dapr
 
 
 package "network: myNetwork1" as myNetwork1 {
@@ -32,7 +32,7 @@ package "network: myNetwork1" as myNetwork1 {
         [myJetstream2] as myNetwork1_jetstream2
     }
     package "participants" as myNetwork1_participants {
-        [Component1] as myNetwork1_Component1
+        [component1] as myNetwork1_component1
     }
 }
 
@@ -41,19 +41,19 @@ package "network: myNetwork2" as myNetwork2 {
         [myJetstream1] as myNetwork2_jetstream1
     }
     package "participants" as myNetwork2_participants {
-        [Component1] as myNetwork2_Component1
-        [Component2] as myNetwork2_Component2
+        [component1] as myNetwork2_component1
+        [component2] as myNetwork2_component2
     }
 }
 
 application --> myNetwork1 : creates
 application --> myNetwork2 : creates
 myNetwork1 -[hidden]r- myNetwork2
-Component1_participant_myNetwork1 --> myNetwork1_Component1 : registers
-Component1_participant_myNetwork2 --> myNetwork2_Component1 : registers
-Component2_participant_myNetwork2 --> myNetwork2_Component2 : registers
-secret_Component1_dapr <-u- myNetwork1 : creates
-secret_Component2_dapr <-u- myNetwork2 : creates
+component1_participant_myNetwork1 --> myNetwork1_component1 : registers
+component1_participant_myNetwork2 --> myNetwork2_component1 : registers
+component2_participant_myNetwork2 --> myNetwork2_component2 : registers
+secret_component1_dapr <-u- myNetwork1 : creates
+secret_component2_dapr <-u- myNetwork2 : creates
 
 
 @enduml
