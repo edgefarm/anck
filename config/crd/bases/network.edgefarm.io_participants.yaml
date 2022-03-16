@@ -36,6 +36,10 @@ spec:
           spec:
             description: ParticipantsSpec defines the desired state of Participants
             properties:
+              app:
+                description: App is the name of the distrubuted application the participant
+                  is created for.
+                type: string
               component:
                 description: Component is the name of the component that wants to
                   use the participant.
@@ -45,6 +49,7 @@ spec:
                   connected to.
                 type: string
             required:
+            - app
             - component
             - network
             type: object

@@ -22,6 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ConfigServiceClient interface {
+	SysAccount(ctx context.Context, in *SysAccountRequest, opts ...grpc.CallOption) (*SysAccountResponse, error)
 	DesiredState(ctx context.Context, in *DesiredStateRequest, opts ...grpc.CallOption) (*DesiredStateResponse, error)
 	DeleteNetwork(ctx context.Context, in *DeleteNetworkRequest, opts ...grpc.CallOption) (*DeleteNetworkResponse, error)
 }
@@ -32,6 +33,15 @@ type configServiceClient struct {
 
 func NewConfigServiceClient(cc grpc.ClientConnInterface) ConfigServiceClient {
 	return &configServiceClient{cc}
+}
+
+func (c *configServiceClient) SysAccount(ctx context.Context, in *SysAccountRequest, opts ...grpc.CallOption) (*SysAccountResponse, error) {
+	out := new(SysAccountResponse)
+	err := c.cc.Invoke(ctx, "/v1alpha1.ConfigService/SysAccount", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *configServiceClient) DesiredState(ctx context.Context, in *DesiredStateRequest, opts ...grpc.CallOption) (*DesiredStateResponse, error) {
@@ -56,6 +66,7 @@ func (c *configServiceClient) DeleteNetwork(ctx context.Context, in *DeleteNetwo
 // All implementations must embed UnimplementedConfigServiceServer
 // for forward compatibility
 type ConfigServiceServer interface {
+	SysAccount(context.Context, *SysAccountRequest) (*SysAccountResponse, error)
 	DesiredState(context.Context, *DesiredStateRequest) (*DesiredStateResponse, error)
 	DeleteNetwork(context.Context, *DeleteNetworkRequest) (*DeleteNetworkResponse, error)
 	mustEmbedUnimplementedConfigServiceServer()
@@ -65,6 +76,9 @@ type ConfigServiceServer interface {
 type UnimplementedConfigServiceServer struct {
 }
 
+func (UnimplementedConfigServiceServer) SysAccount(context.Context, *SysAccountRequest) (*SysAccountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SysAccount not implemented")
+}
 func (UnimplementedConfigServiceServer) DesiredState(context.Context, *DesiredStateRequest) (*DesiredStateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DesiredState not implemented")
 }
@@ -82,6 +96,24 @@ type UnsafeConfigServiceServer interface {
 
 func RegisterConfigServiceServer(s grpc.ServiceRegistrar, srv ConfigServiceServer) {
 	s.RegisterService(&ConfigService_ServiceDesc, srv)
+}
+
+func _ConfigService_SysAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SysAccountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ConfigServiceServer).SysAccount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/v1alpha1.ConfigService/SysAccount",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ConfigServiceServer).SysAccount(ctx, req.(*SysAccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _ConfigService_DesiredState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -127,6 +159,10 @@ var ConfigService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "v1alpha1.ConfigService",
 	HandlerType: (*ConfigServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "SysAccount",
+			Handler:    _ConfigService_SysAccount_Handler,
+		},
 		{
 			MethodName: "DesiredState",
 			Handler:    _ConfigService_DesiredState_Handler,

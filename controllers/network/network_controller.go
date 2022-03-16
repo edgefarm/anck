@@ -21,6 +21,7 @@ import (
 	"time"
 
 	"google.golang.org/grpc"
+	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -31,18 +32,19 @@ import (
 	networkv1alpha1 "github.com/edgefarm/anck/apis/network/v1alpha1"
 
 	anckcredentials "github.com/edgefarm/anck-credentials/pkg/apis/config/v1alpha1"
+	common "github.com/edgefarm/anck/pkg/common"
+	resources "github.com/edgefarm/anck/pkg/resources"
 )
 
 var (
-	setupLog = ctrl.Log.WithName("anck-controller")
+	networkLog = ctrl.Log.WithName("network")
 )
 
 const (
-	anckcredentialsServiceName = "anck-credentials"
-	anckcredentialsServicePort = 6000
-	anckcredentialsNamespace   = "anck"
-	timeoutSeconds             = 10
-	anckParticipant            = "anck-this-name-shall-never-be-used"
+	timeoutSeconds = 10
+
+	// anckParticipant is the participant that is able to create jetstreams
+	anckParticipant = "anck-this-name-shall-never-be-used"
 )
 
 // NetworksReconciler reconciles a Network object
@@ -88,10 +90,10 @@ func (r *NetworksReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	grpcContext, cancel := context.WithTimeout(context.Background(), timeoutSeconds*time.Second)
 	defer cancel()
 
-	cc, err := grpc.Dial(fmt.Sprintf("%s.%s.svc.cluster.local:%d", anckcredentialsServiceName, anckcredentialsNamespace, anckcredentialsServicePort), grpc.WithInsecure())
+	cc, err := grpc.Dial(common.AnckcredentialsServiceURL, grpc.WithInsecure())
 	if err != nil {
 		errorText := "Error connecting to anckcredentials"
-		setupLog.Error(err, errorText)
+		networkLog.Error(err, errorText)
 		return ctrl.Result{
 			Requeue:      false,
 			RequeueAfter: 0,
@@ -100,17 +102,17 @@ func (r *NetworksReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	defer cc.Close()
 
 	client := anckcredentials.NewConfigServiceClient(cc)
-	setupLog.Info(fmt.Sprintf("Requesting credentials for network '%s'", networkName))
+	networkLog.Info(fmt.Sprintf("Requesting credentials for network '%s'", networkName))
 
 	participants := network.Spec.Participants
-	participants = append(participants, anckParticipant)
+	participants = append(participants, fmt.Sprintf("%s.%s", network.Spec.App, anckParticipant))
 	resp, err := client.DesiredState(grpcContext, &anckcredentials.DesiredStateRequest{
 		Network:      networkName,
 		Participants: participants,
 	})
 	if err != nil {
 		errorText := "Error setting desired state"
-		setupLog.Error(err, errorText)
+		networkLog.Error(err, errorText)
 		return ctrl.Result{
 			Requeue:      false,
 			RequeueAfter: 0,
@@ -126,10 +128,10 @@ func (r *NetworksReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		namespace = network.Namespace
 	}
 
-	err = createNamespace(namespace)
+	err = resources.CreateNamespace(namespace)
 	if err != nil {
 		errorText := "Error creating namespace"
-		setupLog.Error(err, errorText)
+		networkLog.Error(err, errorText)
 		return ctrl.Result{
 			Requeue:      false,
 			RequeueAfter: 0,
@@ -138,35 +140,35 @@ func (r *NetworksReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	for _, component := range participants {
 		if err != nil {
 			errorText := "Error splitting network participant"
-			setupLog.Error(err, errorText)
+			networkLog.Error(err, errorText)
 			return ctrl.Result{}, fmt.Errorf("%s", errorText)
 		}
 		secret, err := createOrUpdateComponentSecrets(component, namespace, resp)
 		if err != nil {
 			errorText := "Error creating or updating component secret"
-			setupLog.Error(err, errorText)
+			networkLog.Error(err, errorText)
 			return ctrl.Result{}, fmt.Errorf("%s", errorText)
 		}
 
 		err = createOrUpdateComponentDaprSecrets(secret)
 		if err != nil {
 			errorText := "Error creating or updating component dapr secret"
-			setupLog.Error(err, errorText)
+			networkLog.Error(err, errorText)
 			return ctrl.Result{}, fmt.Errorf("%s", errorText)
 		}
 	}
 
-	anckCreds, err := readCredentialsFromSecret(anckParticipant, network.Name, namespace)
+	anckCreds, err := readCredentialsFromSecret(appComponentName(network.Spec.App, anckParticipant), network.Name, namespace)
 	if err != nil {
 		errorText := "Error reading credentials from secret"
-		setupLog.Error(err, errorText)
+		networkLog.Error(err, errorText)
 		return ctrl.Result{}, fmt.Errorf("%s", errorText)
 	}
 
 	jetstream, err := NewJetstream(anckCreds)
 	if err != nil {
 		errorText := "Error creating jetstream"
-		setupLog.Error(err, errorText)
+		networkLog.Error(err, errorText)
 		return ctrl.Result{
 			Requeue:      false,
 			RequeueAfter: 0,
@@ -174,7 +176,7 @@ func (r *NetworksReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	}
 
 	for _, stream := range network.Spec.Streams {
-		err = jetstream.Create(stream)
+		err = jetstream.Create(network.Name, stream)
 		if err != nil {
 			return ctrl.Result{}, fmt.Errorf("Error creating jetstream: %s", err)
 		}
@@ -194,37 +196,37 @@ func (r *NetworksReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		For(&networkv1alpha1.Network{}).
 		WithEventFilter(predicate.Funcs{
 			DeleteFunc: func(e event.DeleteEvent) bool {
-				setupLog.Info("Delete handler for network called")
+				networkLog.Info("Delete handler for network called")
 
 				network := e.Object.(*networkv1alpha1.Network)
 				streamNames := func(streams []networkv1alpha1.StreamSpec) []string {
 					var names []string
 					for _, stream := range streams {
-						names = append(names, stream.Name)
+						names = append(names, fmt.Sprintf("%s_%s", network.Spec.App, stream.Name))
 					}
 					return names
 				}(network.Spec.Streams)
 
-				anckCreds, err := readCredentialsFromSecret(anckParticipant, network.Name, network.Spec.Namespace)
+				anckCreds, err := readCredentialsFromSecret(appComponentName(network.Spec.App, anckParticipant), network.Name, network.Spec.Namespace)
 				if err != nil {
 					errorText := "Error reading credentials from secret"
-					setupLog.Error(err, errorText)
+					networkLog.Error(err, errorText)
 				}
 
 				js, err := NewJetstream(anckCreds)
 				if err != nil {
-					setupLog.Error(err, "Error creating jetstream")
+					networkLog.Error(err, "Error creating jetstream")
 					return false
 				}
 
 				if len(streamNames) > 0 {
-					setupLog.Info("Delete configured jetstreams:")
+					networkLog.Info("Delete configured jetstreams:")
 					for _, streamName := range streamNames {
-						setupLog.Info(fmt.Sprintf("\t- %s\n", streamName))
+						networkLog.Info(fmt.Sprintf("\t- %s\n", streamName))
 					}
-					err := js.Delete(streamNames)
+					err := js.Delete(network.Name, streamNames)
 					if err != nil {
-						setupLog.Info("Error deleting jetstreams")
+						networkLog.Info("Error deleting jetstreams")
 						return false
 					}
 				}
@@ -234,16 +236,16 @@ func (r *NetworksReconciler) SetupWithManager(mgr ctrl.Manager) error {
 				grpcContext, cancel := context.WithTimeout(context.Background(), timeoutSeconds*time.Second)
 				defer cancel()
 
-				cc, err := grpc.Dial(fmt.Sprintf("%s.%s.svc.cluster.local:%d", anckcredentialsServiceName, anckcredentialsNamespace, anckcredentialsServicePort), grpc.WithInsecure())
+				cc, err := grpc.Dial(common.AnckcredentialsServiceURL, grpc.WithInsecure())
 				if err != nil {
 					errorText := "Error connecting to anckcredentials"
-					setupLog.Info(errorText)
+					networkLog.Info(errorText)
 					return false
 				}
 				defer cc.Close()
 				client := anckcredentials.NewConfigServiceClient(cc)
 
-				setupLog.Info(fmt.Sprintf("Deleting network '%s'", network.Name))
+				networkLog.Info(fmt.Sprintf("Deleting network '%s'", network.Name))
 				_, err = client.DeleteNetwork(grpcContext, &anckcredentials.DeleteNetworkRequest{
 					Network: network.Name,
 				})
@@ -262,19 +264,26 @@ func (r *NetworksReconciler) SetupWithManager(mgr ctrl.Manager) error {
 					namespace = network.Namespace
 				}
 				networkParticipants := network.Spec.Participants
-				networkParticipants = append(networkParticipants, anckParticipant)
+				networkParticipants = append(networkParticipants, appComponentName(network.Spec.App, anckParticipant))
 
 				for _, component := range networkParticipants {
+					err = removeNetworkFromComponentSecret(component, network.Name, namespace)
 					if err != nil {
-						errorText := "Error splitting network participant"
-						setupLog.Error(err, errorText)
-						return false
+						if errors.IsNotFound(err) {
+							networkLog.Info(fmt.Sprintf("Secret '%s' not found. Must have been deleted by participant controller: %s", component, err))
+						} else {
+							networkLog.Error(err, "Error updating component secret")
+							return false
+						}
 					}
-					err = removeParticipantFromComponentSecret(component, network.Name, namespace)
+					err = removeNetworkFromDaprSecret(component, network.Name, namespace)
 					if err != nil {
-						errorText := "Error updating component secret"
-						setupLog.Error(err, errorText)
-						return false
+						if errors.IsNotFound(err) {
+							networkLog.Info(fmt.Sprintf("Secret '%s' not found. Must have been deleted by participant controller: %s", component, err))
+						} else {
+							networkLog.Error(err, "Error updating dapr secret")
+							return false
+						}
 					}
 				}
 				return false
@@ -294,4 +303,8 @@ func (r *NetworksReconciler) SetupWithManager(mgr ctrl.Manager) error {
 			},
 		}).
 		Complete(r)
+}
+
+func appComponentName(app string, component string) string {
+	return fmt.Sprintf("%s.%s", app, component)
 }

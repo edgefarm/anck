@@ -32,6 +32,9 @@ type ParticipantsSpec struct {
 
 	// Network is the name of the network the participant is connected to.
 	Network string `json:"network"`
+
+	// App is the name of the distrubuted application the participant is created for.
+	App string `json:"app"`
 }
 
 // ParticipantsStatus defines the observed state of Participants

@@ -1,6 +1,9 @@
 package additional
 
 import (
+	"fmt"
+
+	"github.com/edgefarm/anck/pkg/nats"
 	v1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -10,8 +13,9 @@ import (
 )
 
 const (
-	natsImage     = "nats:2.6.5-alpine3.14"
-	natsNamespace = "nats"
+	natsImage                 = "nats:2.7.4-alpine3.15"
+	natsLeafnodeRegistryImage = "ci4rail/nats-leafnode-registry:528ef57d"
+	natsNamespace             = "nats"
 )
 
 // ApplyNats creates the nats DaemonSet and necessary namespace and configmap
@@ -26,7 +30,25 @@ func ApplyNats(client client.Client) error {
 		return err
 	}
 
-	configMap := corev1.ConfigMap{
+	sys, err := nats.GetSysAccount()
+	if err != nil {
+		return err
+	}
+
+	defaultSysAccountCredsPath := fmt.Sprintf("%s/%s", credsMountDirectory, sysAccountCredsFile)
+
+	opts := []nats.Option{}
+	opts = append(opts, nats.WithNGSRemote(defaultSysAccountCredsPath, sys.SysAccountPubKey))
+	opts = append(opts, nats.WithPidFile("/var/run/nats/nats.pid"))
+	opts = append(opts, nats.WithCacheResolver(sys.OperatorJWT, sys.SysAccountPubKey, sys.SysAccountJWT, "/jwt"))
+	detaulfNatsConfig := nats.NewConfig(opts...)
+
+	defaultNatsConfigStr, err := detaulfNatsConfig.ToJSON()
+	if err != nil {
+		return err
+	}
+
+	initialNatsConfigConfigMap := corev1.ConfigMap{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "ConfigMap",
 			APIVersion: "v1",
@@ -36,17 +58,31 @@ func ApplyNats(client client.Client) error {
 			Namespace: natsNamespace,
 		},
 		Data: map[string]string{
-			"nats.json": `{
-	"http": 8222,
-	"leafnodes": {
-		"remotes": []
-	},
-	"pid_file": "/var/run/nats/nats.pid"
-}`,
+			"nats.json": defaultNatsConfigStr,
 		},
 	}
 
-	err = ApplyOrUpdate(client, &configMap)
+	err = ApplyOrUpdate(client, &initialNatsConfigConfigMap)
+	if err != nil {
+		return err
+	}
+
+	sysAccountCredsSecret := corev1.Secret{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       "Secret",
+			APIVersion: "v1",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "initial-nats-sys-account-creds",
+			Namespace: natsNamespace,
+		},
+		Type: corev1.SecretTypeOpaque,
+		Data: map[string][]byte{
+			sysAccountCredsFile: []byte(sys.SysAccountCreds),
+		},
+	}
+
+	err = ApplyOrUpdate(client, &sysAccountCredsSecret)
 	if err != nil {
 		return err
 	}
@@ -103,16 +139,28 @@ func ApplyNats(client client.Client) error {
 							Command: []string{
 								"/bin/sh",
 								"-c",
-								"[ ! -f /config/nats.json ] && echo `cat /nats-init-config/nats.json` > /config/nats.json || echo nats.json already exists",
+								"cp /creds-initial/edgefarm-sys.creds /creds/nats-sidecar.creds && cp /creds-initial/edgefarm-sys.creds /creds/edgefarm-sys.creds && [ ! -f /config/nats.json ] && echo `cat /nats-init-config/nats.json` > /config/nats.json || echo nats.json already exists",
 							},
 							VolumeMounts: []corev1.VolumeMount{
 								{
 									Name:      "nats-init-config",
 									MountPath: "/nats-init-config",
+									ReadOnly:  true,
+								},
+								{
+									Name:      "initial-nats-sys-account-creds",
+									MountPath: "/creds-initial",
+									ReadOnly:  true,
 								},
 								{
 									Name:      "config",
 									MountPath: "/config",
+									ReadOnly:  false,
+								},
+								{
+									Name:      "creds",
+									MountPath: "/creds",
+									ReadOnly:  false,
 								},
 							},
 						},
@@ -174,7 +222,7 @@ func ApplyNats(client client.Client) error {
 						},
 						{
 							Name:    "nats-leafnode-registry",
-							Image:   "ci4rail/nats-leafnode-registry:4170ee22",
+							Image:   natsLeafnodeRegistryImage,
 							Command: []string{"/registry"},
 							Args:    []string{"--natsuri", "nats://localhost:4222", "--state", "/state/state.json"},
 							VolumeMounts: []corev1.VolumeMount{
@@ -191,7 +239,7 @@ func ApplyNats(client client.Client) error {
 								{
 									Name:      "resolv",
 									MountPath: "/etc/resolv.conf",
-									ReadOnly:  false,
+									ReadOnly:  true,
 								},
 								{
 									Name:      "state",
@@ -213,7 +261,7 @@ func ApplyNats(client client.Client) error {
 								{
 									Name:      "config",
 									MountPath: "/config",
-									ReadOnly:  false,
+									ReadOnly:  true,
 								},
 								{
 									Name:      "nats-pid",
@@ -232,6 +280,14 @@ func ApplyNats(client client.Client) error {
 									LocalObjectReference: corev1.LocalObjectReference{
 										Name: "nats-init-config",
 									},
+								},
+							},
+						},
+						{
+							Name: "initial-nats-sys-account-creds",
+							VolumeSource: corev1.VolumeSource{
+								Secret: &corev1.SecretVolumeSource{
+									SecretName: "initial-nats-sys-account-creds",
 								},
 							},
 						},

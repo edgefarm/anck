@@ -16,6 +16,15 @@ syntax = "proto3";
 package v1alpha1;
 option go_package = ".;v1alpha1";
 
+message SysAccountRequest {}
+
+message SysAccountResponse {
+  string operatorJWT = 1;
+  string sysCreds = 2;
+  string sysJWT = 3;
+  string sysPublicKey = 4;
+}
+
 message DesiredStateRequest {
   string network = 1;
   repeated string participants = 2;
@@ -23,12 +32,18 @@ message DesiredStateRequest {
 
 message Credentials {
   string networkParticipant = 1;
-  string creds = 4;
+  string creds = 2;
+}
+
+message Network {
+  string name = 1;
+  string accoutPublicKey = 2;
 }
 
 message DesiredStateResponse {
   repeated Credentials creds = 1;
   repeated string deletedParticipants = 2;
+  Network network = 3;
 }
 
 message DeleteNetworkRequest { string network = 1; }
@@ -36,6 +51,7 @@ message DeleteNetworkRequest { string network = 1; }
 message DeleteNetworkResponse {}
 
 service ConfigService {
+  rpc SysAccount(SysAccountRequest) returns (SysAccountResponse) {}
   rpc DesiredState(DesiredStateRequest) returns (DesiredStateResponse);
   rpc DeleteNetwork(DeleteNetworkRequest) returns (DeleteNetworkResponse);
 }

@@ -88,6 +88,9 @@ type NetworkSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
+	// App is the name of the distrubuted application the network is created for.
+	App string `json:"app"`
+
 	// Namespace is the namespace the credentials shall be stored in. If empty, the accountname is used for credential deplyoment.
 	Namespace string `json:"namespace,omitempty"`
 

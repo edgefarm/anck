@@ -35,6 +35,10 @@ import (
 	networkclientset "github.com/edgefarm/anck/pkg/client/networkclientset"
 )
 
+var (
+	participantsLog = ctrl.Log.WithName("participants")
+)
+
 // ParticipantsReconciler reconciles a Participants object
 type ParticipantsReconciler struct {
 	client.Client
@@ -74,11 +78,10 @@ func (r *ParticipantsReconciler) Reconcile(ctx context.Context, req ctrl.Request
 
 	clientset, err := setupNetworkClientset()
 	if err != nil {
-		setupLog.Error(err, "error getting client for cluster")
+		participantsLog.Error(err, "error getting client for cluster")
 		return ctrl.Result{}, err
 	}
 
-	setupLog.Info(fmt.Sprintf("Reconceiling participant '%s' in network '%s' in namespace '%s'", participant.Spec.Component, participant.Spec.Network, participant.Namespace))
 	desiredNetwork := participant.Spec.Network
 	if networkExists(desiredNetwork, participant.Namespace) {
 		err = retry.RetryOnConflict(retry.DefaultRetry, func() error {
@@ -86,7 +89,7 @@ func (r *ParticipantsReconciler) Reconcile(ctx context.Context, req ctrl.Request
 			if err != nil {
 				return err
 			}
-			network = addParticipant(network, participant.Spec.Component)
+			network = addParticipant(network, participant.Spec.Component, participant.Spec.Component)
 			_, err = clientset.NetworkV1alpha1().Networks(network.Namespace).Update(context.Background(), network, metav1.UpdateOptions{})
 			if err != nil {
 				return err
@@ -115,7 +118,7 @@ func networkExists(network string, namespace string) bool {
 	}
 	_, err = clientset.NetworkV1alpha1().Networks(namespace).Get(context.Background(), network, metav1.GetOptions{})
 	if err != nil {
-		setupLog.Info(fmt.Sprintf("Error getting network: %s", err))
+		participantsLog.Info(fmt.Sprintf("Error getting network: %s", err))
 		return false
 	}
 	return true
@@ -131,17 +134,19 @@ func contains(slice []string, item string) bool {
 }
 
 // addParticipant adds the participant to the network object.
-func addParticipant(network *networkv1alpha1.Network, participant string) *networkv1alpha1.Network {
-	if !contains(network.Spec.Participants, participant) {
-		network.Spec.Participants = append(network.Spec.Participants, participant)
+func addParticipant(network *networkv1alpha1.Network, participant string, app string) *networkv1alpha1.Network {
+	appParticipant := fmt.Sprintf("%s.%s", app, participant)
+	if !contains(network.Spec.Participants, appParticipant) {
+		network.Spec.Participants = append(network.Spec.Participants, appParticipant)
 	}
 	return network
 }
 
 // removeParticipant removes the participant from the network object.
-func removeParticipant(network *networkv1alpha1.Network, participant string) *networkv1alpha1.Network {
+func removeParticipant(network *networkv1alpha1.Network, participant string, app string) *networkv1alpha1.Network {
+	appParticipant := fmt.Sprintf("%s.%s", app, participant)
 	for i, p := range network.Spec.Participants {
-		if p == participant {
+		if p == appParticipant {
 			network.Spec.Participants = append(network.Spec.Participants[:i], network.Spec.Participants[i+1:]...)
 			break
 		}
@@ -154,12 +159,12 @@ func removeParticipant(network *networkv1alpha1.Network, participant string) *ne
 func setupNetworkClientset() (*networkclientset.Clientset, error) {
 	c, err := rest.InClusterConfig()
 	if err != nil {
-		setupLog.Error(err, "error getting cluster config")
+		participantsLog.Error(err, "error getting cluster config")
 		return nil, err
 	}
 	clientset, err := networkclientset.NewForConfig(c)
 	if err != nil {
-		setupLog.Error(err, "error getting client for cluster")
+		participantsLog.Error(err, "error getting client for cluster")
 		return nil, err
 	}
 	return clientset, nil
@@ -173,25 +178,27 @@ func (r *ParticipantsReconciler) SetupWithManager(mgr ctrl.Manager) error {
 			DeleteFunc: func(e event.DeleteEvent) bool {
 				clientset, err := setupNetworkClientset()
 				if err != nil {
-					setupLog.Error(err, "error getting client for cluster")
+					participantsLog.Error(err, "error getting client for cluster")
 					return false
 				}
 				participant := e.Object.(*networkv1alpha1.Participants)
+				appComponentName := fmt.Sprintf("%s.%s", participant.Spec.App, participant.Spec.Component)
 				retry.RetryOnConflict(retry.DefaultRetry, func() error {
 					network, err := clientset.NetworkV1alpha1().Networks(participant.Namespace).Get(context.Background(), participant.Spec.Network, metav1.GetOptions{})
 					if err != nil {
 						return err
 					}
-					network = removeParticipant(network, participant.Spec.Component)
+					participantsLog.Info(fmt.Sprintf("Removing participant '%s' from network '%s' in namespace '%s'", participant.Spec.Component, participant.Spec.Network, participant.Namespace))
+					network = removeParticipant(network, appComponentName, participant.Spec.App)
 					_, err = clientset.NetworkV1alpha1().Networks(network.Namespace).Update(context.Background(), network, metav1.UpdateOptions{})
 					if err != nil {
 						return err
 					}
-					err = removeParticipantFromComponentSecret(participant.Spec.Component, participant.Spec.Network, participant.Namespace)
+					err = removeNetworkFromComponentSecret(appComponentName, participant.Spec.Network, participant.Namespace)
 					if err != nil {
 						return err
 					}
-					err = removeParticipantFromDaprSecret(participant.Spec.Component, participant.Spec.Network, participant.Namespace)
+					err = removeNetworkFromDaprSecret(appComponentName, participant.Spec.Network, participant.Namespace)
 					return err
 				})
 
@@ -214,11 +221,11 @@ func (r *ParticipantsReconciler) SetupWithManager(mgr ctrl.Manager) error {
 }
 
 // splitNetworkParticipant extracts the component and network name from the network participant name.
-// The format of networkParticipant is <network>.<component>
-func splitNetworkParticipant(networkParticipant string) (string, string, error) {
+// The format of networkParticipant is <network>.<app>.<component>
+func splitNetworkParticipant(networkParticipant string) (string, string, string, error) {
 	parts := strings.Split(networkParticipant, ".")
-	if len(parts) != 2 {
-		return "", "", fmt.Errorf("invalid network participant name: %s", networkParticipant)
+	if len(parts) != 3 {
+		return "", "", "", fmt.Errorf("invalid network participant name: %s", networkParticipant)
 	}
-	return parts[0], parts[1], nil
+	return parts[0], parts[1], parts[2], nil
 }
