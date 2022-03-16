@@ -32,3 +32,29 @@ rules:
   - get
   - patch
   - update
+- apiGroups:
+  - network.edgefarm.io
+  resources:
+  - participants
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - network.edgefarm.io
+  resources:
+  - participants/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - network.edgefarm.io
+  resources:
+  - participants/status
+  verbs:
+  - get
+  - patch
+  - update

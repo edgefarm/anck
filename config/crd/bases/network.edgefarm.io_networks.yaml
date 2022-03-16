@@ -36,21 +36,117 @@ spec:
           spec:
             description: NetworkSpec defines the desired state of Network
             properties:
-              accountname:
-                description: Accountname is the name of the nats account. If empty,
-                  the namespace, where the Network ressource was deployed is used.
-                type: string
+              imports:
+                description: Imports is a list of streams to import from other networks.
+                items:
+                  description: ImportSpec defines the configuration of an Import
+                  properties:
+                    from:
+                      description: From is the global subject to import
+                      type: string
+                    to:
+                      description: To is the local subject to forward the imported
+                        messages to
+                      type: string
+                  required:
+                  - from
+                  - to
+                  type: object
+                type: array
               namespace:
                 description: Namespace is the namespace the credentials shall be stored
                   in. If empty, the accountname is used for credential deplyoment.
                 type: string
-              usernames:
-                description: Usernames is the name of the nats users.
+              participants:
+                description: Participants is a list of participating components in
+                  the network.
                 items:
                   type: string
                 type: array
+              streams:
+                description: Streams is a list of streams in the network.
+                items:
+                  description: StreamSpec defines the configuration of a Stream
+                  properties:
+                    discard:
+                      default: old
+                      description: 'Discard defines if once the Stream reach it''s
+                        limits of size or messages the ''new'' policy will prevent
+                        further messages from being added while ''old'' will delete
+                        old messages. Allowed values are: new, old'
+                      type: string
+                    global:
+                      default: true
+                      description: Global defines if the stream is local only or global
+                      type: boolean
+                    maxAge:
+                      default: 1y
+                      description: MaxAge defines the oldest messages that can be
+                        stored in the Stream, any messages older than this period
+                        will be removed, -1 for unlimited. Supports units (s)econds,
+                        (m)inutes, (h)ours, (d)ays, (M)onths, (y)ears.
+                      type: string
+                    maxBytes:
+                      default: -1
+                      description: MaxBytes defines the combined size of all messages
+                        in a Stream, when exceeded oldest messages are removed, -1
+                        for unlimited.
+                      format: int64
+                      type: integer
+                    maxMsgSize:
+                      default: -1
+                      description: MaxMsgSize defines the maximum size any single
+                        message may be to be accepted by the Stream.
+                      format: int32
+                      type: integer
+                    maxMsgs:
+                      default: -1
+                      description: MaxMsgs defines the amount of messages to keep
+                        in the store for this Stream, when exceeded oldest messages
+                        are removed, -1 for unlimited.
+                      format: int64
+                      type: integer
+                    maxMsgsPerSubject:
+                      default: -1
+                      description: MaxMsgsPerSubject defines the amount of messages
+                        to keep in the store for this Stream per unique subject, when
+                        exceeded oldest messages are removed, -1 for unlimited.
+                      format: int64
+                      type: integer
+                    name:
+                      description: Name of the stream
+                      type: string
+                    public:
+                      default: false
+                      description: Public defines if the stream shall be exported
+                      type: boolean
+                    retention:
+                      default: limits
+                      description: 'Messages are retained either based on limits like
+                        size and age (Limits), as long as there are Consumers (Interest)
+                        or until any worker processed them (Work Queue) Allowed values
+                        are: limits, interest, workqueue'
+                      type: string
+                    storage:
+                      default: memory
+                      description: 'Streams are stored on the server, this can be
+                        one of many backends and all are usable in clustering mode.
+                        Allowed values are: file, memory'
+                      type: string
+                    subjects:
+                      description: Subject defines the subjects of the stream
+                      items:
+                        type: string
+                      type: array
+                  required:
+                  - name
+                  - subjects
+                  type: object
+                type: array
             required:
-            - usernames
+            - imports
+            - participants
+            - streams
             type: object
           status:
             description: NetworkStatus defines the observed state of Network

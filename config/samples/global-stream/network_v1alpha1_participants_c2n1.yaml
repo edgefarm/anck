@@ -1,0 +1,8 @@
+apiVersion: network.edgefarm.io/v1alpha1
+kind: Participants
+metadata:
+  name: mycomponent2-network1
+  namespace: stream
+spec:
+  component: mycomponent2
+  network: mystream-network1

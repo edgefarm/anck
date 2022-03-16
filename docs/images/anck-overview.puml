@@ -1,0 +1,30 @@
+@startuml
+
+package "crd: networks.network.edgefarm.io" {
+    [myNetwork] as networkscrd
+}
+
+package "crd: participants.network.edgefarm.io" {
+    [myParticipant] as participantscrd
+}
+
+package "anck-credentials" {
+    [anck-credentials] as ac
+}
+note left {
+    external component
+    that handles credentials
+    for edgefarm network
+}
+
+package "anck" {
+    [networks controller] as nc
+    [participants controller] as pc
+    nc .r.> networkscrd : handle
+    pc .r.> participantscrd : handle
+    pc .r.> networkscrd : updates
+    networkscrd -[hidden]- participantscrd
+    nc .d.> ac: desired state
+}
+
+@enduml

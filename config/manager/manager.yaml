@@ -30,7 +30,7 @@ spec:
             - /manager
           args:
             - --leader-elect
-          image: ci4rail/anck
+          image: controller:latest
           name: manager
           # TODO: patch for dev using kustomize
           # securityContext:

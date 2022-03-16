@@ -1,6 +1,7 @@
 domain: edgefarm.io
 layout:
   - go.kubebuilder.io/v3
+multigroup: true
 plugins:
   manifests.sdk.operatorframework.io/v2: {}
   scorecard.sdk.operatorframework.io/v2: {}
@@ -13,7 +14,16 @@ resources:
     controller: true
     domain: edgefarm.io
     group: network
-    kind: Network
-    path: github.com/edgefarm/anck/api/v1alpha1
+    kind: Networks
+    path: github.com/edgefarm/anck/apis/network/v1alpha1
+    version: v1alpha1
+  - api:
+      crdVersion: v1
+      namespaced: true
+    controller: true
+    domain: edgefarm.io
+    group: network
+    kind: Participants
+    path: github.com/edgefarm/anck/apis/network/v1alpha1
     version: v1alpha1
 version: "3"

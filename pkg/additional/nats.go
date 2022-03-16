@@ -37,14 +37,6 @@ func ApplyNats(client client.Client) error {
 		},
 		Data: map[string]string{
 			"nats.json": `{
-	"accounts": {
-		"default": {
-			"users": [{
-				"user": "default",
-				"password": ""
-				}]
-		}
-	},
 	"http": 8222,
 	"leafnodes": {
 		"remotes": []
@@ -154,7 +146,7 @@ func ApplyNats(client client.Client) error {
 							},
 							Resources: corev1.ResourceRequirements{
 								Limits: corev1.ResourceList{
-									corev1.ResourceCPU:    resource.MustParse("500"),
+									corev1.ResourceCPU:    resource.MustParse("500m"),
 									corev1.ResourceMemory: resource.MustParse("512Mi"),
 								},
 								Requests: corev1.ResourceList{
@@ -182,9 +174,9 @@ func ApplyNats(client client.Client) error {
 						},
 						{
 							Name:    "nats-leafnode-registry",
-							Image:   "ci4rail/nats-leafnode-registry:46c637d4",
+							Image:   "ci4rail/nats-leafnode-registry:4170ee22",
 							Command: []string{"/registry"},
-							Args:    []string{"--natsuri", "nats://localhost:4222"},
+							Args:    []string{"--natsuri", "nats://localhost:4222", "--state", "/state/state.json"},
 							VolumeMounts: []corev1.VolumeMount{
 								{
 									Name:      "config",
@@ -199,6 +191,11 @@ func ApplyNats(client client.Client) error {
 								{
 									Name:      "resolv",
 									MountPath: "/etc/resolv.conf",
+									ReadOnly:  false,
+								},
+								{
+									Name:      "state",
+									MountPath: "/state",
 									ReadOnly:  false,
 								},
 							},
@@ -271,6 +268,15 @@ func ApplyNats(client client.Client) error {
 								HostPath: &corev1.HostPathVolumeSource{
 									Path: "/etc/resolv.conf",
 									Type: &hostPathFile,
+								},
+							},
+						},
+						{
+							Name: "state",
+							VolumeSource: corev1.VolumeSource{
+								HostPath: &corev1.HostPathVolumeSource{
+									Path: "/data/nats/registry-state",
+									Type: &hostPathDirectoryOrCreate,
 								},
 							},
 						},
