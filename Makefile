@@ -76,8 +76,14 @@ help: ## Display this help.
 manifests: controller-gen ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
 	$(CONTROLLER_GEN) rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
 
-generate: controller-gen ## Generate code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.
+generate: controller-gen client ## Generate code containing DeepCopy, DeepCopyInto, DeepCopyObject method implementations and clientset for the project.
 	$(CONTROLLER_GEN) object:headerFile="hack/boilerplate.go.txt" paths="./..."
+
+client: client-gen ## Generate clientset for the project.
+	$(CLIENT_GEN) --clientset-name networkclientset --input-base github.com/edgefarm/anck/apis --input network/v1alpha1 --go-header-file hack/boilerplate.go.txt --output-base . --output-package github.com/edgefarm/anck/pkg/client --output-file-base .
+	@rm -rf pkg/client
+	@mv github.com/edgefarm/anck/pkg/client pkg/
+	@rm -rf github.com
 
 fmt: ## Run go fmt against code.
 	go fmt ./...
@@ -87,6 +93,9 @@ vet: ## Run go vet against code.
 
 test: manifests generate fmt vet envtest ## Run tests.
 	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./... -coverprofile cover.out
+
+cover: test ## Run tests and show coverage report.
+	go tool cover -html=cover.out
 
 ##@ Build
 
@@ -117,6 +126,11 @@ deploy: manifests kustomize ## Deploy controller to the K8s cluster specified in
 undeploy: ## Undeploy controller from the K8s cluster specified in ~/.kube/config.
 	$(KUSTOMIZE) build config/default | kubectl delete -f -
 
+
+CLIENT_GEN = $(shell pwd)/bin/client-gen
+client-gen: ## Download client-gen locally if necessary.
+
+	$(call go-get-tool,$(CLIENT_GEN),k8s.io/code-generator/cmd/client-gen@v0.23.3)
 
 CONTROLLER_GEN = $(shell pwd)/bin/controller-gen
 controller-gen: ## Download controller-gen locally if necessary.

@@ -1,7 +1,0 @@
-apiVersion: network.edgefarm.io/v1alpha1
-kind: Network
-metadata:
-  name: minimum-network-sample
-spec:
-  usernames:
-    - oneuser

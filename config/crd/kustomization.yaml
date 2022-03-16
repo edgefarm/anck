@@ -3,6 +3,7 @@
 # It should be run by config/default
 resources:
   - bases/network.edgefarm.io_networks.yaml
+  - bases/network.edgefarm.io_participants.yaml
 #+kubebuilder:scaffold:crdkustomizeresource
 
 patchesStrategicMerge:

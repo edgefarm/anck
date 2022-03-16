@@ -1,0 +1,17 @@
+apiVersion: network.edgefarm.io/v1alpha1
+kind: Network
+metadata:
+  name: mystream-network2
+  namespace: stream
+spec:
+  namespace: stream
+  participants: []
+  streams:
+    - name: myStream2
+      subjects:
+        - mySubject1
+      storage: file
+      global: true
+      public: true
+
+  imports: []

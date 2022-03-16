@@ -1,5 +1,5 @@
 /*
-Copyright © 2021 Ci4Rail GmbH <engineering@ci4rail.com>
+Copyright © 2022 Ci4Rail GmbH <engineering@ci4rail.com>
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -17,27 +17,25 @@ package v1alpha1;
 option go_package = ".;v1alpha1";
 
 message DesiredStateRequest {
-  string accountName = 1;
-  repeated string username = 2;
+  string network = 1;
+  repeated string participants = 2;
 }
 
 message Credentials {
-  string userAccountName = 1;
-  string username = 2;
-  string password = 3;
+  string networkParticipant = 1;
   string creds = 4;
 }
 
 message DesiredStateResponse {
   repeated Credentials creds = 1;
-  repeated string deletedUserAccountNames = 2;
+  repeated string deletedParticipants = 2;
 }
 
-message DeleteAccountRequest { string accountName = 1; }
+message DeleteNetworkRequest { string network = 1; }
 
-message DeleteAccountResponse {}
+message DeleteNetworkResponse {}
 
 service ConfigService {
   rpc DesiredState(DesiredStateRequest) returns (DesiredStateResponse);
-  rpc DeleteAccount(DeleteAccountRequest) returns (DeleteAccountResponse);
+  rpc DeleteNetwork(DeleteNetworkRequest) returns (DeleteNetworkResponse);
 }

@@ -27,8 +27,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	networkv1alpha1 "github.com/edgefarm/anck/api/v1alpha1"
-	"github.com/edgefarm/anck/controllers"
+	networkv1alpha1 "github.com/edgefarm/anck/apis/network/v1alpha1"
+	networkcontrollers "github.com/edgefarm/anck/controllers/network"
 	"github.com/edgefarm/anck/pkg/additional"
 	//+kubebuilder:scaffold:imports
 )
@@ -75,11 +75,18 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&controllers.NetworkReconciler{
+	if err = (&networkcontrollers.NetworksReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Network")
+		os.Exit(1)
+	}
+	if err = (&networkcontrollers.ParticipantsReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "Participants")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder
