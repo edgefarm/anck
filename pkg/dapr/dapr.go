@@ -32,7 +32,7 @@ type Spec struct {
 	SpecMetadata []SpecMetadata `yaml:"metadata"`
 }
 
-// Option is a type that represents a DaprConfig option
+// Option is a type that represents a Config option
 type Option func(*Config)
 
 // WithCreds sets the credentials for the DaprConfig

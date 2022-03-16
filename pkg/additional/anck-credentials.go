@@ -1,6 +1,7 @@
 package additional
 
 import (
+	"github.com/edgefarm/anck/pkg/common"
 	v1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
@@ -11,16 +12,15 @@ import (
 )
 
 const (
-	anckcredentialsImage     = "ci4rail/anck-credentials:latest"
-	anckcredentialsNamespace = "anck"
-	anckcredentialsGrpcPort  = 6000
+	anckcredentialsImage    = "ci4rail/anck-credentials:latest"
+	anckcredentialsGrpcPort = 6000
 )
 
 // ApplyAnckCredentials creates the nats DaemonSet and necessary namespace and configmap
 func ApplyAnckCredentials(client client.Client) error {
 	namespace := corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: anckcredentialsNamespace,
+			Name: common.AnckNamespace,
 		},
 	}
 	err := ApplyIgnoreExisting(client, &namespace)
@@ -77,7 +77,7 @@ func ApplyAnckCredentials(client client.Client) error {
 			{
 				Kind:      "ServiceAccount",
 				Name:      "anck-credentials",
-				Namespace: anckcredentialsNamespace,
+				Namespace: common.AnckNamespace,
 			},
 		},
 	}
@@ -93,9 +93,9 @@ func ApplyAnckCredentials(client client.Client) error {
 		},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "anck-credentials",
-			Namespace: anckcredentialsNamespace,
+			Namespace: common.AnckNamespace,
 			Labels: map[string]string{
-				"k8s-app": "anck-credentials",
+				"app": "anck-credentials",
 			},
 		},
 		Spec: corev1.ServiceSpec{
@@ -108,7 +108,7 @@ func ApplyAnckCredentials(client client.Client) error {
 				},
 			},
 			Selector: map[string]string{
-				"k8s-app": "anck-credentials",
+				"app": "anck-credentials",
 			},
 		},
 	}
@@ -124,9 +124,9 @@ func ApplyAnckCredentials(client client.Client) error {
 		},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "anck-credentials",
-			Namespace: anckcredentialsNamespace,
+			Namespace: common.AnckNamespace,
 			Labels: map[string]string{
-				"k8s-app": "anck-credentials",
+				"app": "anck-credentials",
 			},
 		},
 	}
@@ -142,7 +142,7 @@ func ApplyAnckCredentials(client client.Client) error {
 		},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "anck-credentials",
-			Namespace: anckcredentialsNamespace,
+			Namespace: common.AnckNamespace,
 			Labels: map[string]string{
 				"k8s-app": "anck-credentials",
 			},

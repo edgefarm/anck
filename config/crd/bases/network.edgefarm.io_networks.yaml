@@ -36,6 +36,10 @@ spec:
           spec:
             description: NetworkSpec defines the desired state of Network
             properties:
+              app:
+                description: App is the name of the distrubuted application the network
+                  is created for.
+                type: string
               imports:
                 description: Imports is a list of streams to import from other networks.
                 items:
@@ -144,6 +148,7 @@ spec:
                   type: object
                 type: array
             required:
+            - app
             - imports
             - participants
             - streams
