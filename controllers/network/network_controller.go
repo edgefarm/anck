@@ -104,8 +104,13 @@ func (r *NetworksReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	client := anckcredentials.NewConfigServiceClient(cc)
 	networkLog.Info(fmt.Sprintf("Requesting credentials for network '%s'", networkName))
 
-	participants := network.Spec.Participants
-	participants = append(participants, fmt.Sprintf("%s.%s", network.Spec.App, anckParticipant))
+	participantsMap := network.Spec.Participants
+	participantsMap[fmt.Sprintf("%s.%s", network.Spec.App, anckParticipant)] = "unknownParticipantType"
+	participants := []string{}
+	for participant := range participantsMap {
+		participants = append(participants, participant)
+	}
+
 	resp, err := client.DesiredState(grpcContext, &anckcredentials.DesiredStateRequest{
 		Network:      networkName,
 		Participants: participants,
@@ -137,7 +142,7 @@ func (r *NetworksReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 			RequeueAfter: 0,
 		}, fmt.Errorf("%s", errorText)
 	}
-	for _, component := range participants {
+	for component, participantType := range participantsMap {
 		if err != nil {
 			errorText := "Error splitting network participant"
 			networkLog.Error(err, errorText)
@@ -150,7 +155,7 @@ func (r *NetworksReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 			return ctrl.Result{}, fmt.Errorf("%s", errorText)
 		}
 
-		err = createOrUpdateComponentDaprSecrets(secret)
+		err = createOrUpdateComponentDaprSecrets(secret, participantType)
 		if err != nil {
 			errorText := "Error creating or updating component dapr secret"
 			networkLog.Error(err, errorText)
@@ -263,10 +268,14 @@ func (r *NetworksReconciler) SetupWithManager(mgr ctrl.Manager) error {
 					// third case: create secret within the namespace the resource was defined 'network.Namespace'.
 					namespace = network.Namespace
 				}
-				networkParticipants := network.Spec.Participants
-				networkParticipants = append(networkParticipants, appComponentName(network.Spec.App, anckParticipant))
+				participantsMap := network.Spec.Participants
+				participants := make([]string, 0, len(participantsMap))
+				for participant := range participantsMap {
+					participants = append(participants, participant)
+				}
+				participants = append(participants, appComponentName(network.Spec.App, anckParticipant))
 
-				for _, component := range networkParticipants {
+				for _, component := range participants {
 					err = removeNetworkFromComponentSecret(component, network.Name, namespace)
 					if err != nil {
 						if errors.IsNotFound(err) {

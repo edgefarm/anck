@@ -14,7 +14,7 @@ var (
 	daprLog = ctrl.Log.WithName("dapr")
 )
 
-func createOrUpdateComponentDaprSecrets(secret *v1.Secret) error {
+func createOrUpdateComponentDaprSecrets(secret *v1.Secret, participantType string) error {
 	items := make(map[string]string)
 
 	// Update the secret if it exists or create a new one if it doesn't
@@ -36,26 +36,39 @@ func createOrUpdateComponentDaprSecrets(secret *v1.Secret) error {
 		if err != nil {
 			return err
 		}
-		config := dapr.NewDapr(rawNetworkName, dapr.WithCreds(jwt, nkey), dapr.WithNatsURL("nats://nats.nats:4222"))
+		opts := []dapr.Option{}
+		opts = append(opts, dapr.WithCreds(jwt, nkey))
+		if participantType == "edge" {
+			opts = append(opts, dapr.WithNatsURL("nats://nats.nats:4222"))
+		} else if participantType == "cloud" {
+			opts = append(opts, dapr.WithNatsURL("tls://connect.ngs.global"))
+		} else {
+			// skip unknown participant type
+			continue
+		}
+
+		config := dapr.NewDapr(rawNetworkName, opts...)
 		str, err := config.ToYaml()
 		if err != nil {
 			return err
 		}
 		items[daprComponentName] = str
 	}
-
-	daprSecretName := fmt.Sprintf("%s.dapr", secret.Name)
-	secretExists, err := resources.ExistsSecret(daprSecretName, secret.Namespace)
-	if err != nil {
-		return err
-	}
-	if secretExists {
-		_, err = resources.UpdateSecret(daprSecretName, secret.Namespace, &items)
-	} else {
-		_, err = resources.CreateSecret(daprSecretName, secret.Namespace, &items)
-	}
-	if err != nil {
-		return err
+	// only create/update secret if there are items to add. This is to avoid creating empty secrets if only ignored participant types are present
+	if len(items) > 0 {
+		daprSecretName := fmt.Sprintf("%s.dapr", secret.Name)
+		secretExists, err := resources.ExistsSecret(daprSecretName, secret.Namespace)
+		if err != nil {
+			return err
+		}
+		if secretExists {
+			_, err = resources.UpdateSecret(daprSecretName, secret.Namespace, &items)
+		} else {
+			_, err = resources.CreateSecret(daprSecretName, secret.Namespace, &items)
+		}
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
