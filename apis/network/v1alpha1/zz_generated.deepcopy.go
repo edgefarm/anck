@@ -103,8 +103,10 @@ func (in *NetworkSpec) DeepCopyInto(out *NetworkSpec) {
 	*out = *in
 	if in.Participants != nil {
 		in, out := &in.Participants, &out.Participants
-		*out = make([]string, len(*in))
-		copy(*out, *in)
+		*out = make(map[string]string, len(*in))
+		for key, val := range *in {
+			(*out)[key] = val
+		}
 	}
 	if in.Streams != nil {
 		in, out := &in.Streams, &out.Streams

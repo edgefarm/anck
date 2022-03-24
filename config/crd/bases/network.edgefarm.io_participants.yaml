@@ -48,10 +48,15 @@ spec:
                 description: Network is the name of the network the participant is
                   connected to.
                 type: string
+              type:
+                description: Type determins wether the participant runs on an edge
+                  node or a cloud node.
+                type: string
             required:
             - app
             - component
             - network
+            - type
             type: object
           status:
             description: ParticipantsStatus defines the observed state of Participants

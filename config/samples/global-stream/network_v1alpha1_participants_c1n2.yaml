@@ -6,3 +6,4 @@ metadata:
 spec:
   component: mycomponent1
   network: mystream-network2
+  type: edge
