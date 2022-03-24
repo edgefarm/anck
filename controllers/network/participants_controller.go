@@ -89,7 +89,7 @@ func (r *ParticipantsReconciler) Reconcile(ctx context.Context, req ctrl.Request
 			if err != nil {
 				return err
 			}
-			network = addParticipant(network, participant.Spec.Component, participant.Spec.Component)
+			network = addParticipant(network, participant)
 			_, err = clientset.NetworkV1alpha1().Networks(network.Namespace).Update(context.Background(), network, metav1.UpdateOptions{})
 			if err != nil {
 				return err
@@ -134,24 +134,21 @@ func contains(slice []string, item string) bool {
 }
 
 // addParticipant adds the participant to the network object.
-func addParticipant(network *networkv1alpha1.Network, participant string, app string) *networkv1alpha1.Network {
-	appParticipant := fmt.Sprintf("%s.%s", app, participant)
-	if !contains(network.Spec.Participants, appParticipant) {
-		network.Spec.Participants = append(network.Spec.Participants, appParticipant)
+func addParticipant(network *networkv1alpha1.Network, participant *networkv1alpha1.Participants) *networkv1alpha1.Network {
+	participantName := fmt.Sprintf("%s.%s", participant.Spec.App, participant.Spec.Component)
+	participantType := participant.Spec.Type
+	if _, ok := network.Spec.Participants[participantName]; !ok {
+		network.Spec.Participants[participantName] = participantType
 	}
 	return network
 }
 
 // removeParticipant removes the participant from the network object.
-func removeParticipant(network *networkv1alpha1.Network, participant string, app string) *networkv1alpha1.Network {
-	appParticipant := fmt.Sprintf("%s.%s", app, participant)
-	for i, p := range network.Spec.Participants {
-		if p == appParticipant {
-			network.Spec.Participants = append(network.Spec.Participants[:i], network.Spec.Participants[i+1:]...)
-			break
-		}
+func removeParticipant(network *networkv1alpha1.Network, participant *networkv1alpha1.Participants) *networkv1alpha1.Network {
+	participantName := fmt.Sprintf("%s.%s", participant.Spec.App, participant.Spec.Component)
+	if _, ok := network.Spec.Participants[participantName]; ok {
+		delete(network.Spec.Participants, participantName)
 	}
-
 	return network
 }
 
@@ -189,7 +186,7 @@ func (r *ParticipantsReconciler) SetupWithManager(mgr ctrl.Manager) error {
 						return err
 					}
 					participantsLog.Info(fmt.Sprintf("Removing participant '%s' from network '%s' in namespace '%s'", participant.Spec.Component, participant.Spec.Network, participant.Namespace))
-					network = removeParticipant(network, appComponentName, participant.Spec.App)
+					network = removeParticipant(network, participant)
 					_, err = clientset.NetworkV1alpha1().Networks(network.Namespace).Update(context.Background(), network, metav1.UpdateOptions{})
 					if err != nil {
 						return err

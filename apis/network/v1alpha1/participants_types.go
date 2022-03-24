@@ -35,6 +35,9 @@ type ParticipantsSpec struct {
 
 	// App is the name of the distrubuted application the participant is created for.
 	App string `json:"app"`
+
+	// Type determins wether the participant runs on an edge node or a cloud node.
+	Type string `json:"type"`
 }
 
 // ParticipantsStatus defines the observed state of Participants

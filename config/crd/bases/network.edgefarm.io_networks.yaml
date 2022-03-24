@@ -62,11 +62,11 @@ spec:
                   in. If empty, the accountname is used for credential deplyoment.
                 type: string
               participants:
-                description: Participants is a list of participating components in
-                  the network.
-                items:
+                additionalProperties:
                   type: string
-                type: array
+                description: Participants is a list of participating components in
+                  the network with their corresponding types (edge or cloud).
+                type: object
               streams:
                 description: Streams is a list of streams in the network.
                 items:

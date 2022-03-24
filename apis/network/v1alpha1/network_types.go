@@ -94,8 +94,8 @@ type NetworkSpec struct {
 	// Namespace is the namespace the credentials shall be stored in. If empty, the accountname is used for credential deplyoment.
 	Namespace string `json:"namespace,omitempty"`
 
-	// Participants is a list of participating components in the network.
-	Participants []string `json:"participants"`
+	// Participants is a list of participating components in the network with their corresponding types (edge or cloud).
+	Participants map[string]string `json:"participants"`
 
 	// Streams is a list of streams in the network.
 	Streams []StreamSpec `json:"streams"`
