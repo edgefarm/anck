@@ -50,17 +50,14 @@
       - update
       - delete
       - patch
-# - op: add
-#   path: /rules/0
-#   value:
-#     apiGroups:
-#       - "*"
-#     resources:
-#       - serviceaccounts
-#     verbs:
-#       - get
-#       - list
-#       - create
-#       - update
-#       - delete
-#       - patch
+
+- op: add
+  path: /rules/0
+  value:
+    apiGroups:
+      - ""
+    resources:
+      - pods
+    verbs:
+      - get
+      - list

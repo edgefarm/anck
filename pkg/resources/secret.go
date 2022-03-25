@@ -14,7 +14,7 @@ import (
 func DeleteSecret(name string, namespace string) error {
 	clientset, err := clientset()
 	if err != nil {
-		secretCrudLog.Error(err, "error getting client for cluster")
+		resourcesLog.Error(err, "error getting client for cluster")
 		return err
 	}
 	err = clientset.CoreV1().Secrets(namespace).Delete(context.Background(), name, metav1.DeleteOptions{})
@@ -22,7 +22,7 @@ func DeleteSecret(name string, namespace string) error {
 		if apierrors.IsNotFound(err) {
 			return nil
 		}
-		secretCrudLog.Error(err, "error deleting secret")
+		resourcesLog.Error(err, "error deleting secret")
 		return err
 	}
 	return nil
@@ -32,13 +32,13 @@ func DeleteSecret(name string, namespace string) error {
 func ReadSecret(name string, namespace string) (map[string]string, error) {
 	clientset, err := clientset()
 	if err != nil {
-		secretCrudLog.Error(err, "error getting client for cluster")
+		resourcesLog.Error(err, "error getting client for cluster")
 		return nil, err
 	}
 	creds := make(map[string]string)
 	secret, err := clientset.CoreV1().Secrets(namespace).Get(context.Background(), name, metav1.GetOptions{})
 	if err != nil {
-		secretCrudLog.Info(fmt.Sprintf("error getting secret: %s", err))
+		resourcesLog.Info(fmt.Sprintf("error getting secret: %s", err))
 		// must return a not nil map, so it can be used by the caller
 		return creds, err
 	}
@@ -54,12 +54,12 @@ func ReadSecret(name string, namespace string) (map[string]string, error) {
 func ExistsSecret(name string, namespace string) (bool, error) {
 	clientset, err := clientset()
 	if err != nil {
-		secretCrudLog.Error(err, "error getting client for cluster")
+		resourcesLog.Error(err, "error getting client for cluster")
 		return false, err
 	}
 	secretList, err := clientset.CoreV1().Secrets(namespace).List(context.Background(), metav1.ListOptions{})
 	if err != nil {
-		secretCrudLog.Info(fmt.Sprintf("error listing secret: %s", err))
+		resourcesLog.Info(fmt.Sprintf("error listing secret: %s", err))
 		return false, err
 	}
 
@@ -75,7 +75,7 @@ func ExistsSecret(name string, namespace string) (bool, error) {
 func UpdateSecret(name string, namespace string, data *map[string]string) (*v1.Secret, error) {
 	clientset, err := clientset()
 	if err != nil {
-		secretCrudLog.Error(err, "error getting client for cluster")
+		resourcesLog.Error(err, "error getting client for cluster")
 		return nil, err
 	}
 	secret, err := clientset.CoreV1().Secrets(namespace).Get(context.Background(), name, metav1.GetOptions{})
@@ -83,7 +83,7 @@ func UpdateSecret(name string, namespace string, data *map[string]string) (*v1.S
 		if apierrors.IsNotFound(err) {
 			return nil, nil
 		}
-		secretCrudLog.Error(err, "error getting secret")
+		resourcesLog.Error(err, "error getting secret")
 		return nil, err
 	}
 
@@ -95,7 +95,7 @@ func UpdateSecret(name string, namespace string, data *map[string]string) (*v1.S
 
 	secret, err = clientset.CoreV1().Secrets(namespace).Update(context.Background(), secret, metav1.UpdateOptions{})
 	if err != nil {
-		secretCrudLog.Error(err, "error updating secret")
+		resourcesLog.Error(err, "error updating secret")
 		return nil, err
 	}
 
@@ -106,7 +106,7 @@ func UpdateSecret(name string, namespace string, data *map[string]string) (*v1.S
 func CreateSecret(name string, namespace string, data *map[string]string) (*v1.Secret, error) {
 	clientset, err := clientset()
 	if err != nil {
-		secretCrudLog.Error(err, "error getting client for cluster")
+		resourcesLog.Error(err, "error getting client for cluster")
 		return nil, err
 	}
 	secret := &v1.Secret{
@@ -131,7 +131,7 @@ func CreateSecret(name string, namespace string, data *map[string]string) (*v1.S
 		return nil
 	})
 	if err != nil {
-		secretCrudLog.Error(err, "error creating secret")
+		resourcesLog.Error(err, "error creating secret")
 		return nil, err
 	}
 

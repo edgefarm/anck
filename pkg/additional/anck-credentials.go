@@ -95,7 +95,7 @@ func ApplyAnckCredentials(client client.Client) error {
 			Name:      "anck-credentials",
 			Namespace: common.AnckNamespace,
 			Labels: map[string]string{
-				"app": "anck-credentials",
+				"k8s-app": "anck-credentials",
 			},
 		},
 		Spec: corev1.ServiceSpec{
@@ -108,7 +108,7 @@ func ApplyAnckCredentials(client client.Client) error {
 				},
 			},
 			Selector: map[string]string{
-				"app": "anck-credentials",
+				"k8s-app": "anck-credentials",
 			},
 		},
 	}
@@ -126,7 +126,7 @@ func ApplyAnckCredentials(client client.Client) error {
 			Name:      "anck-credentials",
 			Namespace: common.AnckNamespace,
 			Labels: map[string]string{
-				"app": "anck-credentials",
+				"k8s-app": "anck-credentials",
 			},
 		},
 	}

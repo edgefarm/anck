@@ -20,7 +20,6 @@ import (
 	"fmt"
 	"time"
 
-	"google.golang.org/grpc"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -30,6 +29,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
 	networkv1alpha1 "github.com/edgefarm/anck/apis/network/v1alpha1"
+	grpcClient "github.com/edgefarm/anck/pkg/grpc"
 
 	anckcredentials "github.com/edgefarm/anck-credentials/pkg/apis/config/v1alpha1"
 	common "github.com/edgefarm/anck/pkg/common"
@@ -90,7 +90,7 @@ func (r *NetworksReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	grpcContext, cancel := context.WithTimeout(context.Background(), timeoutSeconds*time.Second)
 	defer cancel()
 
-	cc, err := grpc.Dial(common.AnckcredentialsServiceURL, grpc.WithInsecure())
+	cc, err := grpcClient.Dial(common.AnckcredentialsServiceURL, time.Second*10, time.Second*1)
 	if err != nil {
 		errorText := "Error connecting to anckcredentials"
 		networkLog.Error(err, errorText)
@@ -241,7 +241,7 @@ func (r *NetworksReconciler) SetupWithManager(mgr ctrl.Manager) error {
 				grpcContext, cancel := context.WithTimeout(context.Background(), timeoutSeconds*time.Second)
 				defer cancel()
 
-				cc, err := grpc.Dial(common.AnckcredentialsServiceURL, grpc.WithInsecure())
+				cc, err := grpcClient.Dial(common.AnckcredentialsServiceURL, time.Second*10, time.Second*1)
 				if err != nil {
 					errorText := "Error connecting to anckcredentials"
 					networkLog.Info(errorText)

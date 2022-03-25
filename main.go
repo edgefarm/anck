@@ -13,11 +13,16 @@ limitations under the License.
 package main
 
 import (
+	"context"
 	"flag"
+	"fmt"
 	"os"
+	"strings"
+	"time"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
+	v1 "k8s.io/api/core/v1"
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 
 	"k8s.io/apimachinery/pkg/runtime"
@@ -30,6 +35,8 @@ import (
 	networkv1alpha1 "github.com/edgefarm/anck/apis/network/v1alpha1"
 	networkcontrollers "github.com/edgefarm/anck/controllers/network"
 	"github.com/edgefarm/anck/pkg/additional"
+	"github.com/edgefarm/anck/pkg/common"
+	"github.com/edgefarm/anck/pkg/resources"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -75,6 +82,20 @@ func main() {
 		os.Exit(1)
 	}
 
+	setupLog.Info("applying Deployment for 'anck-credentials'")
+	err = additional.ApplyAnckCredentials(mgr.GetClient())
+	if err != nil {
+		setupLog.Error(err, "unable to set up acnk-credentials")
+		os.Exit(1)
+	}
+
+	setupLog.Info("waiting for 'anck-credentials' to be up and running")
+	err = waitForAnckCredentials(1 * time.Minute)
+	if err != nil {
+		setupLog.Error(err, "anck-credentials timed out. Exiting...")
+		os.Exit(1)
+	}
+
 	if err = (&networkcontrollers.NetworksReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
@@ -100,7 +121,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	setupLog.Info("starting manager")
 	setupLog.Info("applying DaemonSet for 'node-dns'")
 	err = additional.ApplyNodeDNS(mgr.GetClient())
 	if err != nil {
@@ -111,14 +131,7 @@ func main() {
 	setupLog.Info("applying DaemonSet for 'nats'")
 	err = additional.ApplyNats(mgr.GetClient())
 	if err != nil {
-		setupLog.Error(err, "unable to set up node dns")
-		os.Exit(1)
-	}
-
-	setupLog.Info("applying Deployment for 'anck-credentials'")
-	err = additional.ApplyAnckCredentials(mgr.GetClient())
-	if err != nil {
-		setupLog.Error(err, "unable to set up node dns")
+		setupLog.Error(err, "unable to set up nats")
 		os.Exit(1)
 	}
 
@@ -131,5 +144,51 @@ func main() {
 	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
 		setupLog.Error(err, "problem running manager")
 		os.Exit(1)
+	}
+}
+
+type response struct {
+	Err error
+}
+
+func waitForAnckCredentials(timeout time.Duration) error {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	ch := make(chan response, 1)
+
+	go func() {
+		for {
+			select {
+			default:
+				podList, err := resources.ListPods(common.AnckNamespace)
+				if err != nil {
+					ch <- response{
+						Err: err,
+					}
+					return
+				}
+				for _, pod := range podList {
+					if strings.Contains(pod.Name, "anck-credentials") {
+						if pod.Status.Phase == v1.PodRunning {
+							ch <- response{
+								Err: nil,
+							}
+							return
+						}
+					}
+				}
+			case <-ctx.Done():
+				fmt.Println("Canceled by timeout")
+				return
+			}
+			time.Sleep(1 * time.Second)
+		}
+	}()
+
+	select {
+	case response := <-ch:
+		return response.Err
+	case <-time.After(timeout):
+		return fmt.Errorf("timeout waiting for anck-credentials")
 	}
 }
