@@ -12,7 +12,7 @@ import (
 func CreateNamespace(namespace string) error {
 	clientset, err := clientset()
 	if err != nil {
-		secretCrudLog.Error(err, "error getting client for cluster")
+		resourcesLog.Error(err, "error getting client for cluster")
 		return err
 	}
 	_, err = clientset.CoreV1().Namespaces().Create(context.Background(), &v1.Namespace{
@@ -24,7 +24,7 @@ func CreateNamespace(namespace string) error {
 		if apierrors.IsAlreadyExists(err) {
 			return nil
 		}
-		secretCrudLog.Error(err, "error creating namespace")
+		resourcesLog.Error(err, "error creating namespace")
 		return err
 	}
 	return nil
