@@ -6,17 +6,17 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 )
 
-var secretCrudLog = ctrl.Log.WithName("secretCrud")
+var resourcesLog = ctrl.Log.WithName("resources")
 
 func clientset() (*kubernetes.Clientset, error) {
 	c, err := rest.InClusterConfig()
 	if err != nil {
-		secretCrudLog.Error(err, "error getting cluster config")
+		resourcesLog.Error(err, "error getting cluster config")
 		return nil, err
 	}
 	clientset, err := kubernetes.NewForConfig(c)
 	if err != nil {
-		secretCrudLog.Error(err, "error getting client for cluster")
+		resourcesLog.Error(err, "error getting client for cluster")
 		return nil, err
 	}
 	return clientset, nil

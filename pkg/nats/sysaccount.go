@@ -3,10 +3,11 @@ package nats
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/edgefarm/anck/pkg/common"
+	grpcClient "github.com/edgefarm/anck/pkg/grpc"
 	"github.com/hsson/once"
-	"google.golang.org/grpc"
 
 	anckcredentials "github.com/edgefarm/anck-credentials/pkg/apis/config/v1alpha1"
 )
@@ -28,7 +29,7 @@ func GetSysAccount() (*SysAccount, error) {
 	o := once.Error{}
 	err := o.Do(func() error {
 
-		cc, err := grpc.Dial(common.AnckcredentialsServiceURL, grpc.WithInsecure())
+		cc, err := grpcClient.Dial(common.AnckcredentialsServiceURL, time.Second*10, time.Second*1)
 		if err != nil {
 			return err
 		}
