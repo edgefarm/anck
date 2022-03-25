@@ -13,9 +13,8 @@ import (
 )
 
 const (
-	natsImage                 = "nats:2.7.4-alpine3.15"
-	natsLeafnodeRegistryImage = "ci4rail/nats-leafnode-registry:528ef57d"
-	natsNamespace             = "nats"
+	natsImage     = "ci4rail/edgefarm-nats:796af8fb"
+	natsNamespace = "nats"
 )
 
 // ApplyNats creates the nats DaemonSet and necessary namespace and configmap
@@ -88,7 +87,6 @@ func ApplyNats(client client.Client) error {
 	}
 
 	hostPathDirectoryOrCreate := corev1.HostPathDirectoryOrCreate
-	hostPathFile := corev1.HostPathFile
 
 	daemonset := v1.DaemonSet{
 		TypeMeta: metav1.TypeMeta{
@@ -170,11 +168,6 @@ func ApplyNats(client client.Client) error {
 							Name:            "nats",
 							Image:           natsImage,
 							ImagePullPolicy: corev1.PullIfNotPresent,
-							Args: []string{
-								"-js",
-								"-c",
-								"/config/nats.json",
-							},
 							Ports: []corev1.ContainerPort{
 								{
 									Name:          "clients",
@@ -214,58 +207,8 @@ func ApplyNats(client client.Client) error {
 									ReadOnly:  false,
 								},
 								{
-									Name:      "nats-pid",
-									MountPath: "/var/run/nats",
-									ReadOnly:  false,
-								},
-							},
-						},
-						{
-							Name:    "nats-leafnode-registry",
-							Image:   natsLeafnodeRegistryImage,
-							Command: []string{"/registry"},
-							Args:    []string{"--natsuri", "nats://localhost:4222", "--state", "/state/state.json"},
-							VolumeMounts: []corev1.VolumeMount{
-								{
-									Name:      "config",
-									MountPath: "/config",
-									ReadOnly:  false,
-								},
-								{
-									Name:      "creds",
-									MountPath: "/creds",
-									ReadOnly:  false,
-								},
-								{
-									Name:      "resolv",
-									MountPath: "/etc/resolv.conf",
-									ReadOnly:  true,
-								},
-								{
 									Name:      "state",
 									MountPath: "/state",
-									ReadOnly:  false,
-								},
-							},
-						},
-						{
-							Name:            "nats-config-reloader",
-							Image:           "ci4rail/nats-server-config-reloader:7fc8210",
-							ImagePullPolicy: corev1.PullIfNotPresent,
-							Command:         []string{"nats-server-config-reloader"},
-							Args: []string{
-								"-P", "/var/run/nats/nats.pid",
-								"-c", "/config/nats.json",
-								"-signal", "15"},
-							VolumeMounts: []corev1.VolumeMount{
-								{
-									Name:      "config",
-									MountPath: "/config",
-									ReadOnly:  true,
-								},
-								{
-									Name:      "nats-pid",
-									MountPath: "/var/run/nats/",
 									ReadOnly:  false,
 								},
 							},
@@ -306,24 +249,6 @@ func ApplyNats(client client.Client) error {
 								HostPath: &corev1.HostPathVolumeSource{
 									Path: "/data/nats/creds",
 									Type: &hostPathDirectoryOrCreate,
-								},
-							},
-						},
-						{
-							Name: "nats-pid",
-							VolumeSource: corev1.VolumeSource{
-								HostPath: &corev1.HostPathVolumeSource{
-									Path: "/data/nats/pid/",
-									Type: &hostPathDirectoryOrCreate,
-								},
-							},
-						},
-						{
-							Name: "resolv",
-							VolumeSource: corev1.VolumeSource{
-								HostPath: &corev1.HostPathVolumeSource{
-									Path: "/etc/resolv.conf",
-									Type: &hostPathFile,
 								},
 							},
 						},
