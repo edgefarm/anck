@@ -22,7 +22,7 @@ const (
 
 // ApplyNatsResolver creates the nats-resolver deployment and necessary namespace and configmap
 func ApplyNatsResolver(client client.Client) error {
-	sys, err := nats.GetSysAccount()
+	natsServer, err := nats.GetNatsServerInfos()
 	if err != nil {
 		return err
 	}
@@ -114,14 +114,14 @@ func ApplyNatsResolver(client client.Client) error {
 		return err
 	}
 
-	operatorJWT := sys.OperatorJWT
-	sysAccountPubKey := sys.SysAccountPubKey
-	sysAccountJWT := sys.SysAccountJWT
-	sysAccountCreds := sys.SysAccountCreds
+	operatorJWT := natsServer.SysAccount.OperatorJWT
+	sysAccountPubKey := natsServer.SysAccount.SysPublicKey
+	sysAccountJWT := natsServer.SysAccount.SysJWT
+	sysAccountCreds := natsServer.SysAccount.SysCreds
 	jwtStoragePath := "/jwt"
 
 	natsResolverConfig := nats.NewConfig(
-		nats.WithNGSRemote(fmt.Sprintf("%s/%s", credsMountDirectory, sysAccountCredsFile), sysAccountPubKey),
+		nats.WithNGSRemote(fmt.Sprintf("%s/%s", credsMountDirectory, sysAccountCredsFile), sysAccountPubKey, nil, nil),
 		nats.WithFullResolver(operatorJWT,
 			sysAccountPubKey,
 			sysAccountJWT,

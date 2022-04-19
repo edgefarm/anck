@@ -1,6 +1,7 @@
 package nats
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -11,6 +12,7 @@ import (
 
 // Config is the configuration for the NATS server
 type Config struct {
+	Jetstream       *Jetstream     `json:"jetstream,omitempty"`
 	Authorization   *Authorization `json:"authorization,omitempty"`
 	PidFile         *string        `json:"pid_file,omitempty"`
 	HTTP            int            `json:"http"`
@@ -27,6 +29,12 @@ type User struct {
 	Password string `json:"password"`
 }
 
+// Jetstream is the jetstream configuration for the NATS server
+type Jetstream struct {
+	StoreDir string `json:"store_dir"`
+	Domain   string `json:"domain"`
+}
+
 // Authorization is the authorization configuration
 type Authorization struct {
 	Users []User `json:"users,omitempty"`
@@ -40,6 +48,10 @@ type Remotes struct {
 	Credentials string `json:"credentials"`
 	// Account public key
 	Account string `json:"account"`
+	// DenyImports is a list of subjects to deny imports for
+	DenyImports []string `json:"deny_imports,omitempty"`
+	// DenyExports is a list of subjects to deny exports for
+	DenyExports []string `json:"deny_exports,omitempty"`
 }
 
 // Leafnodes is the leafnode configuration part
@@ -67,26 +79,30 @@ func WithPidFile(pidFile string) Option {
 	}
 }
 
-// WithRemote sets a leafnode remote
-func WithRemote(url string, credentials string, accountPublicKey string) Option {
+// WithJetstream enabled jetstream and sets the store dir and an domain
+func WithJetstream(storageDir string, domain string) Option {
 	return func(c *Config) {
-		if c.Leafnodes == nil {
-			c.Leafnodes = &Leafnodes{}
+		if c.Jetstream == nil {
+			c.Jetstream = &Jetstream{}
 		}
-		if c.Leafnodes.Remotes == nil {
-			c.Leafnodes.Remotes = make([]Remotes, 0)
+		c.Jetstream.StoreDir = storageDir
+		c.Jetstream.Domain = domain
+	}
+}
+
+// WithRemote sets a leafnode remote
+func WithRemote(url string, credentials string, accountPublicKey string, denyImports []string, denyExports []string) Option {
+	return func(c *Config) {
+		err := c.AddRemote(url, credentials, accountPublicKey, denyImports, denyExports)
+		if err != nil {
+			panic(err)
 		}
-		c.Leafnodes.Remotes = append(c.Leafnodes.Remotes, Remotes{
-			URL:         url,
-			Credentials: credentials,
-			Account:     accountPublicKey,
-		})
 	}
 }
 
 // WithNGSRemote sets a leafnode remote to NGS
-func WithNGSRemote(credentials string, accountPublicKey string) Option {
-	return WithRemote("tls://connect.ngs.global:7422", credentials, accountPublicKey)
+func WithNGSRemote(credentials string, accountPublicKey string, denyImports []string, denyExports []string) Option {
+	return WithRemote("tls://connect.ngs.global:7422", credentials, accountPublicKey, denyImports, denyExports)
 }
 
 // WithFullResolver sets a full resolver (used for nats account servers)
@@ -195,12 +211,16 @@ func NewConfig(opts ...Option) *Config {
 
 // ToJSON converts a Config instance to Json
 func (c *Config) ToJSON() (string, error) {
-	json, err := json.Marshal(*c)
+	// cannot use json.Marshal(*c) here because it escapes '>' and '<'
+	bf := bytes.NewBuffer([]byte{})
+	jsonEncoder := json.NewEncoder(bf)
+	jsonEncoder.SetEscapeHTML(false)
+	err := jsonEncoder.Encode(*c)
 	if err != nil {
 		return "", err
 	}
 
-	return string(pretty.Pretty(json)), nil
+	return string(pretty.Pretty(bf.Bytes())), nil
 }
 
 // LoadFromFile loads a config ftom a JSON file
@@ -224,12 +244,12 @@ func LoadFromJSON(j string) (*Config, error) {
 }
 
 // AddNGSRemote adds a NGS remote to the config
-func (c *Config) AddNGSRemote(credentials string, accountPublicKey string) error {
-	return c.AddRemote("tls://connect.ngs.global:7422", credentials, accountPublicKey)
+func (c *Config) AddNGSRemote(credentials string, accountPublicKey string, denyImports []string, denyExports []string) error {
+	return c.AddRemote("tls://connect.ngs.global:7422", credentials, accountPublicKey, denyImports, denyExports)
 }
 
 // AddRemote adds a remote to the configs
-func (c *Config) AddRemote(url string, credentials string, accountPublicKey string) error {
+func (c *Config) AddRemote(url string, credentials string, accountPublicKey string, denyImports []string, denyExports []string) error {
 	if c.Leafnodes == nil {
 		c.Leafnodes = &Leafnodes{}
 	}
@@ -240,6 +260,8 @@ func (c *Config) AddRemote(url string, credentials string, accountPublicKey stri
 		URL:         url,
 		Credentials: credentials,
 		Account:     accountPublicKey,
+		DenyImports: denyImports,
+		DenyExports: denyExports,
 	})
 	return nil
 }

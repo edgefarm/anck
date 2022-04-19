@@ -22,29 +22,31 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-// StreamSpec defines the configuration of a Stream
-type StreamSpec struct {
-	// Name of the stream
+// SubjectSpec defines the desired state of Subject
+type SubjectSpec struct {
+	// Name defines the name of the subject
 	Name string `json:"name"`
-
 	// Subject defines the subjects of the stream
 	Subjects []string `json:"subjects"`
+	// Stream defines the stream name for the subject
+	Stream string `json:"stream"`
+}
 
-	// Public defines if the stream shall be exported
-	// +kubebuilder:default:=false
-	Public bool `json:"public,omitempty"`
+// StreamLinkSpec defines the desired state of a linked stream
+type StreamLinkSpec struct {
+	// Stream is the name of the linked stream
+	Stream string `json:"stream,omitempty"`
+}
 
-	// Global defines if the stream is local only or global
-	// +kubebuilder:default:=true
-	Global bool `json:"global,omitempty"`
-
-	// Streams are stored on the server, this can be one of many backends and all are usable in clustering mode.
-	// Allowed values are: file, memory
-	// +kubebuilder:default:=memory
+// StreamConfigSpec defines the configuration of a Stream
+type StreamConfigSpec struct {
+	// Storage - Streams are stored on the server, this can be one of many backends and all are usable in clustering mode.
+	// +kubebuilder:validation:Enum={"file","memory"}
+	// +kubebuilder:default:=file
 	Storage string `json:"storage,omitempty"`
 
-	// Messages are retained either based on limits like size and age (Limits), as long as there are Consumers (Interest) or until any worker processed them (Work Queue)
-	// Allowed values are: limits, interest, workqueue
+	// Retention - Messages are retained either based on limits like size and age (Limits), as long as there are Consumers (Interest) or until any worker processed them (Work Queue)
+	// +kubebuilder:validation:Enum={"limits","interest","workqueue"}
 	// +kubebuilder:default:=limits
 	Retention string `json:"retention,omitempty"`
 
@@ -69,18 +71,25 @@ type StreamSpec struct {
 	MaxMsgSize int32 `json:"maxMsgSize,omitempty"`
 
 	// Discard defines if once the Stream reach it's limits of size or messages the 'new' policy will prevent further messages from being added while 'old' will delete old messages.
-	// Allowed values are: new, old
+	// +kubebuilder:validation:Enum={"old","new"}
 	// +kubebuilder:default:="old"
 	Discard string `json:"discard,omitempty"`
 }
 
-// ImportSpec defines the configuration of an Import
-type ImportSpec struct {
-	// From is the global subject to import
-	From string `json:"from"`
+// StreamSpec defines the desired state of Stream
+type StreamSpec struct {
+	// Name of the stream
+	Name string `json:"name"`
 
-	// To is the local subject to forward the imported messages to
-	To string `json:"to"`
+	// Location defines where the stream is located
+	// +kubebuilder:validation:Enum={"node","main"}
+	Location string `json:"location"`
+
+	// Link defines the link to another stream
+	Link *StreamLinkSpec `json:"link,omitempty"`
+
+	// Streams define the streams that are part of this network
+	Config StreamConfigSpec `json:"config"`
 }
 
 // NetworkSpec defines the desired state of Network
@@ -91,36 +100,96 @@ type NetworkSpec struct {
 	// App is the name of the distrubuted application the network is created for.
 	App string `json:"app"`
 
-	// Namespace is the namespace the credentials shall be stored in. If empty, the accountname is used for credential deplyoment.
+	// Namespace is the namespace the credentials shall be stored in..
 	Namespace string `json:"namespace,omitempty"`
-
-	// Participants is a list of participating components in the network with their corresponding types (edge or cloud).
-	Participants map[string]string `json:"participants"`
 
 	// Streams is a list of streams in the network.
 	Streams []StreamSpec `json:"streams"`
 
-	// Imports is a list of streams to import from other networks.
-	Imports []ImportSpec `json:"imports"`
+	// Subjects define the subjects that are part of this network
+	Subjects []SubjectSpec `json:"subjects"`
 }
 
-// NetworkStatus defines the observed state of Network
-type NetworkStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+// ParticipatingSpec defines the current state of participating nodes and pods
+type ParticipatingSpec struct {
+	// Nodes is a list of kubernetes nodes that currently are hosting participating components.
+	// key is node, value is current state of the participating node ("pending", "created", "terminating")
+	Nodes map[string]string `json:"nodes"`
+
+	// Pods is a map of node names to a list of pod names indicating the pods running on the node.
+	// key is node, value is list of pod names
+	Pods map[string][]string `json:"pods"`
+
+	// PodsCreated is a map of node names to a list of pod names indicating that the pods are being created.
+	// key is node, value is list of pod names
+	PodsCreating map[string][]string `json:"podsCreating"`
+
+	// PodsTerminating is a map of node names to a list of pod names indicating that the pods are terminating.
+	// key is node, value is list of pod names
+	PodsTerminating map[string][]string `json:"podsTerminating"`
+
+	// Components is a list of participating components in the network with their corresponding types ("edge" or "cloud").
+	Components map[string]string `json:"components"`
+}
+
+// MirrorStreamSpec defines the current state of a mirrored stream
+type MirrorStreamSpec struct {
+	// SourceDomain is the domain from which the stream is mirrored
+	SourceDomain string `json:"sourceDomain"`
+
+	// SourceName is the name of the source stream to mirror
+	SourceName string `json:"sourceName"`
+}
+
+// AggreagateStreamSpec defines the current state of a aggregated stream
+type AggreagateStreamSpec struct {
+	// SourceDomainss is a list of domains from which streams are aggregated
+	SourceDomains []string `json:"sourceDomains"`
+
+	// SourceName is the name of the source stream to aggregate
+	SourceName string `json:"sourceName"`
+
+	// State is the current state of the aggregate stream
+	State string `json:"state,omitempty"`
+}
+
+// MainDomainSpec defines the current state of the main domains jetstreams
+type MainDomainSpec struct {
+	// Standard is a map of standard jetstreams that are available in the main domain.
+	// key is jetstream name, value is either "created", "error"
+	Standard map[string]string `json:"standard"`
+
+	// Mirror is a map of mirror jetstreams that are available in the main domain.
+	// key is jetstream name, value is either "pending", "created", "deleting"
+	Mirror map[string]MirrorStreamSpec `json:"mirror"`
+
+	// Aggregatte is a map of aggregated jetstreams that are available in the main domain.
+	// key is jetstream name, value is either "pending", "updated", "created", "deleting"
+	Aggregatte map[string]AggreagateStreamSpec `json:"aggregate"`
+}
+
+// NetworkInfoSpec defines the observed state of Network
+type NetworkInfoSpec struct {
+	// Participanting is the current state of participating nodes and pods
+	Participating ParticipatingSpec `json:"participating"`
+
+	// MainDomain is the current state of streams in the main domain
+	MainDomain MainDomainSpec `json:"mainDomain"`
+
+	// UsedAccount is the account that is used for the network.
+	UsedAccount string `json:"usedAccount,omitempty"`
 }
 
 //+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
-// +genclient
+//+genclient
 
 // Network is the Schema for the networks API
 type Network struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   NetworkSpec   `json:"spec,omitempty"`
-	Status NetworkStatus `json:"status,omitempty"`
+	Spec NetworkSpec     `json:"spec,omitempty"`
+	Info NetworkInfoSpec `json:"info,omitempty"`
 }
 
 //+kubebuilder:object:root=true

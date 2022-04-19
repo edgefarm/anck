@@ -1,5 +1,5 @@
 /*
-Copyright © 2021 Ci4Rail GmbH <engineering@ci4rail.com>
+Copyright © 2022 Ci4Rail GmbH <engineering@ci4rail.com>
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -94,18 +94,6 @@ func (c *FakeNetworks) Create(ctx context.Context, network *v1alpha1.Network, op
 func (c *FakeNetworks) Update(ctx context.Context, network *v1alpha1.Network, opts v1.UpdateOptions) (result *v1alpha1.Network, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewUpdateAction(networksResource, c.ns, network), &v1alpha1.Network{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Network), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeNetworks) UpdateStatus(ctx context.Context, network *v1alpha1.Network, opts v1.UpdateOptions) (*v1alpha1.Network, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(networksResource, "status", c.ns, network), &v1alpha1.Network{})
 
 	if obj == nil {
 		return nil, err

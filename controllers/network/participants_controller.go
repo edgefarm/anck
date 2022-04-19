@@ -23,7 +23,6 @@ import (
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/client-go/rest"
 	"k8s.io/client-go/util/retry"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -32,7 +31,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
 	networkv1alpha1 "github.com/edgefarm/anck/apis/network/v1alpha1"
-	networkclientset "github.com/edgefarm/anck/pkg/client/networkclientset"
+	resources "github.com/edgefarm/anck/pkg/resources"
 )
 
 var (
@@ -76,7 +75,7 @@ func (r *ParticipantsReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		}, err
 	}
 
-	clientset, err := setupNetworkClientset()
+	clientset, err := resources.SetupNetworkClientset()
 	if err != nil {
 		participantsLog.Error(err, "error getting client for cluster")
 		return ctrl.Result{}, err
@@ -112,7 +111,7 @@ func (r *ParticipantsReconciler) Reconcile(ctx context.Context, req ctrl.Request
 }
 
 func networkExists(network string, namespace string) bool {
-	clientset, err := setupNetworkClientset()
+	clientset, err := resources.SetupNetworkClientset()
 	if err != nil {
 		return false
 	}
@@ -124,21 +123,12 @@ func networkExists(network string, namespace string) bool {
 	return true
 }
 
-func contains(slice []string, item string) bool {
-	for _, s := range slice {
-		if s == item {
-			return true
-		}
-	}
-	return false
-}
-
 // addParticipant adds the participant to the network object.
 func addParticipant(network *networkv1alpha1.Network, participant *networkv1alpha1.Participants) *networkv1alpha1.Network {
 	participantName := fmt.Sprintf("%s.%s", participant.Spec.App, participant.Spec.Component)
 	participantType := participant.Spec.Type
-	if _, ok := network.Spec.Participants[participantName]; !ok {
-		network.Spec.Participants[participantName] = participantType
+	if _, ok := network.Info.Participating.Components[participantName]; !ok {
+		network.Info.Participating.Components[participantName] = participantType
 	}
 	return network
 }
@@ -146,25 +136,10 @@ func addParticipant(network *networkv1alpha1.Network, participant *networkv1alph
 // removeParticipant removes the participant from the network object.
 func removeParticipant(network *networkv1alpha1.Network, participant *networkv1alpha1.Participants) *networkv1alpha1.Network {
 	participantName := fmt.Sprintf("%s.%s", participant.Spec.App, participant.Spec.Component)
-	if _, ok := network.Spec.Participants[participantName]; ok {
-		delete(network.Spec.Participants, participantName)
+	if _, ok := network.Info.Participating.Components[participantName]; ok {
+		delete(network.Info.Participating.Components, participantName)
 	}
 	return network
-}
-
-// setupNetworkClientset returns a clientset for the network v1alpha1
-func setupNetworkClientset() (*networkclientset.Clientset, error) {
-	c, err := rest.InClusterConfig()
-	if err != nil {
-		participantsLog.Error(err, "error getting cluster config")
-		return nil, err
-	}
-	clientset, err := networkclientset.NewForConfig(c)
-	if err != nil {
-		participantsLog.Error(err, "error getting client for cluster")
-		return nil, err
-	}
-	return clientset, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.
@@ -173,7 +148,7 @@ func (r *ParticipantsReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		For(&networkv1alpha1.Participants{}).
 		WithEventFilter(predicate.Funcs{
 			DeleteFunc: func(e event.DeleteEvent) bool {
-				clientset, err := setupNetworkClientset()
+				clientset, err := resources.SetupNetworkClientset()
 				if err != nil {
 					participantsLog.Error(err, "error getting client for cluster")
 					return false

@@ -26,6 +26,132 @@ spec:
               of an object. Servers should convert recognized schemas to the latest
               internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
             type: string
+          info:
+            description: NetworkInfoSpec defines the observed state of Network
+            properties:
+              mainDomain:
+                description: MainDomain is the current state of streams in the main
+                  domain
+                properties:
+                  aggregate:
+                    additionalProperties:
+                      description: AggreagateStreamSpec defines the current state
+                        of a aggregated stream
+                      properties:
+                        sourceDomains:
+                          description: SourceDomainss is a list of domains from which
+                            streams are aggregated
+                          items:
+                            type: string
+                          type: array
+                        sourceName:
+                          description: SourceName is the name of the source stream
+                            to aggregate
+                          type: string
+                        state:
+                          description: State is the current state of the aggregate
+                            stream
+                          type: string
+                      required:
+                      - sourceDomains
+                      - sourceName
+                      type: object
+                    description: Aggregatte is a map of aggregated jetstreams that
+                      are available in the main domain. key is jetstream name, value
+                      is either "pending", "updated", "created", "deleting"
+                    type: object
+                  mirror:
+                    additionalProperties:
+                      description: MirrorStreamSpec defines the current state of a
+                        mirrored stream
+                      properties:
+                        sourceDomain:
+                          description: SourceDomain is the domain from which the stream
+                            is mirrored
+                          type: string
+                        sourceName:
+                          description: SourceName is the name of the source stream
+                            to mirror
+                          type: string
+                      required:
+                      - sourceDomain
+                      - sourceName
+                      type: object
+                    description: Mirror is a map of mirror jetstreams that are available
+                      in the main domain. key is jetstream name, value is either "pending",
+                      "created", "deleting"
+                    type: object
+                  standard:
+                    additionalProperties:
+                      type: string
+                    description: Standard is a map of standard jetstreams that are
+                      available in the main domain. key is jetstream name, value is
+                      either "created", "error"
+                    type: object
+                required:
+                - aggregate
+                - mirror
+                - standard
+                type: object
+              participating:
+                description: Participanting is the current state of participating
+                  nodes and pods
+                properties:
+                  components:
+                    additionalProperties:
+                      type: string
+                    description: Components is a list of participating components
+                      in the network with their corresponding types ("edge" or "cloud").
+                    type: object
+                  nodes:
+                    additionalProperties:
+                      type: string
+                    description: Nodes is a list of kubernetes nodes that currently
+                      are hosting participating components. key is node, value is
+                      current state of the participating node ("pending", "created",
+                      "terminating")
+                    type: object
+                  pods:
+                    additionalProperties:
+                      items:
+                        type: string
+                      type: array
+                    description: Pods is a map of node names to a list of pod names
+                      indicating the pods running on the node. key is node, value
+                      is list of pod names
+                    type: object
+                  podsCreating:
+                    additionalProperties:
+                      items:
+                        type: string
+                      type: array
+                    description: PodsCreated is a map of node names to a list of pod
+                      names indicating that the pods are being created. key is node,
+                      value is list of pod names
+                    type: object
+                  podsTerminating:
+                    additionalProperties:
+                      items:
+                        type: string
+                      type: array
+                    description: PodsTerminating is a map of node names to a list
+                      of pod names indicating that the pods are terminating. key is
+                      node, value is list of pod names
+                    type: object
+                required:
+                - components
+                - nodes
+                - pods
+                - podsCreating
+                - podsTerminating
+                type: object
+              usedAccount:
+                description: UsedAccount is the account that is used for the network.
+                type: string
+            required:
+            - mainDomain
+            - participating
+            type: object
           kind:
             description: 'Kind is a string value representing the REST resource this
               object represents. Servers may infer this from the endpoint the client
@@ -40,102 +166,116 @@ spec:
                 description: App is the name of the distrubuted application the network
                   is created for.
                 type: string
-              imports:
-                description: Imports is a list of streams to import from other networks.
-                items:
-                  description: ImportSpec defines the configuration of an Import
-                  properties:
-                    from:
-                      description: From is the global subject to import
-                      type: string
-                    to:
-                      description: To is the local subject to forward the imported
-                        messages to
-                      type: string
-                  required:
-                  - from
-                  - to
-                  type: object
-                type: array
               namespace:
                 description: Namespace is the namespace the credentials shall be stored
-                  in. If empty, the accountname is used for credential deplyoment.
+                  in..
                 type: string
-              participants:
-                additionalProperties:
-                  type: string
-                description: Participants is a list of participating components in
-                  the network with their corresponding types (edge or cloud).
-                type: object
               streams:
                 description: Streams is a list of streams in the network.
                 items:
-                  description: StreamSpec defines the configuration of a Stream
+                  description: StreamSpec defines the desired state of Stream
                   properties:
-                    discard:
-                      default: old
-                      description: 'Discard defines if once the Stream reach it''s
-                        limits of size or messages the ''new'' policy will prevent
-                        further messages from being added while ''old'' will delete
-                        old messages. Allowed values are: new, old'
+                    config:
+                      description: Streams define the streams that are part of this
+                        network
+                      properties:
+                        discard:
+                          default: old
+                          description: Discard defines if once the Stream reach it's
+                            limits of size or messages the 'new' policy will prevent
+                            further messages from being added while 'old' will delete
+                            old messages.
+                          enum:
+                          - old
+                          - new
+                          type: string
+                        maxAge:
+                          default: 1y
+                          description: MaxAge defines the oldest messages that can
+                            be stored in the Stream, any messages older than this
+                            period will be removed, -1 for unlimited. Supports units
+                            (s)econds, (m)inutes, (h)ours, (d)ays, (M)onths, (y)ears.
+                          type: string
+                        maxBytes:
+                          default: -1
+                          description: MaxBytes defines the combined size of all messages
+                            in a Stream, when exceeded oldest messages are removed,
+                            -1 for unlimited.
+                          format: int64
+                          type: integer
+                        maxMsgSize:
+                          default: -1
+                          description: MaxMsgSize defines the maximum size any single
+                            message may be to be accepted by the Stream.
+                          format: int32
+                          type: integer
+                        maxMsgs:
+                          default: -1
+                          description: MaxMsgs defines the amount of messages to keep
+                            in the store for this Stream, when exceeded oldest messages
+                            are removed, -1 for unlimited.
+                          format: int64
+                          type: integer
+                        maxMsgsPerSubject:
+                          default: -1
+                          description: MaxMsgsPerSubject defines the amount of messages
+                            to keep in the store for this Stream per unique subject,
+                            when exceeded oldest messages are removed, -1 for unlimited.
+                          format: int64
+                          type: integer
+                        retention:
+                          default: limits
+                          description: Retention - Messages are retained either based
+                            on limits like size and age (Limits), as long as there
+                            are Consumers (Interest) or until any worker processed
+                            them (Work Queue)
+                          enum:
+                          - limits
+                          - interest
+                          - workqueue
+                          type: string
+                        storage:
+                          default: file
+                          description: Storage - Streams are stored on the server,
+                            this can be one of many backends and all are usable in
+                            clustering mode.
+                          enum:
+                          - file
+                          - memory
+                          type: string
+                      type: object
+                    link:
+                      description: Link defines the link to another stream
+                      properties:
+                        stream:
+                          description: Stream is the name of the linked stream
+                          type: string
+                      type: object
+                    location:
+                      description: Location defines where the stream is located
+                      enum:
+                      - node
+                      - main
                       type: string
-                    global:
-                      default: true
-                      description: Global defines if the stream is local only or global
-                      type: boolean
-                    maxAge:
-                      default: 1y
-                      description: MaxAge defines the oldest messages that can be
-                        stored in the Stream, any messages older than this period
-                        will be removed, -1 for unlimited. Supports units (s)econds,
-                        (m)inutes, (h)ours, (d)ays, (M)onths, (y)ears.
-                      type: string
-                    maxBytes:
-                      default: -1
-                      description: MaxBytes defines the combined size of all messages
-                        in a Stream, when exceeded oldest messages are removed, -1
-                        for unlimited.
-                      format: int64
-                      type: integer
-                    maxMsgSize:
-                      default: -1
-                      description: MaxMsgSize defines the maximum size any single
-                        message may be to be accepted by the Stream.
-                      format: int32
-                      type: integer
-                    maxMsgs:
-                      default: -1
-                      description: MaxMsgs defines the amount of messages to keep
-                        in the store for this Stream, when exceeded oldest messages
-                        are removed, -1 for unlimited.
-                      format: int64
-                      type: integer
-                    maxMsgsPerSubject:
-                      default: -1
-                      description: MaxMsgsPerSubject defines the amount of messages
-                        to keep in the store for this Stream per unique subject, when
-                        exceeded oldest messages are removed, -1 for unlimited.
-                      format: int64
-                      type: integer
                     name:
                       description: Name of the stream
                       type: string
-                    public:
-                      default: false
-                      description: Public defines if the stream shall be exported
-                      type: boolean
-                    retention:
-                      default: limits
-                      description: 'Messages are retained either based on limits like
-                        size and age (Limits), as long as there are Consumers (Interest)
-                        or until any worker processed them (Work Queue) Allowed values
-                        are: limits, interest, workqueue'
+                  required:
+                  - config
+                  - location
+                  - name
+                  type: object
+                type: array
+              subjects:
+                description: Subjects define the subjects that are part of this network
+                items:
+                  description: SubjectSpec defines the desired state of Subject
+                  properties:
+                    name:
+                      description: Name defines the name of the subject
                       type: string
-                    storage:
-                      default: memory
-                      description: 'Streams are stored on the server, this can be
-                        one of many backends and all are usable in clustering mode.
-                        Allowed values are: file, memory'
+                    stream:
+                      description: Stream defines the stream name for the subject
                       type: string
                     subjects:
                       description: Subject defines the subjects of the stream
@@ -144,23 +284,18 @@ spec:
                       type: array
                   required:
                   - name
+                  - stream
                   - subjects
                   type: object
                 type: array
             required:
             - app
-            - imports
-            - participants
             - streams
-            type: object
-          status:
-            description: NetworkStatus defines the observed state of Network
+            - subjects
             type: object
         type: object
     served: true
     storage: true
-    subresources:
-      status: {}
 status:
   acceptedNames:
     kind: ""

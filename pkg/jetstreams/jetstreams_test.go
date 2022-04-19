@@ -1,4 +1,4 @@
-package network
+package jetstreams
 
 import (
 	"testing"
@@ -37,21 +37,26 @@ func TestCreateCredsfile(t *testing.T) {
 func TestCreateJetstreamConfigsStorageFile(t *testing.T) {
 	assert := assert.New(t)
 	config := networkv1alpha1.StreamSpec{
-		Name:              "myName",
-		Subjects:          []string{"mySubject1", "mySubject2"},
-		Public:            true,
-		Global:            true,
-		Storage:           "file",
-		Retention:         "interest",
-		MaxMsgsPerSubject: 100,
-		MaxMsgs:           1000,
-		MaxBytes:          1000000,
-		MaxAge:            "234d",
-		MaxMsgSize:        1000000,
-		Discard:           "new",
+		Name:     "myName",
+		Location: "node",
+		Config: networkv1alpha1.StreamConfigSpec{
+			Storage:           "file",
+			Retention:         "interest",
+			MaxMsgsPerSubject: 100,
+			MaxMsgs:           1000,
+			MaxBytes:          1000000,
+			MaxAge:            "234d",
+			MaxMsgSize:        1000000,
+			Discard:           "new",
+		},
 	}
-
-	c, err := createJetstreamConfig(config)
+	c, err := createJetstreamConfig(config, []networkv1alpha1.SubjectSpec{
+		{
+			Name:     "mystreams",
+			Subjects: []string{"mySubject1", "mySubject2"},
+			Stream:   "myName",
+		},
+	})
 	assert.Nil(err)
 	assert.NotNil(c)
 	assert.Equal(c.Name, "myName")
@@ -69,21 +74,27 @@ func TestCreateJetstreamConfigsStorageFile(t *testing.T) {
 func TestCreateJetstreamConfigsStorageMemory(t *testing.T) {
 	assert := assert.New(t)
 	config := networkv1alpha1.StreamSpec{
-		Name:              "myName",
-		Subjects:          []string{"mySubject1", "mySubject2"},
-		Public:            true,
-		Global:            true,
-		Storage:           "memory",
-		Retention:         "interest",
-		MaxMsgsPerSubject: 100,
-		MaxMsgs:           1000,
-		MaxBytes:          1000000,
-		MaxAge:            "234d",
-		MaxMsgSize:        1000000,
-		Discard:           "new",
+		Name:     "myName",
+		Location: "node",
+		Config: networkv1alpha1.StreamConfigSpec{
+			Storage:           "memory",
+			Retention:         "interest",
+			MaxMsgsPerSubject: 100,
+			MaxMsgs:           1000,
+			MaxBytes:          1000000,
+			MaxAge:            "234d",
+			MaxMsgSize:        1000000,
+			Discard:           "new",
+		},
 	}
 
-	c, err := createJetstreamConfig(config)
+	c, err := createJetstreamConfig(config, []networkv1alpha1.SubjectSpec{
+		{
+			Name:     "mystreams",
+			Subjects: []string{"mySubject1", "mySubject2"},
+			Stream:   "myName",
+		},
+	})
 	assert.Nil(err)
 	assert.NotNil(c)
 	assert.Equal(c.Name, "myName")
@@ -101,21 +112,27 @@ func TestCreateJetstreamConfigsStorageMemory(t *testing.T) {
 func TestCreateJetstreamConfigInvalidStorage(t *testing.T) {
 	assert := assert.New(t)
 	config := networkv1alpha1.StreamSpec{
-		Name:              "myName",
-		Subjects:          []string{"mySubject1", "mySubject2"},
-		Public:            true,
-		Global:            true,
-		Storage:           "invalid",
-		Retention:         "interest",
-		MaxMsgsPerSubject: 100,
-		MaxMsgs:           1000,
-		MaxBytes:          1000000,
-		MaxAge:            "234d",
-		MaxMsgSize:        1000000,
-		Discard:           "new",
+		Name:     "myName",
+		Location: "node",
+		Config: networkv1alpha1.StreamConfigSpec{
+			Storage:           "invalid",
+			Retention:         "interest",
+			MaxMsgsPerSubject: 100,
+			MaxMsgs:           1000,
+			MaxBytes:          1000000,
+			MaxAge:            "234d",
+			MaxMsgSize:        1000000,
+			Discard:           "new",
+		},
 	}
 
-	c, err := createJetstreamConfig(config)
+	c, err := createJetstreamConfig(config, []networkv1alpha1.SubjectSpec{
+		{
+			Name:     "mystreams",
+			Subjects: []string{"mySubject1", "mySubject2"},
+			Stream:   "myName",
+		},
+	})
 	assert.NotNil(err)
 	assert.Nil(c)
 }
@@ -123,21 +140,27 @@ func TestCreateJetstreamConfigInvalidStorage(t *testing.T) {
 func TestCreateJetstreamConfigsRetentionLimits(t *testing.T) {
 	assert := assert.New(t)
 	config := networkv1alpha1.StreamSpec{
-		Name:              "myName",
-		Subjects:          []string{"mySubject1", "mySubject2"},
-		Public:            true,
-		Global:            true,
-		Storage:           "memory",
-		Retention:         "limits",
-		MaxMsgsPerSubject: 100,
-		MaxMsgs:           1000,
-		MaxBytes:          1000000,
-		MaxAge:            "234d",
-		MaxMsgSize:        1000000,
-		Discard:           "new",
+		Name:     "myName",
+		Location: "node",
+		Config: networkv1alpha1.StreamConfigSpec{
+			Storage:           "memory",
+			Retention:         "limits",
+			MaxMsgsPerSubject: 100,
+			MaxMsgs:           1000,
+			MaxBytes:          1000000,
+			MaxAge:            "234d",
+			MaxMsgSize:        1000000,
+			Discard:           "new",
+		},
 	}
 
-	c, err := createJetstreamConfig(config)
+	c, err := createJetstreamConfig(config, []networkv1alpha1.SubjectSpec{
+		{
+			Name:     "mystreams",
+			Subjects: []string{"mySubject1", "mySubject2"},
+			Stream:   "myName",
+		},
+	})
 	assert.Nil(err)
 	assert.NotNil(c)
 	assert.Equal(c.Name, "myName")
@@ -155,21 +178,27 @@ func TestCreateJetstreamConfigsRetentionLimits(t *testing.T) {
 func TestCreateJetstreamConfigsRetentionInterest(t *testing.T) {
 	assert := assert.New(t)
 	config := networkv1alpha1.StreamSpec{
-		Name:              "myName",
-		Subjects:          []string{"mySubject1", "mySubject2"},
-		Public:            true,
-		Global:            true,
-		Storage:           "memory",
-		Retention:         "interest",
-		MaxMsgsPerSubject: 100,
-		MaxMsgs:           1000,
-		MaxBytes:          1000000,
-		MaxAge:            "234d",
-		MaxMsgSize:        1000000,
-		Discard:           "new",
+		Name:     "myName",
+		Location: "node",
+		Config: networkv1alpha1.StreamConfigSpec{
+			Storage:           "memory",
+			Retention:         "interest",
+			MaxMsgsPerSubject: 100,
+			MaxMsgs:           1000,
+			MaxBytes:          1000000,
+			MaxAge:            "234d",
+			MaxMsgSize:        1000000,
+			Discard:           "new",
+		},
 	}
 
-	c, err := createJetstreamConfig(config)
+	c, err := createJetstreamConfig(config, []networkv1alpha1.SubjectSpec{
+		{
+			Name:     "mystreams",
+			Subjects: []string{"mySubject1", "mySubject2"},
+			Stream:   "myName",
+		},
+	})
 	assert.Nil(err)
 	assert.NotNil(c)
 	assert.Equal(c.Name, "myName")
@@ -187,21 +216,27 @@ func TestCreateJetstreamConfigsRetentionInterest(t *testing.T) {
 func TestCreateJetstreamConfigsRetentionWorkqueue(t *testing.T) {
 	assert := assert.New(t)
 	config := networkv1alpha1.StreamSpec{
-		Name:              "myName",
-		Subjects:          []string{"mySubject1", "mySubject2"},
-		Public:            true,
-		Global:            true,
-		Storage:           "memory",
-		Retention:         "workqueue",
-		MaxMsgsPerSubject: 100,
-		MaxMsgs:           1000,
-		MaxBytes:          1000000,
-		MaxAge:            "234d",
-		MaxMsgSize:        1000000,
-		Discard:           "new",
+		Name:     "myName",
+		Location: "node",
+		Config: networkv1alpha1.StreamConfigSpec{
+			Storage:           "memory",
+			Retention:         "workqueue",
+			MaxMsgsPerSubject: 100,
+			MaxMsgs:           1000,
+			MaxBytes:          1000000,
+			MaxAge:            "234d",
+			MaxMsgSize:        1000000,
+			Discard:           "new",
+		},
 	}
 
-	c, err := createJetstreamConfig(config)
+	c, err := createJetstreamConfig(config, []networkv1alpha1.SubjectSpec{
+		{
+			Name:     "mystreams",
+			Subjects: []string{"mySubject1", "mySubject2"},
+			Stream:   "myName",
+		},
+	})
 	assert.Nil(err)
 	assert.NotNil(c)
 	assert.Equal(c.Name, "myName")
@@ -219,21 +254,27 @@ func TestCreateJetstreamConfigsRetentionWorkqueue(t *testing.T) {
 func TestCreateJetstreamConfigInvalidRetention(t *testing.T) {
 	assert := assert.New(t)
 	config := networkv1alpha1.StreamSpec{
-		Name:              "myName",
-		Subjects:          []string{"mySubject1", "mySubject2"},
-		Public:            true,
-		Global:            true,
-		Storage:           "file",
-		Retention:         "invalid",
-		MaxMsgsPerSubject: 100,
-		MaxMsgs:           1000,
-		MaxBytes:          1000000,
-		MaxAge:            "234d",
-		MaxMsgSize:        1000000,
-		Discard:           "new",
+		Name:     "myName",
+		Location: "node",
+		Config: networkv1alpha1.StreamConfigSpec{
+			Storage:           "file",
+			Retention:         "invalid",
+			MaxMsgsPerSubject: 100,
+			MaxMsgs:           1000,
+			MaxBytes:          1000000,
+			MaxAge:            "234d",
+			MaxMsgSize:        1000000,
+			Discard:           "new",
+		},
 	}
 
-	c, err := createJetstreamConfig(config)
+	c, err := createJetstreamConfig(config, []networkv1alpha1.SubjectSpec{
+		{
+			Name:     "mystreams",
+			Subjects: []string{"mySubject1", "mySubject2"},
+			Stream:   "myName",
+		},
+	})
 	assert.NotNil(err)
 	assert.Nil(c)
 }
@@ -241,21 +282,27 @@ func TestCreateJetstreamConfigInvalidRetention(t *testing.T) {
 func TestCreateJetstreamConfigDiscardNew(t *testing.T) {
 	assert := assert.New(t)
 	config := networkv1alpha1.StreamSpec{
-		Name:              "myName",
-		Subjects:          []string{"mySubject1", "mySubject2"},
-		Public:            true,
-		Global:            true,
-		Storage:           "file",
-		Retention:         "interest",
-		MaxMsgsPerSubject: 100,
-		MaxMsgs:           1000,
-		MaxBytes:          1000000,
-		MaxAge:            "234d",
-		MaxMsgSize:        1000000,
-		Discard:           "new",
+		Name:     "myName",
+		Location: "node",
+		Config: networkv1alpha1.StreamConfigSpec{
+			Storage:           "file",
+			Retention:         "interest",
+			MaxMsgsPerSubject: 100,
+			MaxMsgs:           1000,
+			MaxBytes:          1000000,
+			MaxAge:            "234d",
+			MaxMsgSize:        1000000,
+			Discard:           "new",
+		},
 	}
 
-	c, err := createJetstreamConfig(config)
+	c, err := createJetstreamConfig(config, []networkv1alpha1.SubjectSpec{
+		{
+			Name:     "mystreams",
+			Subjects: []string{"mySubject1", "mySubject2"},
+			Stream:   "myName",
+		},
+	})
 	assert.Nil(err)
 	assert.NotNil(c)
 	assert.Equal(c.Name, "myName")
@@ -272,22 +319,29 @@ func TestCreateJetstreamConfigDiscardNew(t *testing.T) {
 
 func TestCreateJetstreamConfigDiscardOld(t *testing.T) {
 	assert := assert.New(t)
+
 	config := networkv1alpha1.StreamSpec{
-		Name:              "myName",
-		Subjects:          []string{"mySubject1", "mySubject2"},
-		Public:            true,
-		Global:            true,
-		Storage:           "file",
-		Retention:         "interest",
-		MaxMsgsPerSubject: 100,
-		MaxMsgs:           1000,
-		MaxBytes:          1000000,
-		MaxAge:            "234d",
-		MaxMsgSize:        1000000,
-		Discard:           "old",
+		Name:     "myName",
+		Location: "node",
+		Config: networkv1alpha1.StreamConfigSpec{
+			Storage:           "file",
+			Retention:         "interest",
+			MaxMsgsPerSubject: 100,
+			MaxMsgs:           1000,
+			MaxBytes:          1000000,
+			MaxAge:            "234d",
+			MaxMsgSize:        1000000,
+			Discard:           "old",
+		},
 	}
 
-	c, err := createJetstreamConfig(config)
+	c, err := createJetstreamConfig(config, []networkv1alpha1.SubjectSpec{
+		{
+			Name:     "mystreams",
+			Subjects: []string{"mySubject1", "mySubject2"},
+			Stream:   "myName",
+		},
+	})
 	assert.Nil(err)
 	assert.NotNil(c)
 	assert.Equal(c.Name, "myName")
@@ -304,44 +358,58 @@ func TestCreateJetstreamConfigDiscardOld(t *testing.T) {
 
 func TestCreateJetstreamConfigInvalidDiscard(t *testing.T) {
 	assert := assert.New(t)
+
 	config := networkv1alpha1.StreamSpec{
-		Name:              "myName",
-		Subjects:          []string{"mySubject1", "mySubject2"},
-		Public:            true,
-		Global:            true,
-		Storage:           "file",
-		Retention:         "interest",
-		MaxMsgsPerSubject: 100,
-		MaxMsgs:           1000,
-		MaxBytes:          1000000,
-		MaxAge:            "234d",
-		MaxMsgSize:        1000000,
-		Discard:           "invalid",
+		Name:     "myName",
+		Location: "node",
+		Config: networkv1alpha1.StreamConfigSpec{
+			Storage:           "file",
+			Retention:         "interest",
+			MaxMsgsPerSubject: 100,
+			MaxMsgs:           1000,
+			MaxBytes:          1000000,
+			MaxAge:            "234d",
+			MaxMsgSize:        1000000,
+			Discard:           "invalid",
+		},
 	}
 
-	c, err := createJetstreamConfig(config)
+	c, err := createJetstreamConfig(config, []networkv1alpha1.SubjectSpec{
+		{
+			Name:     "mystreams",
+			Subjects: []string{"mySubject1", "mySubject2"},
+			Stream:   "myName",
+		},
+	})
 	assert.NotNil(err)
 	assert.Nil(c)
 }
 
 func TestCreateJetstreamConfigInvalidMaxAge(t *testing.T) {
 	assert := assert.New(t)
+
 	config := networkv1alpha1.StreamSpec{
-		Name:              "myName",
-		Subjects:          []string{"mySubject1", "mySubject2"},
-		Public:            true,
-		Global:            true,
-		Storage:           "file",
-		Retention:         "interest",
-		MaxMsgsPerSubject: 100,
-		MaxMsgs:           1000,
-		MaxBytes:          1000000,
-		MaxAge:            "invalid",
-		MaxMsgSize:        1000000,
-		Discard:           "invalid",
+		Name:     "myName",
+		Location: "node",
+		Config: networkv1alpha1.StreamConfigSpec{
+			Storage:           "file",
+			Retention:         "interest",
+			MaxMsgsPerSubject: 100,
+			MaxMsgs:           1000,
+			MaxBytes:          1000000,
+			MaxAge:            "invalid",
+			MaxMsgSize:        1000000,
+			Discard:           "invalid",
+		},
 	}
 
-	c, err := createJetstreamConfig(config)
+	c, err := createJetstreamConfig(config, []networkv1alpha1.SubjectSpec{
+		{
+			Name:     "mystreams",
+			Subjects: []string{"mySubject1", "mySubject2"},
+			Stream:   "myName",
+		},
+	})
 	assert.NotNil(err)
 	assert.Nil(c)
 }

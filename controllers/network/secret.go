@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	anckcredentials "github.com/edgefarm/anck-credentials/pkg/apis/config/v1alpha1"
-	natssysaccount "github.com/edgefarm/anck/pkg/nats"
+	"github.com/edgefarm/anck/pkg/nats"
 	resources "github.com/edgefarm/anck/pkg/resources"
 	v1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -36,13 +36,13 @@ func createOrUpdateComponentSecrets(component string, namespace string, networkC
 	for _, active := range networkCreds.Creds {
 		secret[fmt.Sprintf("%s.creds", network)] = active.Creds
 	}
-	sysaccount, err := natssysaccount.GetSysAccount()
+	natsServer, err := nats.GetNatsServerInfos()
 	if err != nil {
 		return nil, err
 	}
 
 	// currently fixed to sysaccounts credentials
-	secret["nats-sidecar.creds"] = sysaccount.SysAccountCreds
+	secret["nats-sidecar.creds"] = natsServer.SysAccount.SysCreds
 	secret[fmt.Sprintf("%s.pub", network)] = accountPublicKey
 
 	// Delete networks from the secret if the component is no longer participating in

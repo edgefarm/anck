@@ -36,6 +36,7 @@ import (
 	networkcontrollers "github.com/edgefarm/anck/controllers/network"
 	"github.com/edgefarm/anck/pkg/additional"
 	"github.com/edgefarm/anck/pkg/common"
+	"github.com/edgefarm/anck/pkg/nats"
 	"github.com/edgefarm/anck/pkg/resources"
 	//+kubebuilder:scaffold:imports
 )
@@ -96,6 +97,12 @@ func main() {
 		os.Exit(1)
 	}
 
+	_, err = nats.GetNatsServerInfos()
+	if err != nil {
+		setupLog.Error(err, "unable to get nats server infos")
+		os.Exit(1)
+	}
+
 	if err = (&networkcontrollers.NetworksReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
@@ -108,6 +115,13 @@ func main() {
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Participants")
+		os.Exit(1)
+	}
+	if err = (&networkcontrollers.PodsReconiler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "Pods")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder
@@ -128,18 +142,19 @@ func main() {
 		os.Exit(1)
 	}
 
-	setupLog.Info("applying DaemonSet for 'nats'")
-	err = additional.ApplyNats(mgr.GetClient())
+	setupLog.Info("applying DaemonSet for 'leaf-nats'")
+	err = additional.ApplyLeafNats(mgr.GetClient())
 	if err != nil {
-		setupLog.Error(err, "unable to set up nats")
+		setupLog.Error(err, "unable to set up leaf-nats")
 		os.Exit(1)
 	}
 
-	err = additional.ApplyNatsResolver(mgr.GetClient())
-	if err != nil {
-		setupLog.Error(err, "unable to set up nats-resolver")
-		os.Exit(1)
-	}
+	// This is a temporary disabled for the nats on premise setup
+	// err = additional.ApplyNatsResolver(mgr.GetClient())
+	// if err != nil {
+	// 	setupLog.Error(err, "unable to set up nats-resolver")
+	// 	os.Exit(1)
+	// }
 
 	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
 		setupLog.Error(err, "problem running manager")

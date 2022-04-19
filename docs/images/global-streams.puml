@@ -1,4 +1,5 @@
 @startuml
+!theme materia from https://raw.githubusercontent.com/plantuml/plantuml/master/themes
 
 package "global-network" as global_network {
     [configure streams] as configure_streams

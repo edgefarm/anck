@@ -8,17 +8,19 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/intstr"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 const (
-	natsImage     = "ci4rail/edgefarm-nats:796af8fb"
-	natsNamespace = "nats"
+	natsImage                   = "ci4rail/edgefarm-nats:66c57aaf"
+	natsNamespace               = "nats"
+	defaultDomain               = "DEFAULT_DOMAIN"
+	defaultJetstreamStoreageDir = "/store"
+	deniedExportTopics          = "local.>"
 )
 
-// ApplyNats creates the nats DaemonSet and necessary namespace and configmap
-func ApplyNats(client client.Client) error {
+// ApplyLeafNats creates the leaf-nats DaemonSet and necessary namespace and configmap
+func ApplyLeafNats(client client.Client) error {
 	namespace := corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: natsNamespace,
@@ -29,7 +31,7 @@ func ApplyNats(client client.Client) error {
 		return err
 	}
 
-	sys, err := nats.GetSysAccount()
+	natsServer, err := nats.GetNatsServerInfos()
 	if err != nil {
 		return err
 	}
@@ -37,9 +39,10 @@ func ApplyNats(client client.Client) error {
 	defaultSysAccountCredsPath := fmt.Sprintf("%s/%s", credsMountDirectory, sysAccountCredsFile)
 
 	opts := []nats.Option{}
-	opts = append(opts, nats.WithNGSRemote(defaultSysAccountCredsPath, sys.SysAccountPubKey))
+	opts = append(opts, nats.WithRemote(natsServer.Addresses.LeafAddress, defaultSysAccountCredsPath, natsServer.SysAccount.SysPublicKey, []string{deniedExportTopics}, []string{deniedExportTopics}))
 	opts = append(opts, nats.WithPidFile("/var/run/nats/nats.pid"))
-	opts = append(opts, nats.WithCacheResolver(sys.OperatorJWT, sys.SysAccountPubKey, sys.SysAccountJWT, "/jwt"))
+	opts = append(opts, nats.WithCacheResolver(natsServer.SysAccount.OperatorJWT, natsServer.SysAccount.SysPublicKey, natsServer.SysAccount.SysJWT, "/jwt"))
+	opts = append(opts, nats.WithJetstream(defaultJetstreamStoreageDir, defaultDomain))
 	detaulfNatsConfig := nats.NewConfig(opts...)
 
 	defaultNatsConfigStr, err := detaulfNatsConfig.ToJSON()
@@ -47,13 +50,13 @@ func ApplyNats(client client.Client) error {
 		return err
 	}
 
-	initialNatsConfigConfigMap := corev1.ConfigMap{
+	initialLeafNatsConfigConfigMap := corev1.ConfigMap{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "ConfigMap",
 			APIVersion: "v1",
 		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "nats-init-config",
+			Name:      "leaf-nats-init-config",
 			Namespace: natsNamespace,
 		},
 		Data: map[string]string{
@@ -61,7 +64,7 @@ func ApplyNats(client client.Client) error {
 		},
 	}
 
-	err = ApplyOrUpdate(client, &initialNatsConfigConfigMap)
+	err = ApplyOrUpdate(client, &initialLeafNatsConfigConfigMap)
 	if err != nil {
 		return err
 	}
@@ -77,7 +80,7 @@ func ApplyNats(client client.Client) error {
 		},
 		Type: corev1.SecretTypeOpaque,
 		Data: map[string][]byte{
-			sysAccountCredsFile: []byte(sys.SysAccountCreds),
+			sysAccountCredsFile: []byte(natsServer.SysAccount.SysCreds),
 		},
 	}
 
@@ -87,6 +90,7 @@ func ApplyNats(client client.Client) error {
 	}
 
 	hostPathDirectoryOrCreate := corev1.HostPathDirectoryOrCreate
+	hostPathFile := corev1.HostPathFile
 
 	daemonset := v1.DaemonSet{
 		TypeMeta: metav1.TypeMeta{
@@ -94,36 +98,23 @@ func ApplyNats(client client.Client) error {
 			APIVersion: "apps/v1",
 		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "nats",
+			Name:      "leaf-nats",
 			Namespace: natsNamespace,
 			Labels: map[string]string{
-				"k8s-app": "nats",
+				"k8s-app": "leaf-nats",
 			},
 		},
 		Spec: v1.DaemonSetSpec{
 			MinReadySeconds: 5,
-			UpdateStrategy: v1.DaemonSetUpdateStrategy{
-				Type: "RollingUpdate",
-				RollingUpdate: &v1.RollingUpdateDaemonSet{
-					MaxUnavailable: &intstr.IntOrString{
-						Type:   intstr.Int,
-						IntVal: 50,
-					},
-					MaxSurge: &intstr.IntOrString{
-						Type:   intstr.Int,
-						IntVal: 50,
-					},
-				},
-			},
 			Selector: &metav1.LabelSelector{
 				MatchLabels: map[string]string{
-					"k8s-app": "nats",
+					"k8s-app": "leaf-nats",
 				},
 			},
 			Template: corev1.PodTemplateSpec{
 				ObjectMeta: metav1.ObjectMeta{
 					Labels: map[string]string{
-						"k8s-app":       "nats",
+						"k8s-app":       "leaf-nats",
 						"node-dns.host": "nats",
 					},
 				},
@@ -132,18 +123,18 @@ func ApplyNats(client client.Client) error {
 					InitContainers: []corev1.Container{
 						{
 							Name:            "init-nats-config",
-							Image:           "busybox:1.28",
+							Image:           "alpine:3.15.4",
 							ImagePullPolicy: corev1.PullIfNotPresent,
 							Command: []string{
 								"/bin/sh",
-								"-c",
-								"cp /creds-initial/edgefarm-sys.creds /creds/nats-sidecar.creds && cp /creds-initial/edgefarm-sys.creds /creds/edgefarm-sys.creds && [ ! -f /config/nats.json ] && echo `cat /nats-init-config/nats.json` > /config/nats.json || echo nats.json already exists",
+								"-ce",
+								"cp /creds-initial/edgefarm-sys.creds /creds/nats-sidecar.creds && cp /creds-initial/edgefarm-sys.creds /creds/edgefarm-sys.creds && MYDOMAIN=$(cat /host/etc/hostname) && sed -i \"s/DEFAULT_DOMAIN/${MYDOMAIN}/g\" /leaf-nats-init-config/nats.json && cp /leaf-nats-init-config/nats.json /config/nats.json",
 							},
 							VolumeMounts: []corev1.VolumeMount{
 								{
-									Name:      "nats-init-config",
-									MountPath: "/nats-init-config",
-									ReadOnly:  true,
+									Name:      "leaf-nats-init-config",
+									MountPath: "/leaf-nats-init-config",
+									ReadOnly:  false,
 								},
 								{
 									Name:      "initial-nats-sys-account-creds",
@@ -160,12 +151,17 @@ func ApplyNats(client client.Client) error {
 									MountPath: "/creds",
 									ReadOnly:  false,
 								},
+								{
+									Name:      "hostname",
+									MountPath: "/host/etc/hostname",
+									ReadOnly:  true,
+								},
 							},
 						},
 					},
 					Containers: []corev1.Container{
 						{
-							Name:            "nats",
+							Name:            "leaf-nats",
 							Image:           natsImage,
 							ImagePullPolicy: corev1.PullIfNotPresent,
 							Ports: []corev1.ContainerPort{
@@ -180,7 +176,7 @@ func ApplyNats(client client.Client) error {
 									HostPort:      8222,
 								},
 								{
-									Name:          "jestream",
+									Name:          "jetstream",
 									ContainerPort: 7222,
 									HostPort:      7222,
 								},
@@ -211,17 +207,22 @@ func ApplyNats(client client.Client) error {
 									MountPath: "/state",
 									ReadOnly:  false,
 								},
+								{
+									Name:      "store",
+									MountPath: "/store",
+									ReadOnly:  false,
+								},
 							},
 						},
 					},
 					RestartPolicy: "Always",
 					Volumes: []corev1.Volume{
 						{
-							Name: "nats-init-config",
+							Name: "leaf-nats-init-config",
 							VolumeSource: corev1.VolumeSource{
 								ConfigMap: &corev1.ConfigMapVolumeSource{
 									LocalObjectReference: corev1.LocalObjectReference{
-										Name: "nats-init-config",
+										Name: "leaf-nats-init-config",
 									},
 								},
 							},
@@ -258,6 +259,24 @@ func ApplyNats(client client.Client) error {
 								HostPath: &corev1.HostPathVolumeSource{
 									Path: "/data/nats/registry-state",
 									Type: &hostPathDirectoryOrCreate,
+								},
+							},
+						},
+						{
+							Name: "store",
+							VolumeSource: corev1.VolumeSource{
+								HostPath: &corev1.HostPathVolumeSource{
+									Path: "/data/nats/jetstream_store",
+									Type: &hostPathDirectoryOrCreate,
+								},
+							},
+						},
+						{
+							Name: "hostname",
+							VolumeSource: corev1.VolumeSource{
+								HostPath: &corev1.HostPathVolumeSource{
+									Path: "/etc/hostname",
+									Type: &hostPathFile,
 								},
 							},
 						},
