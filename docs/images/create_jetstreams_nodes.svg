@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="1643.75px" preserveAspectRatio="none" style="width:1468px;height:1643px;background:#FFFFFF;" version="1.1" viewBox="0 0 1468 1643" width="1468.75px" zoomAndPan="magnify"><defs><filter height="300%" id="f1li3owsp4gj3y" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0833333333333335"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.166666666666667" dy="4.166666666666667" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter><linearGradient id="g1li3owsp4gj3y0" x1="50%" x2="50%" y1="0%" y2="100%"><stop offset="0%" stop-color="#FFFFFF"/><stop offset="100%" stop-color="#FFFFFF"/></linearGradient><linearGradient id="g1li3owsp4gj3y1" x1="50%" x2="50%" y1="0%" y2="100%"><stop offset="0%" stop-color="#4DABF5"/><stop offset="100%" stop-color="#2196F3"/></linearGradient><linearGradient id="g1li3owsp4gj3y2" x1="50%" x2="50%" y1="0%" y2="100%"><stop offset="0%" stop-color="#B052C0"/><stop offset="100%" stop-color="#9C27B0"/></linearGradient></defs><g><rect fill="#FFFFFF" height="57.5846" rx="4.1667" ry="4.1667" style="stroke:#CCCCCC;stroke-width:1.0416666666666667;" width="658.3333" x="412.7604" y="20.8333"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="20.8333" font-weight="bold" lengthAdjust="spacing" textLength="625" x="429.4271" y="56.838">Creating jetstreams on leafnode connected devices</text><rect fill="#FFFFFF" filter="url(#f1li3owsp4gj3y)" height="519.4336" style="stroke:#CCCCCC;stroke-width:1.0416666666666667;" width="10.4167" x="274.4792" y="196.0612"/><rect fill="#FFFFFF" filter="url(#f1li3owsp4gj3y)" height="651.5625" style="stroke:#CCCCCC;stroke-width:1.0416666666666667;" width="10.4167" x="695.3125" y="900.7813"/><rect fill="url(#g1li3owsp4gj3y0)" filter="url(#f1li3owsp4gj3y)" height="512.1419" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="752.6042" x="78.125" y="211.6862"/><rect fill="url(#g1li3owsp4gj3y0)" filter="url(#f1li3owsp4gj3y)" height="276.888" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="570.3125" x="88.5417" y="389.681"/><path d="M88.5417,569.7591 L658.8542,569.7591 L658.8542,662.4023 A4.1667,4.1667 0 0 1 654.6875,666.569 L92.7083,666.569 A4.1667,4.1667 0 0 1 88.5417,662.4023 L88.5417,569.7591 " fill="url(#g1li3owsp4gj3y0)" style="stroke:none;stroke-width:1.0416666666666667;"/><rect fill="url(#g1li3owsp4gj3y0)" filter="url(#f1li3owsp4gj3y)" height="757.7148" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="945.3125" x="342.7083" y="801.9206"/><rect fill="url(#g1li3owsp4gj3y0)" filter="url(#f1li3owsp4gj3y)" height="635.9375" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="924.4792" x="353.125" y="916.4063"/><rect fill="url(#g1li3owsp4gj3y0)" filter="url(#f1li3owsp4gj3y)" height="335.0911" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="673.9583" x="363.5417" y="961.1654"/><path d="M363.5417,1184.8958 L1037.5,1184.8958 L1037.5,1292.0898 A4.1667,4.1667 0 0 1 1033.3333,1296.2565 L367.7083,1296.2565 A4.1667,4.1667 0 0 1 363.5417,1292.0898 L363.5417,1184.8958 " fill="url(#g1li3owsp4gj3y0)" style="stroke:none;stroke-width:1.0416666666666667;"/><rect fill="url(#g1li3owsp4gj3y0)" filter="url(#f1li3owsp4gj3y)" height="170.7031" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="696.875" x="570.3125" y="1374.349"/><line style="stroke:#CCCCCC;stroke-width:1.0416666666666667;stroke-dasharray:5.0,5.0;" x1="88.5417" x2="88.5417" y1="144.0104" y2="1577.3438"/><line style="stroke:#CCCCCC;stroke-width:1.0416666666666667;stroke-dasharray:5.0,5.0;" x1="279.1667" x2="279.1667" y1="144.0104" y2="1577.3438"/><line style="stroke:#CCCCCC;stroke-width:1.0416666666666667;stroke-dasharray:5.0,5.0;" x1="700.5208" x2="700.5208" y1="144.0104" y2="1577.3438"/><line style="stroke:#CCCCCC;stroke-width:1.0416666666666667;stroke-dasharray:5.0,5.0;" x1="1142.1875" x2="1142.1875" y1="144.0104" y2="1577.3438"/><rect fill="url(#g1li3owsp4gj3y1)" filter="url(#f1li3owsp4gj3y)" height="49.9674" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="60.4167" x="57.2917" y="89.8763"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="25" x="75" y="119.1874">pod</text><rect fill="url(#g1li3owsp4gj3y1)" filter="url(#f1li3owsp4gj3y)" height="49.9674" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="60.4167" x="57.2917" y="1576.3021"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="25" x="75" y="1605.6132">pod</text><rect fill="url(#g1li3owsp4gj3y1)" filter="url(#f1li3owsp4gj3y)" height="49.9674" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="127.0833" x="214.5833" y="89.8763"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="91.6667" x="232.2917" y="119.1874">pod_controller</text><rect fill="url(#g1li3owsp4gj3y1)" filter="url(#f1li3owsp4gj3y)" height="49.9674" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="127.0833" x="214.5833" y="1576.3021"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="91.6667" x="232.2917" y="1605.6132">pod_controller</text><rect fill="url(#g1li3owsp4gj3y1)" filter="url(#f1li3owsp4gj3y)" height="49.9674" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="153.125" x="622.3958" y="89.8763"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="117.7083" x="640.1042" y="119.1874">network_controller</text><rect fill="url(#g1li3owsp4gj3y1)" filter="url(#f1li3owsp4gj3y)" height="49.9674" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="153.125" x="622.3958" y="1576.3021"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="117.7083" x="640.1042" y="1605.6132">network_controller</text><rect fill="url(#g1li3owsp4gj3y1)" filter="url(#f1li3owsp4gj3y)" height="49.9674" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="142.7083" x="1069.2708" y="89.8763"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="107.2917" x="1086.9792" y="119.1874">reconcile_trigger</text><rect fill="url(#g1li3owsp4gj3y1)" filter="url(#f1li3owsp4gj3y)" height="49.9674" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="142.7083" x="1069.2708" y="1576.3021"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="107.2917" x="1086.9792" y="1605.6132">reconcile_trigger</text><rect fill="#FFFFFF" filter="url(#f1li3owsp4gj3y)" height="519.4336" style="stroke:#CCCCCC;stroke-width:1.0416666666666667;" width="10.4167" x="274.4792" y="196.0612"/><rect fill="#FFFFFF" filter="url(#f1li3owsp4gj3y)" height="651.5625" style="stroke:#CCCCCC;stroke-width:1.0416666666666667;" width="10.4167" x="695.3125" y="900.7813"/><polygon fill="#2196F3" points="261.9792,191.8945,272.3958,196.0612,261.9792,200.2279,266.1458,196.0612" style="stroke:#2196F3;stroke-width:1.0416666666666667;"/><line style="stroke:#2196F3;stroke-width:3.125;" x1="89.0625" x2="268.2292" y1="196.0612" y2="196.0612"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="129.1667" x="106.7708" y="180.6132">create pod &lt;name&gt;</text><path d="M82.2917,211.6862 L178.125,211.6862 L178.125,238.737 L167.7083,249.1536 L78.125,249.1536 L78.125,215.8529 A4.1667,4.1667 0 0 1 82.2917,211.6862 " fill="#FFFFFF" style="stroke:#666666;stroke-width:1.0416666666666667;"/><rect fill="none" height="512.1419" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="752.6042" x="78.125" y="211.6862"/><text fill="#9C27B0" font-family="&quot;Verdana&quot;" font-size="12.5" font-weight="bold" lengthAdjust="spacing" textLength="32.2917" x="104.1667" y="234.7473">loop</text><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="12.5" font-weight="bold" lengthAdjust="spacing" textLength="197.9167" x="204.1667" y="235.789">[until the workd explodes]</text><line style="stroke:#2196F3;stroke-width:3.125;stroke-dasharray:2.0,2.0;" x1="284.8958" x2="328.6458" y1="310.5469" y2="310.5469"/><line style="stroke:#2196F3;stroke-width:3.125;stroke-dasharray:2.0,2.0;" x1="328.6458" x2="328.6458" y1="310.5469" y2="324.0885"/><line style="stroke:#2196F3;stroke-width:3.125;stroke-dasharray:2.0,2.0;" x1="285.9375" x2="328.6458" y1="324.0885" y2="324.0885"/><polygon fill="#2196F3" points="296.3542,319.9219,285.9375,324.0885,296.3542,328.2552,292.1875,324.0885" style="stroke:#2196F3;stroke-width:1.0416666666666667;"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="213.5417" x="302.6042" y="295.0989">check for network participant pod</text><polygon fill="#2196F3" points="688.0208,369.8893,698.4375,374.056,688.0208,378.2227,692.1875,374.056" style="stroke:#2196F3;stroke-width:1.0416666666666667;"/><line style="stroke:#2196F3;stroke-width:3.125;" x1="284.8958" x2="694.2708" y1="374.056" y2="374.056"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="369.7917" x="302.6042" y="358.608">Add podname to Info.Participating.PodsCreating[&lt;node&gt;][]</text><path d="M92.7083,389.681 L177.0833,389.681 L177.0833,416.7318 L166.6667,427.1484 L88.5417,427.1484 L88.5417,393.8477 A4.1667,4.1667 0 0 1 92.7083,389.681 " fill="#FFFFFF" style="stroke:#666666;stroke-width:1.0416666666666667;"/><rect fill="none" height="276.888" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="570.3125" x="88.5417" y="389.681"/><text fill="#9C27B0" font-family="&quot;Verdana&quot;" font-size="12.5" font-weight="bold" lengthAdjust="spacing" textLength="20.8333" x="114.5833" y="412.7421">alt</text><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="12.5" font-weight="bold" lengthAdjust="spacing" textLength="208.3333" x="203.125" y="413.7838">[First pod on node on node]</text><path d="M98.9583,456.2826 L98.9583,492.7409 A4.1667,4.1667 0 0 0 103.125,496.9076 L453.125,496.9076 A4.1667,4.1667 0 0 0 457.2917,492.7409 L457.2917,462.5326 L446.875,452.1159 L103.125,452.1159 A4.1667,4.1667 0 0 0 98.9583,456.2826 " fill="url(#g1li3owsp4gj3y2)" filter="url(#f1li3owsp4gj3y)" style="stroke:#1A78C2;stroke-width:1.0416666666666667;"/><path d="M446.875,452.1159 L446.875,460.4492 A2.0833,2.0833 0 0 0 448.9583,462.5326 L457.2917,462.5326 L446.875,452.1159 " fill="url(#g1li3owsp4gj3y2)" style="stroke:#1A78C2;stroke-width:1.0416666666666667;"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="315.625" x="115.625" y="479.3437">len(Info.Participating.PodsCreating[&lt;node&gt;]) == 1</text><line style="stroke:#2196F3;stroke-width:3.125;" x1="284.8958" x2="328.6458" y1="547.8841" y2="547.8841"/><line style="stroke:#2196F3;stroke-width:3.125;" x1="328.6458" x2="328.6458" y1="547.8841" y2="561.4258"/><line style="stroke:#2196F3;stroke-width:3.125;" x1="285.9375" x2="328.6458" y1="561.4258" y2="561.4258"/><polygon fill="#2196F3" points="296.3542,557.2591,285.9375,561.4258,296.3542,565.5924,292.1875,561.4258" style="stroke:#2196F3;stroke-width:1.0416666666666667;"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="333.3333" x="302.6042" y="532.4361">create Info.Participating.Nodes[&lt;node&gt;] = "pending"</text><line style="stroke:#2196F3;stroke-width:1.0416666666666667;stroke-dasharray:2.0,2.0;" x1="88.5417" x2="658.8542" y1="570.8008" y2="570.8008"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="12.5" font-weight="bold" lengthAdjust="spacing" textLength="341.6667" x="104.1667" y="592.8202">[Pods already participating on node on node]</text><path d="M154.1667,616.6016 L154.1667,653.0599 A4.1667,4.1667 0 0 0 158.3333,657.2266 L396.875,657.2266 A4.1667,4.1667 0 0 0 401.0417,653.0599 L401.0417,622.8516 L390.625,612.4349 L158.3333,612.4349 A4.1667,4.1667 0 0 0 154.1667,616.6016 " fill="url(#g1li3owsp4gj3y2)" filter="url(#f1li3owsp4gj3y)" style="stroke:#1A78C2;stroke-width:1.0416666666666667;"/><path d="M390.625,612.4349 L390.625,620.7682 A2.0833,2.0833 0 0 0 392.7083,622.8516 L401.0417,622.8516 L390.625,612.4349 " fill="url(#g1li3owsp4gj3y2)" style="stroke:#1A78C2;stroke-width:1.0416666666666667;"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="200" x="170.8333" y="639.6627">len(Info.Participating.Pods) &gt;= 1</text><polygon fill="#2196F3" points="688.0208,711.3281,698.4375,715.4948,688.0208,719.6615,692.1875,715.4948" style="stroke:#2196F3;stroke-width:1.0416666666666667;"/><line style="stroke:#2196F3;stroke-width:3.125;" x1="279.6875" x2="694.2708" y1="715.4948" y2="715.4948"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="162.5" x="297.3958" y="700.0468">Update network resource</text><line style="stroke:#2196F3;stroke-width:3.125;stroke-dasharray:2.0,2.0;" x1="1142.1875" x2="1185.9375" y1="772.7539" y2="772.7539"/><line style="stroke:#2196F3;stroke-width:3.125;stroke-dasharray:2.0,2.0;" x1="1185.9375" x2="1185.9375" y1="772.7539" y2="786.2956"/><line style="stroke:#2196F3;stroke-width:3.125;stroke-dasharray:2.0,2.0;" x1="1143.2292" x2="1185.9375" y1="786.2956" y2="786.2956"/><polygon fill="#2196F3" points="1153.6458,782.1289,1143.2292,786.2956,1153.6458,790.4622,1149.4792,786.2956" style="stroke:#2196F3;stroke-width:1.0416666666666667;"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="296.875" x="1159.8958" y="757.3059">watch network CRDs and trigger reconcile loop</text><path d="M346.875,801.9206 L442.7083,801.9206 L442.7083,828.9714 L432.2917,839.388 L342.7083,839.388 L342.7083,806.0872 A4.1667,4.1667 0 0 1 346.875,801.9206 " fill="#FFFFFF" style="stroke:#666666;stroke-width:1.0416666666666667;"/><rect fill="none" height="757.7148" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="945.3125" x="342.7083" y="801.9206"/><text fill="#9C27B0" font-family="&quot;Verdana&quot;" font-size="12.5" font-weight="bold" lengthAdjust="spacing" textLength="32.2917" x="368.75" y="824.9817">loop</text><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="12.5" font-weight="bold" lengthAdjust="spacing" textLength="193.75" x="468.75" y="826.0234">[until the world explodes]</text><polygon fill="#2196F3" points="717.1875,896.6146,706.7708,900.7813,717.1875,904.9479,713.0208,900.7813" style="stroke:#2196F3;stroke-width:1.0416666666666667;"/><line style="stroke:#2196F3;stroke-width:3.125;stroke-dasharray:2.0,2.0;" x1="710.9375" x2="1141.1458" y1="900.7813" y2="900.7813"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="137.5" x="733.8542" y="885.3333">Re-Run reconcile loop</text><path d="M357.2917,916.4063 L529.1667,916.4063 L529.1667,943.457 L518.75,953.8737 L353.125,953.8737 L353.125,920.5729 A4.1667,4.1667 0 0 1 357.2917,916.4063 " fill="#FFFFFF" style="stroke:#666666;stroke-width:1.0416666666666667;"/><rect fill="none" height="635.9375" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="924.4792" x="353.125" y="916.4063"/><text fill="#9C27B0" font-family="&quot;Verdana&quot;" font-size="12.5" font-weight="bold" lengthAdjust="spacing" textLength="108.3333" x="379.1667" y="939.4674">Reconcile loop</text><path d="M367.7083,961.1654 L452.0833,961.1654 L452.0833,988.2161 L441.6667,998.6328 L363.5417,998.6328 L363.5417,965.332 A4.1667,4.1667 0 0 1 367.7083,961.1654 " fill="#FFFFFF" style="stroke:#666666;stroke-width:1.0416666666666667;"/><rect fill="none" height="335.0911" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="673.9583" x="363.5417" y="961.1654"/><text fill="#9C27B0" font-family="&quot;Verdana&quot;" font-size="12.5" font-weight="bold" lengthAdjust="spacing" textLength="20.8333" x="389.5833" y="984.2265">alt</text><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="12.5" font-weight="bold" lengthAdjust="spacing" textLength="256.25" x="478.125" y="985.2681">[Node not participating until now]</text><line style="stroke:#2196F3;stroke-width:3.125;" x1="705.7292" x2="749.4792" y1="1060.026" y2="1060.026"/><line style="stroke:#2196F3;stroke-width:3.125;" x1="749.4792" x2="749.4792" y1="1060.026" y2="1073.5677"/><line style="stroke:#2196F3;stroke-width:3.125;" x1="706.7708" x2="749.4792" y1="1073.5677" y2="1073.5677"/><polygon fill="#2196F3" points="717.1875,1069.401,706.7708,1073.5677,717.1875,1077.7344,713.0208,1073.5677" style="stroke:#2196F3;stroke-width:1.0416666666666667;"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="179.1667" x="723.4375" y="1044.578">Create Jetstreams for nodes</text><path d="M373.9583,1091.276 L373.9583,1171.4844 A4.1667,4.1667 0 0 0 378.125,1175.651 L1019.7917,1175.651 A4.1667,4.1667 0 0 0 1023.9583,1171.4844 L1023.9583,1097.526 L1013.5417,1087.1094 L378.125,1087.1094 A4.1667,4.1667 0 0 0 373.9583,1091.276 " fill="url(#g1li3owsp4gj3y2)" filter="url(#f1li3owsp4gj3y)" style="stroke:#1A78C2;stroke-width:1.0416666666666667;"/><path d="M1013.5417,1087.1094 L1013.5417,1095.4427 A2.0833,2.0833 0 0 0 1015.625,1097.526 L1023.9583,1097.526 L1013.5417,1087.1094 " fill="url(#g1li3owsp4gj3y2)" style="stroke:#1A78C2;stroke-width:1.0416666666666667;"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="607.2917" x="390.625" y="1114.3372">len(Info.Participating.PodsCreating[&lt;node&gt;]) &gt;= 1 &amp;&amp; len(Info.Participating.Pods[&lt;node&gt;]) == 0</text><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="382.2917" x="390.625" y="1128.8879">1. Loop over Info.Participating.Nodes[&lt;node&gt;] == "pending"</text><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="243.75" x="390.625" y="1143.4387">2. Create Jetstreams for looped nodes</text><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="415.625" x="390.625" y="1157.9895">3. After creation set Info.Participating.Nodes[&lt;node&gt;] = "created"</text><line style="stroke:#2196F3;stroke-width:1.0416666666666667;stroke-dasharray:2.0,2.0;" x1="363.5417" x2="1037.5" y1="1185.9375" y2="1185.9375"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="12.5" font-weight="bold" lengthAdjust="spacing" textLength="269.7917" x="379.1667" y="1207.9569">[Node still participating in network]</text><path d="M373.9583,1231.7383 L373.9583,1282.7799 A4.1667,4.1667 0 0 0 378.125,1286.9466 L1018.75,1286.9466 A4.1667,4.1667 0 0 0 1022.9167,1282.7799 L1022.9167,1237.9883 L1012.5,1227.5716 L378.125,1227.5716 A4.1667,4.1667 0 0 0 373.9583,1231.7383 " fill="url(#g1li3owsp4gj3y2)" filter="url(#f1li3owsp4gj3y)" style="stroke:#1A78C2;stroke-width:1.0416666666666667;"/><path d="M1012.5,1227.5716 L1012.5,1235.9049 A2.0833,2.0833 0 0 0 1014.5833,1237.9883 L1022.9167,1237.9883 L1012.5,1227.5716 " fill="url(#g1li3owsp4gj3y2)" style="stroke:#1A78C2;stroke-width:1.0416666666666667;"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="606.25" x="390.625" y="1254.7994">len(Info.Participating.PodsCreating[&lt;node&gt;]) &gt;= 1 &amp;&amp; len(Info.Participating.Pods[&lt;node&gt;]) &gt;= 1</text><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="407.2917" x="390.625" y="1269.3502">1. Leave value for Info.Participating.Nodes[&lt;node&gt;] on "created"</text><line style="stroke:#2196F3;stroke-width:3.125;stroke-dasharray:2.0,2.0;" x1="705.7292" x2="749.4792" y1="1345.1823" y2="1345.1823"/><line style="stroke:#2196F3;stroke-width:3.125;stroke-dasharray:2.0,2.0;" x1="749.4792" x2="749.4792" y1="1345.1823" y2="1358.724"/><line style="stroke:#2196F3;stroke-width:3.125;stroke-dasharray:2.0,2.0;" x1="706.7708" x2="749.4792" y1="1358.724" y2="1358.724"/><polygon fill="#2196F3" points="717.1875,1354.5573,706.7708,1358.724,717.1875,1362.8906,713.0208,1358.724" style="stroke:#2196F3;stroke-width:1.0416666666666667;"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="395.8333" x="723.4375" y="1329.7343">remove new pod from Info.Participating.PodsCreating[&lt;node&gt;]</text><path d="M574.4792,1374.349 L658.8542,1374.349 L658.8542,1401.3997 L648.4375,1411.8164 L570.3125,1411.8164 L570.3125,1378.5156 A4.1667,4.1667 0 0 1 574.4792,1374.349 " fill="#FFFFFF" style="stroke:#666666;stroke-width:1.0416666666666667;"/><rect fill="none" height="170.7031" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="696.875" x="570.3125" y="1374.349"/><text fill="#9C27B0" font-family="&quot;Verdana&quot;" font-size="12.5" font-weight="bold" lengthAdjust="spacing" textLength="20.8333" x="596.3542" y="1397.4101">alt</text><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="12.5" font-weight="bold" lengthAdjust="spacing" textLength="231.25" x="684.8958" y="1398.4517">[If network resource changed]</text><line style="stroke:#2196F3;stroke-width:3.125;" x1="705.7292" x2="749.4792" y1="1473.2096" y2="1473.2096"/><line style="stroke:#2196F3;stroke-width:3.125;" x1="749.4792" x2="749.4792" y1="1473.2096" y2="1486.7513"/><line style="stroke:#2196F3;stroke-width:3.125;" x1="706.7708" x2="749.4792" y1="1486.7513" y2="1486.7513"/><polygon fill="#2196F3" points="717.1875,1482.5846,706.7708,1486.7513,717.1875,1490.918,713.0208,1486.7513" style="stroke:#2196F3;stroke-width:1.0416666666666667;"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="162.5" x="723.4375" y="1457.7616">Update network resource</text><polygon fill="#2196F3" points="1129.6875,1532.5521,1140.1042,1536.7188,1129.6875,1540.8854,1133.8542,1536.7188" style="stroke:#2196F3;stroke-width:1.0416666666666667;"/><line style="stroke:#2196F3;stroke-width:3.125;stroke-dasharray:2.0,2.0;" x1="705.7292" x2="1135.9375" y1="1536.7188" y2="1536.7188"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="178.125" x="723.4375" y="1521.2708">Return and trigger Reconcile</text><!--MD5=[17804d2e0c1afaa4aaa2980a4178047b]
+@startuml
+title Creating jetstreams on leafnode connected devices
+!theme materia from https://raw.githubusercontent.com/plantuml/plantuml/master/themes
+skinparam backgroundColor white
+
+
+pod -> pod_controller: create pod <name>
+
+' pod_controller reconcile loop
+loop until the workd explodes
+    activate pod_controller
+    pod_controller - -> pod_controller: check for network participant pod
+
+    pod_controller -> network_controller: Add podname to Info.Participating.PodsCreating[<node>][]
+    alt First pod on node on node 
+        note over pod_controller: len(Info.Participating.PodsCreating[<node>]) == 1 
+        pod_controller -> pod_controller: create Info.Participating.Nodes[<node>] = "pending"
+    else Pods already participating on node on node
+        note over pod_controller
+        len(Info.Participating.Pods) >= 1 
+        end note
+    end
+    pod_controller -> network_controller: Update network resource
+    deactivate pod_controller
+end
+
+' network_controller reconcile trigger
+reconcile_trigger - -> reconcile_trigger: watch network CRDs and trigger reconcile loop
+
+
+' network_controller reconcile loop
+loop until the world explodes
+  reconcile_trigger - -> network_controller : Re-Run reconcile loop
+  group Reconcile loop
+    activate network_controller
+    alt Node not participating until now
+        network_controller -> network_controller: Create Jetstreams for nodes
+        note over network_controller
+        len(Info.Participating.PodsCreating[<node>]) >= 1 && len(Info.Participating.Pods[<node>]) == 0
+        1. Loop over Info.Participating.Nodes[<node>] == "pending"
+        2. Create Jetstreams for looped nodes
+        3. After creation set Info.Participating.Nodes[<node>] = "created"
+        end note
+    else Node still participating in network
+        note over network_controller
+        len(Info.Participating.PodsCreating[<node>]) >= 1 && len(Info.Participating.Pods[<node>]) >= 1
+        1. Leave value for Info.Participating.Nodes[<node>] on "created"
+        end note
+    end
+    
+    network_controller - -> network_controller: remove new pod from Info.Participating.PodsCreating[<node>]
+    
+    alt If network resource changed
+        network_controller -> network_controller: Update network resource
+        network_controller - -> reconcile_trigger: Return and trigger Reconcile
+    end
+    deactivate network_controller
+  end
+end
+@enduml
+
+@startuml
+title Creating jetstreams on leafnode connected devices
+
+
+
+skinparam backgroundColor transparent
+skinparam useBetaStyle false
+
+
+
+
+
+
+<style>
+  root {
+    BackgroundColor transparent
+    FontColor #FFF
+    HyperLinkColor #fd7e14
+    LineColor #1a78c2
+    LineThickness 1
+    Margin 10
+    Padding 6
+    Shadowing 0.0
+  }
+  node {
+   Padding 15
+   roundcorner 20
+   BackgroundColor #2196F3-#1a78c2
+  }
+  caption {
+    LineThickness 0
+  }
+  footer {
+    LineThickness 0
+  }
+  groupHeader {
+    BackgroundColor #fff
+    FontColor #9C27B0
+    FontStyle bold
+  }
+  header {
+    LineThickness 0
+  }
+  referenceHeader {
+    BackgroundColor transparent
+    FontColor #222
+    FontStyle bold
+  }
+  separator {
+    BackgroundColor #222
+    FontColor transparent
+    FontStyle bold
+  }
+  title {
+	FontSize 20
+	BorderRoundCorner            8
+	BorderThickness 	         1
+	BackgroundColor  #fff-#fff
+	FontColor #2196F3
+	BorderColor #fff
+  }
+  nwdiagDiagram {
+	network {
+			FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3    
+		LineColor #2196F3
+		LineThickness 1.0
+		FontColor #1a78c2
+	}
+	server {
+			FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	}
+	arrow {
+		FontColor #1a78c2
+		LineColor #1a78c2
+	}
+	group {
+		BackGroundColor #fff
+		LineColor $LIGHT_DARK
+		LineThickness 2.0
+		Margin 5
+		Padding 5
+	}
+  }
+  ganttDiagram {
+	task {
+			FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+		LineColor #2196F3
+		Margin 10
+		Padding 6
+	}
+	note {
+		FontColor #FFF
+		LineColor #7D1F8D
+		BackGroundColor #9C27B0
+	}
+	separator {
+		LineColor #fff
+		BackGroundColor #fff-#cccccc
+		FontColor #222
+	}
+	milestone {
+		FontColor #9C27B0
+		FontSize 16
+		FontStyle italic
+		BackGroundColor #fff
+		LineColor #cccccc
+	}
+	timeline {
+		BackgroundColor #fff
+		FontColor #222
+	}
+	closed {
+		BackgroundColor #CC7A00
+		FontColor #FFF
+	}
+  }
+</style>
+skinparam defaultFontName       "Verdana"
+skinparam defaultFontSize       12
+skinparam dpi                   100
+skinparam shadowing             true
+skinparam roundcorner           8
+skinparam ParticipantPadding    40
+skinparam BoxPadding            40
+skinparam Padding               10
+skinparam ArrowColor            #666
+skinparam stereotype {
+    CBackgroundColor #fff
+    CBorderColor #cccccc
+    ABackgroundColor #70bf73
+    ABorderColor #3D8C40
+    IBackgroundColor #B7161C
+    IBorderColor #b7161c
+    EBackgroundColor #ffad33
+    EBorderColor #CC7A00
+    NBackgroundColor #b052c0
+    NBorderColor #7D1F8D
+}
+skinparam title {
+	FontColor	                 #2196F3
+	BorderColor	                 #cccccc
+	FontSize	    	         20
+	BorderRoundCorner            8
+	BorderThickness 	         1
+	BackgroundColor              #fff-#fff
+}
+
+skinparam legend {
+	BackgroundColor #fff
+	BorderColor #cccccc
+	FontColor #222
+}
+
+skinparam swimlane {
+	BorderColor #9C27B0
+	BorderThickness 2
+	TitleBackgroundColor  #fff-#fff
+	TitleFontColor #2196F3
+}
+
+
+skinparam activity {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	BarColor #4CAF50
+	StartColor #9C27B0
+	EndColor #9C27B0
+	DiamondBackgroundColor #FFF-#fff
+  	DiamondBorderColor #cccccc
+	DiamondFontColor #222
+}
+
+
+skinparam participant {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	ParticipantBorderThickness 2
+}
+
+
+skinparam actor {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	FontColor #222
+}
+
+
+skinparam arrow {
+	Thickness 3
+	Color #2196F3
+	FontColor #222
+}
+
+
+skinparam sequence {
+	BorderColor #2196F3
+	TitleFontColor #2196F3
+	BackgroundColor transparent
+	StartColor #2196F3
+	EndColor #2196F3
+	BoxBackgroundColor #fff
+	BoxBorderColor #666
+	BoxFontColor #222
+	DelayFontColor #222
+	LifeLineBorderColor #cccccc
+	LifeLineBorderThickness 2
+	LifeLineBackgroundColor #fff
+	GroupBorderColor #666
+	GroupFontColor #222
+	GroupHeaderFontColor #9C27B0
+	DividerBackgroundColor #FFF-#fff
+    DividerBorderColor #666
+    DividerBorderThickness 2
+    DividerFontColor #222
+	ReferenceBackgroundColor transparent
+	ReferenceBorderColor #666
+	ReferenceFontColor #222
+	ReferenceHeaderFontColor #9C27B0
+	StereotypeFontColor #FFF
+}
+
+
+skinparam partition {
+	BorderColor #2196F3
+	FontColor #2196F3
+	BackgroundColor transparent
+}
+
+
+skinparam collections {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+}
+
+
+skinparam control {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	FontColor #222
+}
+
+
+skinparam entity {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	FontColor #222
+}
+
+
+skinparam boundary {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	FontColor #222
+}
+
+
+skinparam agent {
+	BackgroundColor #orange
+	BorderColor #999999
+	FontColor #333333
+}
+
+
+skinparam note {
+	BorderThickness 1
+	BackgroundColor #b052c0-#9C27B0
+	BorderColor #9C27B0
+	FontColor #FFF
+}
+
+
+skinparam artifact {
+	BackgroundColor #FFF-#fff
+	BorderColor #666
+	FontColor #666
+}
+
+
+skinparam component {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+}
+
+
+skinparam interface {
+	BackgroundColor  #B7161C
+	BorderColor  #e51c23
+	FontColor #222
+}
+
+
+skinparam storage {
+	BackgroundColor #ffad33-#ff9800
+  	BorderColor #ff9800
+	FontColor #FFF
+}
+
+
+skinparam node {
+	BackgroundColor #fff-#fff
+	BorderColor #222
+	FontColor #222
+}
+
+
+skinparam cloud {
+	BackgroundColor #F2FCFE-#eeeeee
+	BorderColor #F2FCFE
+	FontColor #222
+}
+
+
+skinparam database {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	FontColor #222
+}
+
+
+skinparam class {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	HeaderBackgroundColor #2196F3-#1a78c2
+	StereotypeFontColor #222
+	BorderThickness 1
+	AttributeFontColor #fff
+	AttributeFontSize 11
+}
+
+
+skinparam object {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	StereotypeFontColor #222
+	BorderThickness 1
+	AttributeFontColor #222
+	AttributeFontSize 11
+}
+
+
+skinparam usecase {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	BorderThickness 2
+	StereotypeFontColor #2196F3
+}
+
+
+skinparam rectangle {
+	FontColor #2196F3
+	BackgroundColor #fff-#fff
+	BorderThickness 2
+	StereotypeFontColor #2196F3
+}
+
+
+skinparam package {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	BackgroundColor #fff-#fff
+	BorderThickness 2
+}
+
+
+skinparam folder {
+	BackgroundColor #FFF-#fff
+  	BorderColor #ff9800
+	FontColor #ff9800
+	BorderThickness 2
+}
+
+
+skinparam frame {
+	BackgroundColor #FFF-#fff
+  	BorderColor #9C27B0
+	FontColor #9C27B0
+	BorderThickness 2
+}
+
+
+skinparam state {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	BorderColor #1a78c2
+	StartColor #9C27B0
+	EndColor #9C27B0
+	AttributeFontColor #222
+	AttributeFontSize 11
+}
+
+
+skinparam queue {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+}
+
+
+skinparam card {
+	BackgroundColor #b052c0-#9C27B0
+	BorderColor #9C27B0
+	FontColor #FFF
+}
+
+
+skinparam file {
+	BackgroundColor #fff-#fff
+	BorderColor #666
+	FontColor #666
+
+}
+
+
+skinparam stack {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+}
+skinparam backgroundColor white
+
+
+pod -> pod_controller: create pod <name>
+
+loop until the workd explodes
+    activate pod_controller
+    pod_controller - -> pod_controller: check for network participant pod
+
+    pod_controller -> network_controller: Add podname to Info.Participating.PodsCreating[<node>][]
+    alt First pod on node on node 
+        note over pod_controller: len(Info.Participating.PodsCreating[<node>]) == 1 
+        pod_controller -> pod_controller: create Info.Participating.Nodes[<node>] = "pending"
+    else Pods already participating on node on node
+        note over pod_controller
+        len(Info.Participating.Pods) >= 1 
+        end note
+    end
+    pod_controller -> network_controller: Update network resource
+    deactivate pod_controller
+end
+
+reconcile_trigger - -> reconcile_trigger: watch network CRDs and trigger reconcile loop
+
+
+loop until the world explodes
+  reconcile_trigger - -> network_controller : Re-Run reconcile loop
+  group Reconcile loop
+    activate network_controller
+    alt Node not participating until now
+        network_controller -> network_controller: Create Jetstreams for nodes
+        note over network_controller
+        len(Info.Participating.PodsCreating[<node>]) >= 1 && len(Info.Participating.Pods[<node>]) == 0
+        1. Loop over Info.Participating.Nodes[<node>] == "pending"
+        2. Create Jetstreams for looped nodes
+        3. After creation set Info.Participating.Nodes[<node>] = "created"
+        end note
+    else Node still participating in network
+        note over network_controller
+        len(Info.Participating.PodsCreating[<node>]) >= 1 && len(Info.Participating.Pods[<node>]) >= 1
+        1. Leave value for Info.Participating.Nodes[<node>] on "created"
+        end note
+    end
+    
+    network_controller - -> network_controller: remove new pod from Info.Participating.PodsCreating[<node>]
+    
+    alt If network resource changed
+        network_controller -> network_controller: Update network resource
+        network_controller - -> reconcile_trigger: Return and trigger Reconcile
+    end
+    deactivate network_controller
+  end
+end
+@enduml
+
+PlantUML version 1.2022.4beta2(Unknown compile time)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>

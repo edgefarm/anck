@@ -16,13 +16,23 @@ syntax = "proto3";
 package v1alpha1;
 option go_package = ".;v1alpha1";
 
-message SysAccountRequest {}
+message ServerInformationRequest {}
 
-message SysAccountResponse {
+message Addresses {
+  string natsAddress = 1;
+  string leafAddress = 2;
+}
+
+message SysAccount {
   string operatorJWT = 1;
   string sysCreds = 2;
   string sysJWT = 3;
   string sysPublicKey = 4;
+}
+
+message ServerInformationResponse {
+  SysAccount SysAccount = 1;
+  Addresses Addresses = 2;
 }
 
 message DesiredStateRequest {
@@ -38,6 +48,7 @@ message Credentials {
 message Network {
   string name = 1;
   string accoutPublicKey = 2;
+  string accountName = 3;
 }
 
 message DesiredStateResponse {
@@ -51,7 +62,8 @@ message DeleteNetworkRequest { string network = 1; }
 message DeleteNetworkResponse {}
 
 service ConfigService {
-  rpc SysAccount(SysAccountRequest) returns (SysAccountResponse) {}
+  rpc ServerInformation(ServerInformationRequest)
+      returns (ServerInformationResponse) {}
   rpc DesiredState(DesiredStateRequest) returns (DesiredStateResponse);
   rpc DeleteNetwork(DeleteNetworkRequest) returns (DeleteNetworkResponse);
 }

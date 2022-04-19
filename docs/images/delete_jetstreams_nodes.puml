@@ -1,0 +1,62 @@
+@startuml
+title Deleting jetstreams on leafnode connected devices
+!theme materia from https://raw.githubusercontent.com/plantuml/plantuml/master/themes
+skinparam backgroundColor white
+
+
+pod -> pod_controller: delete pod <name>
+
+' pod_controller reconcile loop
+loop until the workd explodes
+    activate pod_controller
+    pod_controller --> pod_controller: check for network participant pod
+
+    pod_controller -> network_controller: Add podname to Info.Participating.PodsTerminating[<node>][]
+    alt Last pod on node on node 
+        note over pod_controller: len(Info.Participating.PodsTerminating[<node>]) == len(Info.Participating.Pods[<node>])
+        pod_controller -> pod_controller: set Info.Participating.Nodes[<node>] = "terminating"
+    else Pods still participating on node on node
+        note over pod_controller
+        len(Info.Participating.PodsTerminating) >= 1  && len(Info.Participating.Pods) >= 1 
+        end note
+    end
+    pod_controller -> network_controller: Update network resource
+    deactivate pod_controller
+end
+
+' network_controller reconcile trigger
+reconcile_trigger --> reconcile_trigger: watch network CRDs and trigger reconcile loop
+
+
+' network_controller reconcile loop
+loop until the world explodes
+  reconcile_trigger --> network_controller : Re-Run reconcile loop
+  group Reconcile loop
+    activate network_controller
+    alt Node not participating any more
+        network_controller -> network_controller: Delete Jetstreams for nodes
+        note over network_controller
+        len(Info.Participating.PodsTerminating[<node>]) == len(Info.Participating.Pods[<node>]
+        1. Loop over Info.Participating.Nodes[<node>] == "terminating"
+        2. Delete Jetstreams for looped nodes
+        3. Delete Info.Participating.Nodes[<node>]
+        4. Delete Info.Participating.Pods[<node>]
+        end note
+    else Node still participating in network
+        note over network_controller
+        len(Info.Participating.PodsTerminating[<node>]) >= 1 && len(Info.Participating.Pods[<node>]) >= 1
+        1. Leave value for Info.Participating.Nodes[<node>] on "created"
+        end note
+    end
+    
+    network_controller --> network_controller: remove deleted pod from Info.Participating.PodsTerminating[<node>]
+    
+    alt If network resource changed
+        network_controller -> network_controller: Update network resource
+        network_controller --> reconcile_trigger: Return and trigger Reconcile
+    end
+    deactivate network_controller
+  end
+end
+
+@enduml

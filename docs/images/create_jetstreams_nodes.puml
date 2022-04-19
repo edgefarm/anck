@@ -1,0 +1,61 @@
+@startuml
+title Creating jetstreams on leafnode connected devices
+!theme materia from https://raw.githubusercontent.com/plantuml/plantuml/master/themes
+skinparam backgroundColor white
+
+
+pod -> pod_controller: create pod <name>
+
+' pod_controller reconcile loop
+loop until the workd explodes
+    activate pod_controller
+    pod_controller --> pod_controller: check for network participant pod
+
+    pod_controller -> network_controller: Add podname to Info.Participating.PodsCreating[<node>][]
+    alt First pod on node on node 
+        note over pod_controller: len(Info.Participating.PodsCreating[<node>]) == 1 
+        pod_controller -> pod_controller: create Info.Participating.Nodes[<node>] = "pending"
+    else Pods already participating on node on node
+        note over pod_controller
+        len(Info.Participating.Pods) >= 1 
+        end note
+    end
+    pod_controller -> network_controller: Update network resource
+    deactivate pod_controller
+end
+
+' network_controller reconcile trigger
+reconcile_trigger --> reconcile_trigger: watch network CRDs and trigger reconcile loop
+
+
+' network_controller reconcile loop
+loop until the world explodes
+  reconcile_trigger --> network_controller : Re-Run reconcile loop
+  group Reconcile loop
+    activate network_controller
+    alt Node not participating until now
+        network_controller -> network_controller: Create Jetstreams for nodes
+        note over network_controller
+        len(Info.Participating.PodsCreating[<node>]) >= 1 && len(Info.Participating.Pods[<node>]) == 0
+        1. Loop over Info.Participating.Nodes[<node>] == "pending"
+        2. Create Jetstreams for looped nodes
+        3. After creation set Info.Participating.Nodes[<node>] = "created"
+        end note
+    else Node still participating in network
+        note over network_controller
+        len(Info.Participating.PodsCreating[<node>]) >= 1 && len(Info.Participating.Pods[<node>]) >= 1
+        1. Leave value for Info.Participating.Nodes[<node>] on "created"
+        end note
+    end
+    
+    network_controller --> network_controller: remove new pod from Info.Participating.PodsCreating[<node>]
+    
+    alt If network resource changed
+        network_controller -> network_controller: Update network resource
+        network_controller --> reconcile_trigger: Return and trigger Reconcile
+    end
+    deactivate network_controller
+  end
+end
+
+@enduml

@@ -1,0 +1,520 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="552.0833px" preserveAspectRatio="none" style="width:1241px;height:552px;background:#00000000;" version="1.1" viewBox="0 0 1241 552" width="1241.6667px" zoomAndPan="magnify"><defs><linearGradient id="g1bagh6dossq5f0" x1="50%" x2="50%" y1="0%" y2="100%"><stop offset="0%" stop-color="#FFFFFF"/><stop offset="100%" stop-color="#FFFFFF"/></linearGradient><filter height="300%" id="f1bagh6dossq5f" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0833333333333335"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.166666666666667" dy="4.166666666666667" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter><linearGradient id="g1bagh6dossq5f1" x1="50%" x2="50%" y1="0%" y2="100%"><stop offset="0%" stop-color="#4DABF5"/><stop offset="100%" stop-color="#2196F3"/></linearGradient><linearGradient id="g1bagh6dossq5f2" x1="50%" x2="50%" y1="0%" y2="100%"><stop offset="0%" stop-color="#B052C0"/><stop offset="100%" stop-color="#9C27B0"/></linearGradient></defs><g><!--MD5=[bfe100b42af289c1323ad50527c8896d]
+cluster crd: networks.network.edgefarm.io--><path d="M775.5208,71.875 L1215.1042,71.875 A6.25,6.25 0 0 1 1219.2708,76.0417 L1226.5625,123.2096 L1225.5208,123.2096 A4.1667,4.1667 0 0 1 1229.6875,127.3763 L1229.6875,265.625 A4.1667,4.1667 0 0 1 1225.5208,269.7917 L775.5208,269.7917 A4.1667,4.1667 0 0 1 771.3542,265.625 L771.3542,76.0417 A4.1667,4.1667 0 0 1 775.5208,71.875 " fill="url(#g1bagh6dossq5f0)" filter="url(#f1bagh6dossq5f)" style="stroke:#2196F3;stroke-width:1.0416666666666667;"/><line style="stroke:#2196F3;stroke-width:1.0416666666666667;" x1="771.3542" x2="1226.5625" y1="123.2096" y2="123.2096"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="20.8333" font-weight="bold" lengthAdjust="spacing" textLength="420.8333" x="785.9375" y="103.713">crd: networks.network.edgefarm.io</text><!--MD5=[8b852605be390561317338d46f2013d8]
+cluster crd: participants.network.edgefarm.io--><path d="M626.5625,341.6667 L1100.5208,341.6667 A6.25,6.25 0 0 1 1104.6875,345.8333 L1111.9792,393.0013 L1110.9375,393.0013 A4.1667,4.1667 0 0 1 1115.1042,397.168 L1115.1042,535.4167 A4.1667,4.1667 0 0 1 1110.9375,539.5833 L626.5625,539.5833 A4.1667,4.1667 0 0 1 622.3958,535.4167 L622.3958,345.8333 A4.1667,4.1667 0 0 1 626.5625,341.6667 " fill="url(#g1bagh6dossq5f0)" filter="url(#f1bagh6dossq5f)" style="stroke:#2196F3;stroke-width:1.0416666666666667;"/><line style="stroke:#2196F3;stroke-width:1.0416666666666667;" x1="622.3958" x2="1111.9792" y1="393.0013" y2="393.0013"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="20.8333" font-weight="bold" lengthAdjust="spacing" textLength="455.2083" x="636.9792" y="373.5046">crd: participants.network.edgefarm.io</text><!--MD5=[c3d13a838947f5fa5870dde6591a3e4e]
+cluster anck-credentials--><path d="M242.1875,341.6667 L457.8125,341.6667 A6.25,6.25 0 0 1 461.9792,345.8333 L469.2708,393.0013 L468.2292,393.0013 A4.1667,4.1667 0 0 1 472.3958,397.168 L472.3958,535.4167 A4.1667,4.1667 0 0 1 468.2292,539.5833 L242.1875,539.5833 A4.1667,4.1667 0 0 1 238.0208,535.4167 L238.0208,345.8333 A4.1667,4.1667 0 0 1 242.1875,341.6667 " fill="url(#g1bagh6dossq5f0)" filter="url(#f1bagh6dossq5f)" style="stroke:#2196F3;stroke-width:1.0416666666666667;"/><line style="stroke:#2196F3;stroke-width:1.0416666666666667;" x1="238.0208" x2="469.2708" y1="393.0013" y2="393.0013"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="20.8333" font-weight="bold" lengthAdjust="spacing" textLength="196.875" x="252.6042" y="373.5046">anck-credentials</text><!--MD5=[0d27cdfb58813155ef6f585a8c7bee13]
+cluster anck--><path d="M233.8542,71.875 L307.8125,71.875 A6.25,6.25 0 0 1 311.9792,76.0417 L319.2708,123.2096 L715.1042,123.2096 A4.1667,4.1667 0 0 1 719.2708,127.3763 L719.2708,265.625 A4.1667,4.1667 0 0 1 715.1042,269.7917 L233.8542,269.7917 A4.1667,4.1667 0 0 1 229.6875,265.625 L229.6875,76.0417 A4.1667,4.1667 0 0 1 233.8542,71.875 " fill="url(#g1bagh6dossq5f0)" filter="url(#f1bagh6dossq5f)" style="stroke:#2196F3;stroke-width:1.0416666666666667;"/><line style="stroke:#2196F3;stroke-width:1.0416666666666667;" x1="229.6875" x2="319.2708" y1="123.2096" y2="123.2096"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="20.8333" font-weight="bold" lengthAdjust="spacing" textLength="55.2083" x="244.2708" y="103.713">anck</text><!--MD5=[b5e33ca041c97f8c82da7f9fcab60fff]
+entity networkscrd--><rect fill="url(#g1bagh6dossq5f1)" filter="url(#f1bagh6dossq5f)" height="69.0592" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="142.7083" x="815.625" y="184.375"/><rect fill="url(#g1bagh6dossq5f1)" height="10.4167" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="15.625" x="937.5" y="189.5833"/><rect fill="url(#g1bagh6dossq5f1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="935.4167" y="191.6667"/><rect fill="url(#g1bagh6dossq5f1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="935.4167" y="195.8333"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="14.5833" lengthAdjust="spacing" textLength="80.2083" x="841.6667" y="229.1616">myNetwork</text><!--MD5=[7c04b0da84da41b911df3172bf00b3e1]
+entity participantscrd--><rect fill="url(#g1bagh6dossq5f1)" filter="url(#f1bagh6dossq5f)" height="69.0592" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="158.3333" x="683.8542" y="454.1667"/><rect fill="url(#g1bagh6dossq5f1)" height="10.4167" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="15.625" x="821.3542" y="459.375"/><rect fill="url(#g1bagh6dossq5f1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="819.2708" y="461.4583"/><rect fill="url(#g1bagh6dossq5f1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="819.2708" y="465.625"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="14.5833" lengthAdjust="spacing" textLength="95.8333" x="709.8958" y="498.9532">myParticipant</text><!--MD5=[1c5ba14a582780a0070707c3598231a5]
+entity ac--><rect fill="url(#g1bagh6dossq5f1)" filter="url(#f1bagh6dossq5f)" height="69.0592" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="181.25" x="256.7708" y="454.1667"/><rect fill="url(#g1bagh6dossq5f1)" height="10.4167" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="15.625" x="417.1875" y="459.375"/><rect fill="url(#g1bagh6dossq5f1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="415.1042" y="461.4583"/><rect fill="url(#g1bagh6dossq5f1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="415.1042" y="465.625"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="14.5833" lengthAdjust="spacing" textLength="118.75" x="282.8125" y="498.9532">anck-credentials</text><!--MD5=[773ce6ccb1e73751bc548fd97971f6c1]
+entity nc--><rect fill="url(#g1bagh6dossq5f1)" filter="url(#f1bagh6dossq5f)" height="69.0592" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="201.0417" x="246.875" y="184.375"/><rect fill="url(#g1bagh6dossq5f1)" height="10.4167" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="15.625" x="427.0833" y="189.5833"/><rect fill="url(#g1bagh6dossq5f1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="425" y="191.6667"/><rect fill="url(#g1bagh6dossq5f1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="425" y="195.8333"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="14.5833" lengthAdjust="spacing" textLength="138.5417" x="272.9167" y="229.1616">networks controller</text><!--MD5=[e12fdb32cd01413c3e9353981b686a91]
+entity pc--><rect fill="url(#g1bagh6dossq5f1)" filter="url(#f1bagh6dossq5f)" height="69.0592" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="217.7083" x="484.375" y="184.375"/><rect fill="url(#g1bagh6dossq5f1)" height="10.4167" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="15.625" x="681.25" y="189.5833"/><rect fill="url(#g1bagh6dossq5f1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="679.1667" y="191.6667"/><rect fill="url(#g1bagh6dossq5f1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="679.1667" y="195.8333"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="14.5833" lengthAdjust="spacing" textLength="155.2083" x="510.4167" y="229.1616">participants controller</text><path d="M16.6667,453.6458 L16.6667,523.8525 A4.1667,4.1667 0 0 0 20.8333,528.0192 L215.625,528.0192 A4.1667,4.1667 0 0 0 219.7917,523.8525 L219.7917,492.7083 L256.7083,488.5417 L219.7917,484.375 L219.7917,459.8958 L209.375,449.4792 L20.8333,449.4792 A4.1667,4.1667 0 0 0 16.6667,453.6458 " fill="url(#g1bagh6dossq5f2)" filter="url(#f1bagh6dossq5f)" style="stroke:#1A78C2;stroke-width:1.0416666666666667;"/><path d="M209.375,449.4792 L209.375,457.8125 A2.0833,2.0833 0 0 0 211.4583,459.8958 L219.7917,459.8958 L209.375,449.4792 " fill="url(#g1bagh6dossq5f2)" style="stroke:#1A78C2;stroke-width:1.0416666666666667;"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="134.375" x="33.3333" y="477.6738">external component</text><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="160.4167" x="33.3333" y="493.4372">that handles credentials</text><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="142.7083" x="33.3333" y="509.2005">for edgefarm network</text><!--MD5=[7140ba28f918dd60380031c820ad68a9]
+link nc to networkscrd--><path d="M362.2604,184.3542 C380.5729,146.8333 415.5938,88.7604 466.1458,63.5417 C545.4792,23.9583 576.9688,61.6354 665.625,62.5 C689.4688,62.7292 697.1563,54.625 719.2708,63.5417 C778.1458,87.2604 828.9375,141.9583 858.75,179.6458 " fill="none" id="nc-to-networkscrd" style="stroke:#2196F3;stroke-width:3.125;stroke-dasharray:7.0,7.0;"/><polygon fill="#2196F3" points="862.2813,184.1563,859.7671,174.2099,859.0641,180.0603,853.2136,179.3573,862.2813,184.1563" style="stroke:#2196F3;stroke-width:3.125;"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="44.7917" x="609.375" y="40.6947">handle</text><!--MD5=[4d4b6526109777c5fa3c31ad8d95c744]
+link pc to participantscrd--><path d="M614.3854,253.1563 C646.0625,303.0938 705.6146,396.9896 738.9167,449.5 " fill="none" id="pc-to-participantscrd" style="stroke:#2196F3;stroke-width:3.125;stroke-dasharray:7.0,7.0;"/><polygon fill="#2196F3" points="741.8646,454.1354,740.3555,443.9878,739.0722,449.7389,733.3211,448.4556,741.8646,454.1354" style="stroke:#2196F3;stroke-width:3.125;"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="44.7917" x="669.2708" y="310.4863">handle</text><!--MD5=[d153abaead92ccb4b50e573f0ecd7b01]
+link pc to networkscrd--><path d="M702.1979,218.75 C738.1458,218.75 777.3646,218.75 810.375,218.75 " fill="none" id="pc-to-networkscrd" style="stroke:#2196F3;stroke-width:3.125;stroke-dasharray:7.0,7.0;"/><polygon fill="#2196F3" points="815.6146,218.75,806.2396,214.5833,810.4063,218.75,806.2396,222.9167,815.6146,218.75" style="stroke:#2196F3;stroke-width:3.125;"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="54.1667" x="731.7708" y="201.1113">updates</text><!--MD5=[b695b1d7059c3665b684fb9d75d23616]
+link networkscrd to participantscrd--><!--MD5=[c9ce26dc56368db098e0f28b85e58e62]
+link nc to ac--><path d="M347.3958,253.1563 C347.3958,302.8854 347.3958,396.2292 347.3958,448.8646 " fill="none" id="nc-to-ac" style="stroke:#2196F3;stroke-width:3.125;stroke-dasharray:7.0,7.0;"/><polygon fill="#2196F3" points="347.3958,454.1354,351.5625,444.7604,347.3958,448.9271,343.2292,444.7604,347.3958,454.1354" style="stroke:#2196F3;stroke-width:3.125;"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="87.5" x="358.8542" y="310.4863">desired state</text><!--MD5=[63c5d76ebcddf91d57a5d4e055f256fe]
+@startuml
+!theme materia from https://raw.githubusercontent.com/plantuml/plantuml/master/themes
+
+package "crd: networks.network.edgefarm.io" {
+    [myNetwork] as networkscrd
+}
+
+package "crd: participants.network.edgefarm.io" {
+    [myParticipant] as participantscrd
+}
+
+package "anck-credentials" {
+    [anck-credentials] as ac
+}
+note left {
+    external component
+    that handles credentials
+    for edgefarm network
+}
+
+package "anck" {
+    [networks controller] as nc
+    [participants controller] as pc
+    nc .r.> networkscrd : handle
+    pc .r.> participantscrd : handle
+    pc .r.> networkscrd : updates
+    networkscrd -[hidden]- participantscrd
+    nc .d.> ac: desired state
+}
+@enduml
+
+@startuml
+
+
+
+skinparam backgroundColor transparent
+skinparam useBetaStyle false
+
+
+
+
+
+
+<style>
+  root {
+    BackgroundColor transparent
+    FontColor #FFF
+    HyperLinkColor #fd7e14
+    LineColor #1a78c2
+    LineThickness 1
+    Margin 10
+    Padding 6
+    Shadowing 0.0
+  }
+  node {
+   Padding 15
+   roundcorner 20
+   BackgroundColor #2196F3-#1a78c2
+  }
+  caption {
+    LineThickness 0
+  }
+  footer {
+    LineThickness 0
+  }
+  groupHeader {
+    BackgroundColor #fff
+    FontColor #9C27B0
+    FontStyle bold
+  }
+  header {
+    LineThickness 0
+  }
+  referenceHeader {
+    BackgroundColor transparent
+    FontColor #222
+    FontStyle bold
+  }
+  separator {
+    BackgroundColor #222
+    FontColor transparent
+    FontStyle bold
+  }
+  title {
+	FontSize 20
+	BorderRoundCorner            8
+	BorderThickness 	         1
+	BackgroundColor  #fff-#fff
+	FontColor #2196F3
+	BorderColor #fff
+  }
+  nwdiagDiagram {
+	network {
+			FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3    
+		LineColor #2196F3
+		LineThickness 1.0
+		FontColor #1a78c2
+	}
+	server {
+			FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	}
+	arrow {
+		FontColor #1a78c2
+		LineColor #1a78c2
+	}
+	group {
+		BackGroundColor #fff
+		LineColor $LIGHT_DARK
+		LineThickness 2.0
+		Margin 5
+		Padding 5
+	}
+  }
+  ganttDiagram {
+	task {
+			FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+		LineColor #2196F3
+		Margin 10
+		Padding 6
+	}
+	note {
+		FontColor #FFF
+		LineColor #7D1F8D
+		BackGroundColor #9C27B0
+	}
+	separator {
+		LineColor #fff
+		BackGroundColor #fff-#cccccc
+		FontColor #222
+	}
+	milestone {
+		FontColor #9C27B0
+		FontSize 16
+		FontStyle italic
+		BackGroundColor #fff
+		LineColor #cccccc
+	}
+	timeline {
+		BackgroundColor #fff
+		FontColor #222
+	}
+	closed {
+		BackgroundColor #CC7A00
+		FontColor #FFF
+	}
+  }
+</style>
+skinparam defaultFontName       "Verdana"
+skinparam defaultFontSize       12
+skinparam dpi                   100
+skinparam shadowing             true
+skinparam roundcorner           8
+skinparam ParticipantPadding    40
+skinparam BoxPadding            40
+skinparam Padding               10
+skinparam ArrowColor            #666
+skinparam stereotype {
+    CBackgroundColor #fff
+    CBorderColor #cccccc
+    ABackgroundColor #70bf73
+    ABorderColor #3D8C40
+    IBackgroundColor #B7161C
+    IBorderColor #b7161c
+    EBackgroundColor #ffad33
+    EBorderColor #CC7A00
+    NBackgroundColor #b052c0
+    NBorderColor #7D1F8D
+}
+skinparam title {
+	FontColor	                 #2196F3
+	BorderColor	                 #cccccc
+	FontSize	    	         20
+	BorderRoundCorner            8
+	BorderThickness 	         1
+	BackgroundColor              #fff-#fff
+}
+
+skinparam legend {
+	BackgroundColor #fff
+	BorderColor #cccccc
+	FontColor #222
+}
+
+skinparam swimlane {
+	BorderColor #9C27B0
+	BorderThickness 2
+	TitleBackgroundColor  #fff-#fff
+	TitleFontColor #2196F3
+}
+
+
+skinparam activity {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	BarColor #4CAF50
+	StartColor #9C27B0
+	EndColor #9C27B0
+	DiamondBackgroundColor #FFF-#fff
+  	DiamondBorderColor #cccccc
+	DiamondFontColor #222
+}
+
+
+skinparam participant {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	ParticipantBorderThickness 2
+}
+
+
+skinparam actor {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	FontColor #222
+}
+
+
+skinparam arrow {
+	Thickness 3
+	Color #2196F3
+	FontColor #222
+}
+
+
+skinparam sequence {
+	BorderColor #2196F3
+	TitleFontColor #2196F3
+	BackgroundColor transparent
+	StartColor #2196F3
+	EndColor #2196F3
+	BoxBackgroundColor #fff
+	BoxBorderColor #666
+	BoxFontColor #222
+	DelayFontColor #222
+	LifeLineBorderColor #cccccc
+	LifeLineBorderThickness 2
+	LifeLineBackgroundColor #fff
+	GroupBorderColor #666
+	GroupFontColor #222
+	GroupHeaderFontColor #9C27B0
+	DividerBackgroundColor #FFF-#fff
+    DividerBorderColor #666
+    DividerBorderThickness 2
+    DividerFontColor #222
+	ReferenceBackgroundColor transparent
+	ReferenceBorderColor #666
+	ReferenceFontColor #222
+	ReferenceHeaderFontColor #9C27B0
+	StereotypeFontColor #FFF
+}
+
+
+skinparam partition {
+	BorderColor #2196F3
+	FontColor #2196F3
+	BackgroundColor transparent
+}
+
+
+skinparam collections {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+}
+
+
+skinparam control {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	FontColor #222
+}
+
+
+skinparam entity {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	FontColor #222
+}
+
+
+skinparam boundary {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	FontColor #222
+}
+
+
+skinparam agent {
+	BackgroundColor #orange
+	BorderColor #999999
+	FontColor #333333
+}
+
+
+skinparam note {
+	BorderThickness 1
+	BackgroundColor #b052c0-#9C27B0
+	BorderColor #9C27B0
+	FontColor #FFF
+}
+
+
+skinparam artifact {
+	BackgroundColor #FFF-#fff
+	BorderColor #666
+	FontColor #666
+}
+
+
+skinparam component {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+}
+
+
+skinparam interface {
+	BackgroundColor  #B7161C
+	BorderColor  #e51c23
+	FontColor #222
+}
+
+
+skinparam storage {
+	BackgroundColor #ffad33-#ff9800
+  	BorderColor #ff9800
+	FontColor #FFF
+}
+
+
+skinparam node {
+	BackgroundColor #fff-#fff
+	BorderColor #222
+	FontColor #222
+}
+
+
+skinparam cloud {
+	BackgroundColor #F2FCFE-#eeeeee
+	BorderColor #F2FCFE
+	FontColor #222
+}
+
+
+skinparam database {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	FontColor #222
+}
+
+
+skinparam class {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	HeaderBackgroundColor #2196F3-#1a78c2
+	StereotypeFontColor #222
+	BorderThickness 1
+	AttributeFontColor #fff
+	AttributeFontSize 11
+}
+
+
+skinparam object {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	StereotypeFontColor #222
+	BorderThickness 1
+	AttributeFontColor #222
+	AttributeFontSize 11
+}
+
+
+skinparam usecase {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	BorderThickness 2
+	StereotypeFontColor #2196F3
+}
+
+
+skinparam rectangle {
+	FontColor #2196F3
+	BackgroundColor #fff-#fff
+	BorderThickness 2
+	StereotypeFontColor #2196F3
+}
+
+
+skinparam package {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	BackgroundColor #fff-#fff
+	BorderThickness 2
+}
+
+
+skinparam folder {
+	BackgroundColor #FFF-#fff
+  	BorderColor #ff9800
+	FontColor #ff9800
+	BorderThickness 2
+}
+
+
+skinparam frame {
+	BackgroundColor #FFF-#fff
+  	BorderColor #9C27B0
+	FontColor #9C27B0
+	BorderThickness 2
+}
+
+
+skinparam state {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	BorderColor #1a78c2
+	StartColor #9C27B0
+	EndColor #9C27B0
+	AttributeFontColor #222
+	AttributeFontSize 11
+}
+
+
+skinparam queue {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+}
+
+
+skinparam card {
+	BackgroundColor #b052c0-#9C27B0
+	BorderColor #9C27B0
+	FontColor #FFF
+}
+
+
+skinparam file {
+	BackgroundColor #fff-#fff
+	BorderColor #666
+	FontColor #666
+
+}
+
+
+skinparam stack {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+}
+
+package "crd: networks.network.edgefarm.io" {
+    [myNetwork] as networkscrd
+}
+
+package "crd: participants.network.edgefarm.io" {
+    [myParticipant] as participantscrd
+}
+
+package "anck-credentials" {
+    [anck-credentials] as ac
+}
+note left {
+    external component
+    that handles credentials
+    for edgefarm network
+}
+
+package "anck" {
+    [networks controller] as nc
+    [participants controller] as pc
+    nc .r.> networkscrd : handle
+    pc .r.> participantscrd : handle
+    pc .r.> networkscrd : updates
+    networkscrd -[hidden]- participantscrd
+    nc .d.> ac: desired state
+}
+@enduml
+
+PlantUML version 1.2021.16(Wed Dec 08 17:25:22 UTC 2021)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>

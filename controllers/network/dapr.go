@@ -5,6 +5,8 @@ import (
 	"strings"
 
 	"github.com/edgefarm/anck/pkg/dapr"
+	jetstreams "github.com/edgefarm/anck/pkg/jetstreams"
+	"github.com/edgefarm/anck/pkg/nats"
 	resources "github.com/edgefarm/anck/pkg/resources"
 	v1 "k8s.io/api/core/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -32,16 +34,20 @@ func createOrUpdateComponentDaprSecrets(secret *v1.Secret, participantType strin
 		}
 		rawNetworkName := strings.TrimSuffix(network, ".creds")
 		daprComponentName := fmt.Sprintf("%s.yaml", rawNetworkName)
-		jwt, nkey, err := parseCredsString(string(cred))
+		jwt, nkey, err := jetstreams.ParseCredsString(string(cred))
 		if err != nil {
 			return err
 		}
 		opts := []dapr.Option{}
 		opts = append(opts, dapr.WithCreds(jwt, nkey))
 		if participantType == "edge" {
-			opts = append(opts, dapr.WithNatsURL("nats://nats.nats:4222"))
+			opts = append(opts, dapr.WithNatsURL("nats://leaf-nats.nats:4222"))
 		} else if participantType == "cloud" {
-			opts = append(opts, dapr.WithNatsURL("tls://connect.ngs.global"))
+			natsServer, err := nats.GetNatsServerInfos()
+			if err != nil {
+				return err
+			}
+			opts = append(opts, dapr.WithNatsURL(natsServer.Addresses.NatsAddress))
 		} else {
 			// skip unknown participant type
 			continue

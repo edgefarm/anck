@@ -20,7 +20,7 @@ func TestNatsConfig(t *testing.T) {
 func TestNatsFullConfig(t *testing.T) {
 	assert := assert.New(t)
 	opts := []Option{}
-	opts = append(opts, WithRemote("nats://localohst:4222", "/my/foo.creds", "FOO"))
+	opts = append(opts, WithRemote("nats://localohst:4222", "/my/foo.creds", "FOO", nil, nil))
 	opts = append(opts, WithFullResolver("operatorJWT", "sysPubKey", "sysJWT", "/jwt"))
 	config := NewConfig(opts...)
 	str, err := config.ToJSON()
@@ -55,7 +55,7 @@ func TestNatsFullConfig(t *testing.T) {
 func TestNatsCacheResolverConfig(t *testing.T) {
 	assert := assert.New(t)
 	opts := []Option{}
-	opts = append(opts, WithRemote("nats://localohst:4222", "/my/foo.creds", "FOO"))
+	opts = append(opts, WithRemote("nats://localohst:4222", "/my/foo.creds", "FOO", nil, nil))
 	opts = append(opts, WithCacheResolver("operatorJWT", "sysPubKey", "sysJWT", "/jwt"))
 	config := NewConfig(opts...)
 	str, err := config.ToJSON()
@@ -88,7 +88,7 @@ func TestNatsCacheResolverConfig(t *testing.T) {
 
 func TestNatsWithRemotes(t *testing.T) {
 	assert := assert.New(t)
-	config := NewConfig(WithRemote("nats://localohst:4222", "/my/foo.creds", "FOO"), WithRemote("nats://localohst:4222", "/my/bar.creds", "BAR"))
+	config := NewConfig(WithRemote("nats://localohst:4222", "/my/foo.creds", "FOO", nil, nil), WithRemote("nats://localohst:4222", "/my/bar.creds", "BAR", nil, nil))
 	str, err := config.ToJSON()
 	fmt.Println(str)
 	assert.Nil(err)
@@ -115,8 +115,8 @@ func TestNatsWithRemotesAndPidFile(t *testing.T) {
 	assert := assert.New(t)
 	opts := []Option{}
 
-	opts = append(opts, WithRemote("nats://localohst:4222", "/my/foo.creds", "FOO"))
-	opts = append(opts, WithRemote("nats://localohst:4222", "/my/bar.creds", "BAR"))
+	opts = append(opts, WithRemote("nats://localohst:4222", "/my/foo.creds", "FOO", nil, nil))
+	opts = append(opts, WithRemote("nats://localohst:4222", "/my/bar.creds", "BAR", nil, nil))
 	opts = append(opts, WithPidFile("/tmp/foo.pid"))
 
 	config := NewConfig(opts...)
@@ -184,12 +184,12 @@ func TestNatsLoadFromString(t *testing.T) {
 func TestNatsAddRemote(t *testing.T) {
 	assert := assert.New(t)
 	opts := []Option{}
-	opts = append(opts, WithRemote("nats://localohst:4222", "/my/foo.creds", "FOO"))
-	opts = append(opts, WithRemote("nats://localohst:4222", "/my/bar.creds", "BAR"))
+	opts = append(opts, WithRemote("nats://localohst:4222", "/my/foo.creds", "FOO", nil, nil))
+	opts = append(opts, WithRemote("nats://localohst:4222", "/my/bar.creds", "BAR", nil, nil))
 	opts = append(opts, WithFullResolver("operatorJWT", "sysPubKey", "sysJWT", "/jwt"))
 	config := NewConfig(opts...)
 
-	err := config.AddRemote("nats://localohst:4222", "/my/baz.creds", "BAZ")
+	err := config.AddRemote("nats://localohst:4222", "/my/baz.creds", "BAZ", nil, nil)
 	assert.Nil(err)
 	str, err := config.ToJSON()
 	fmt.Println(str)
@@ -364,8 +364,8 @@ func TestNatsWithRemotesPidFileAndAdminUser(t *testing.T) {
 	assert := assert.New(t)
 	opts := []Option{}
 
-	opts = append(opts, WithRemote("nats://localohst:4222", "/my/foo.creds", "FOO"))
-	opts = append(opts, WithRemote("nats://localohst:4222", "/my/bar.creds", "BAR"))
+	opts = append(opts, WithRemote("nats://localohst:4222", "/my/foo.creds", "FOO", nil, nil))
+	opts = append(opts, WithRemote("nats://localohst:4222", "/my/bar.creds", "BAR", nil, nil))
 	opts = append(opts, WithAdminUser("admin", "Unicorn5322"))
 	opts = append(opts, WithPidFile("/tmp/foo.pid"))
 
@@ -395,6 +395,64 @@ func TestNatsWithRemotesPidFileAndAdminUser(t *testing.T) {
 			  "url": "nats://localohst:4222",
 			  "credentials": "/my/bar.creds",
 			  "account": "BAR"
+			}
+		  ]
+		}
+	  }`)
+}
+
+func TestNatsWithRemotesJetstream(t *testing.T) {
+	assert := assert.New(t)
+	opts := []Option{}
+	opts = append(opts, WithJetstream("/store", "mydomain"))
+
+	config := NewConfig(opts...)
+	str, err := config.ToJSON()
+	fmt.Println(str)
+	assert.Nil(err)
+	jsonassert.New(t).Assertf(str, `{
+		"http": 8222,
+		"jetstream": {
+			"store_dir": "/store",
+			"domain": "mydomain"
+		}
+	  }`)
+}
+
+func TestNatsWithRemotesAndDenyRules(t *testing.T) {
+	assert := assert.New(t)
+	opts := []Option{}
+
+	opts = append(opts, WithRemote("nats://localohst:4222", "/my/foo.creds", "FOO", []string{"ignored.>"}, nil))
+	opts = append(opts, WithRemote("nats://localohst:4222", "/my/bar.creds", "BAR", nil, []string{"ignored2.>"}))
+	opts = append(opts, WithRemote("nats://localohst:4222", "/my/baz.creds", "BAZ", []string{"ignored3.>"}, []string{"ignored4.>"}))
+
+	config := NewConfig(opts...)
+	str, err := config.ToJSON()
+	fmt.Println(str)
+	assert.Nil(err)
+	jsonassert.New(t).Assertf(str, `{
+		"http": 8222,
+		"leafnodes": {
+		  "remotes": [
+			{
+			  "url": "nats://localohst:4222",
+			  "credentials": "/my/foo.creds",
+			  "account": "FOO",
+			  "deny_imports": ["ignored.>"]
+			},
+			{
+			  "url": "nats://localohst:4222",
+			  "credentials": "/my/bar.creds",
+			  "account": "BAR",
+			  "deny_exports": ["ignored2.>"]
+			},
+			{
+			  "url": "nats://localohst:4222",
+			  "credentials": "/my/baz.creds",
+			  "account": "BAZ",
+			  "deny_imports": ["ignored3.>"],
+			  "deny_exports": ["ignored4.>"]
 			}
 		  ]
 		}

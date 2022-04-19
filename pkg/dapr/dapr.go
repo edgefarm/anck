@@ -1,6 +1,8 @@
 package dapr
 
-import "gopkg.in/yaml.v2"
+import (
+	"gopkg.in/yaml.v2"
+)
 
 const (
 	defaultNatsURL string = "nats://connect.ngs.global:4222"

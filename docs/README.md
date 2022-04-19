@@ -13,7 +13,7 @@ The image shows and overview of the system. It contains `anck` (containing the c
 
 The ressources myNetwork and myParticipant are used to store the network and participant information.
 
-![](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/edgefarm/anck/main/docs/images/anck-overview.puml)
+![](images/anck-overview.svg)
 
 ## Networks and Participants
 
@@ -23,6 +23,12 @@ When the participant CRD is created the controller will update the corresponding
 
 ## Streams
 
+### Create steams for leafnode connected devices
+![](images/create_jetstreams_nodes.svg)
+
+### Delete steams for leafnode connected devices
+![](images/delete_jetstreams_nodes.svg)
+
 ### Local streams
 
 tbd
@@ -31,7 +37,7 @@ tbd
 
 Global streams are created by `anck` and are used to connect participants for a given network to a global stream.
 
-![](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/edgefarm/anck/main/docs/images/global-streams.puml)
+![](images/global-streams.svg)
 
 The global stream can be configured with the following parameters:
 
@@ -56,7 +62,7 @@ The global stream can be configured with the following parameters:
 `anck` provides a secret for each component containing all pubsub configurations for each network the component is a participant of.
 The secret can be mounted by a dapr container allowing an application to connect to EdgeFarm.network.
 
-![](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/edgefarm/anck/main/docs/images/dapr.puml)
+![](images/dapr.svg)
 
 ## Developing and debugging
 

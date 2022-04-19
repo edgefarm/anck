@@ -1,0 +1,596 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="1213.5417px" preserveAspectRatio="none" style="width:1604px;height:1213px;background:#00000000;" version="1.1" viewBox="0 0 1604 1213" width="1604.1667px" zoomAndPan="magnify"><defs><linearGradient id="gnyienhogr4mm0" x1="50%" x2="50%" y1="0%" y2="100%"><stop offset="0%" stop-color="#FFFFFF"/><stop offset="100%" stop-color="#FFFFFF"/></linearGradient><filter height="300%" id="fnyienhogr4mm" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0833333333333335"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.166666666666667" dy="4.166666666666667" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter><linearGradient id="gnyienhogr4mm1" x1="50%" x2="50%" y1="0%" y2="100%"><stop offset="0%" stop-color="#4DABF5"/><stop offset="100%" stop-color="#2196F3"/></linearGradient></defs><g><!--MD5=[3ff016c1aa5003d713567a073e2181a6]
+cluster application--><path d="M829.1667,16.6667 L1283.3333,16.6667 A6.25,6.25 0 0 1 1287.5,20.8333 L1294.7917,68.0013 L1587.5,68.0013 A4.1667,4.1667 0 0 1 1591.6667,72.168 L1591.6667,588.5417 A4.1667,4.1667 0 0 1 1587.5,592.7083 L829.1667,592.7083 A4.1667,4.1667 0 0 1 825,588.5417 L825,20.8333 A4.1667,4.1667 0 0 1 829.1667,16.6667 " fill="url(#gnyienhogr4mm0)" filter="url(#fnyienhogr4mm)" style="stroke:#2196F3;stroke-width:1.0416666666666667;"/><line style="stroke:#2196F3;stroke-width:1.0416666666666667;" x1="825" x2="1294.7917" y1="68.0013" y2="68.0013"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="20.8333" font-weight="bold" lengthAdjust="spacing" textLength="435.4167" x="839.5833" y="48.5046">Application Component specification</text><!--MD5=[468ed49cd0f8cf23b3e1bc1bcfc285f2]
+cluster Component1--><path d="M1229.1667,97.9167 L1397.9167,97.9167 A6.25,6.25 0 0 1 1402.0833,102.0833 L1409.375,149.2513 L1554.1667,149.2513 A4.1667,4.1667 0 0 1 1558.3333,153.418 L1558.3333,555.2083 A4.1667,4.1667 0 0 1 1554.1667,559.375 L1229.1667,559.375 A4.1667,4.1667 0 0 1 1225,555.2083 L1225,102.0833 A4.1667,4.1667 0 0 1 1229.1667,97.9167 " fill="url(#gnyienhogr4mm0)" filter="url(#fnyienhogr4mm)" style="stroke:#2196F3;stroke-width:1.0416666666666667;"/><line style="stroke:#2196F3;stroke-width:1.0416666666666667;" x1="1225" x2="1409.375" y1="149.2513" y2="149.2513"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="20.8333" font-weight="bold" lengthAdjust="spacing" textLength="150" x="1239.5833" y="129.7546">Component1</text><!--MD5=[eb767dc135e0abc024c19f3862e6f28b]
+cluster Component2--><path d="M870.8333,97.9167 L1039.5833,97.9167 A6.25,6.25 0 0 1 1043.75,102.0833 L1051.0417,149.2513 L1195.8333,149.2513 A4.1667,4.1667 0 0 1 1200,153.418 L1200,243.75 A4.1667,4.1667 0 0 1 1195.8333,247.9167 L870.8333,247.9167 A4.1667,4.1667 0 0 1 866.6667,243.75 L866.6667,102.0833 A4.1667,4.1667 0 0 1 870.8333,97.9167 " fill="url(#gnyienhogr4mm0)" filter="url(#fnyienhogr4mm)" style="stroke:#2196F3;stroke-width:1.0416666666666667;"/><line style="stroke:#2196F3;stroke-width:1.0416666666666667;" x1="866.6667" x2="1051.0417" y1="149.2513" y2="149.2513"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="20.8333" font-weight="bold" lengthAdjust="spacing" textLength="150" x="881.25" y="129.7546">Component2</text><!--MD5=[8a1df0e3beec081df260f3d6384078a5]
+cluster secret_Component1_dapr--><path d="M156.25,754.1667 L478.125,754.1667 A6.25,6.25 0 0 1 482.2917,758.3333 L489.5833,805.5013 L488.5417,805.5013 A4.1667,4.1667 0 0 1 492.7083,809.668 L492.7083,1196.875 A4.1667,4.1667 0 0 1 488.5417,1201.0417 L156.25,1201.0417 A4.1667,4.1667 0 0 1 152.0833,1196.875 L152.0833,758.3333 A4.1667,4.1667 0 0 1 156.25,754.1667 " fill="url(#gnyienhogr4mm0)" filter="url(#fnyienhogr4mm)" style="stroke:#2196F3;stroke-width:1.0416666666666667;"/><line style="stroke:#2196F3;stroke-width:1.0416666666666667;" x1="152.0833" x2="489.5833" y1="805.5013" y2="805.5013"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="20.8333" font-weight="bold" lengthAdjust="spacing" textLength="303.125" x="166.6667" y="786.0046">secret: Component1.dapr</text><!--MD5=[e4b0725df83079ef810c250dfee1fbbb]
+cluster secret_Component2_dapr--><path d="M557.2917,1034.375 L879.1667,1034.375 A6.25,6.25 0 0 1 883.3333,1038.5417 L890.625,1085.7096 L889.5833,1085.7096 A4.1667,4.1667 0 0 1 893.75,1089.8763 L893.75,1196.875 A4.1667,4.1667 0 0 1 889.5833,1201.0417 L557.2917,1201.0417 A4.1667,4.1667 0 0 1 553.125,1196.875 L553.125,1038.5417 A4.1667,4.1667 0 0 1 557.2917,1034.375 " fill="url(#gnyienhogr4mm0)" filter="url(#fnyienhogr4mm)" style="stroke:#2196F3;stroke-width:1.0416666666666667;"/><line style="stroke:#2196F3;stroke-width:1.0416666666666667;" x1="553.125" x2="890.625" y1="1085.7096" y2="1085.7096"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="20.8333" font-weight="bold" lengthAdjust="spacing" textLength="303.125" x="567.7083" y="1066.213">secret: Component2.dapr</text><!--MD5=[578c8bc4cf72da05b6e2cca5ce06aa8d]
+cluster myNetwork1--><path d="M20.8333,328.125 L302.0833,328.125 A6.25,6.25 0 0 1 306.25,332.2917 L313.5417,379.4596 L694.7917,379.4596 A4.1667,4.1667 0 0 1 698.9583,383.6263 L698.9583,588.5417 A4.1667,4.1667 0 0 1 694.7917,592.7083 L20.8333,592.7083 A4.1667,4.1667 0 0 1 16.6667,588.5417 L16.6667,332.2917 A4.1667,4.1667 0 0 1 20.8333,328.125 " fill="url(#gnyienhogr4mm0)" filter="url(#fnyienhogr4mm)" style="stroke:#2196F3;stroke-width:1.0416666666666667;"/><line style="stroke:#2196F3;stroke-width:1.0416666666666667;" x1="16.6667" x2="313.5417" y1="379.4596" y2="379.4596"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="20.8333" font-weight="bold" lengthAdjust="spacing" textLength="262.5" x="31.25" y="359.963">network: myNetwork1</text><!--MD5=[da3a91a2fc286b87e91bbfaa5a064d17]
+cluster myNetwork1_streams--><path d="M279.1667,409.375 L394.7917,409.375 A6.25,6.25 0 0 1 398.9583,413.5417 L406.25,460.7096 L661.4583,460.7096 A4.1667,4.1667 0 0 1 665.625,464.8763 L665.625,555.2083 A4.1667,4.1667 0 0 1 661.4583,559.375 L279.1667,559.375 A4.1667,4.1667 0 0 1 275,555.2083 L275,413.5417 A4.1667,4.1667 0 0 1 279.1667,409.375 " fill="url(#gnyienhogr4mm0)" filter="url(#fnyienhogr4mm)" style="stroke:#2196F3;stroke-width:1.0416666666666667;"/><line style="stroke:#2196F3;stroke-width:1.0416666666666667;" x1="275" x2="406.25" y1="460.7096" y2="460.7096"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="20.8333" font-weight="bold" lengthAdjust="spacing" textLength="96.875" x="289.5833" y="441.213">streams</text><!--MD5=[18bd34df1cbe4c9f522da218b9e20f13]
+cluster myNetwork1_participants--><path d="M62.5,409.375 L225,409.375 A6.25,6.25 0 0 1 229.1667,413.5417 L236.4583,460.7096 L245.8333,460.7096 A4.1667,4.1667 0 0 1 250,464.8763 L250,555.2083 A4.1667,4.1667 0 0 1 245.8333,559.375 L62.5,559.375 A4.1667,4.1667 0 0 1 58.3333,555.2083 L58.3333,413.5417 A4.1667,4.1667 0 0 1 62.5,409.375 " fill="url(#gnyienhogr4mm0)" filter="url(#fnyienhogr4mm)" style="stroke:#2196F3;stroke-width:1.0416666666666667;"/><line style="stroke:#2196F3;stroke-width:1.0416666666666667;" x1="58.3333" x2="236.4583" y1="460.7096" y2="460.7096"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="20.8333" font-weight="bold" lengthAdjust="spacing" textLength="143.75" x="72.9167" y="441.213">participants</text><!--MD5=[10f51d03f702145c100ec079839b1a7a]
+cluster myNetwork2--><path d="M756.25,681.25 L1037.5,681.25 A6.25,6.25 0 0 1 1041.6667,685.4167 L1048.9583,732.5846 L1427.0833,732.5846 A4.1667,4.1667 0 0 1 1431.25,736.7513 L1431.25,941.6667 A4.1667,4.1667 0 0 1 1427.0833,945.8333 L756.25,945.8333 A4.1667,4.1667 0 0 1 752.0833,941.6667 L752.0833,685.4167 A4.1667,4.1667 0 0 1 756.25,681.25 " fill="url(#gnyienhogr4mm0)" filter="url(#fnyienhogr4mm)" style="stroke:#2196F3;stroke-width:1.0416666666666667;"/><line style="stroke:#2196F3;stroke-width:1.0416666666666667;" x1="752.0833" x2="1048.9583" y1="732.5846" y2="732.5846"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="20.8333" font-weight="bold" lengthAdjust="spacing" textLength="262.5" x="766.6667" y="713.088">network: myNetwork2</text><!--MD5=[954d8b2bcdc4e26c7c7e86a0baff4c51]
+cluster myNetwork2_streams--><path d="M1208.3333,762.5 L1323.9583,762.5 A6.25,6.25 0 0 1 1328.125,766.6667 L1335.4167,813.8346 L1393.75,813.8346 A4.1667,4.1667 0 0 1 1397.9167,818.0013 L1397.9167,908.3333 A4.1667,4.1667 0 0 1 1393.75,912.5 L1208.3333,912.5 A4.1667,4.1667 0 0 1 1204.1667,908.3333 L1204.1667,766.6667 A4.1667,4.1667 0 0 1 1208.3333,762.5 " fill="url(#gnyienhogr4mm0)" filter="url(#fnyienhogr4mm)" style="stroke:#2196F3;stroke-width:1.0416666666666667;"/><line style="stroke:#2196F3;stroke-width:1.0416666666666667;" x1="1204.1667" x2="1335.4167" y1="813.8346" y2="813.8346"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="20.8333" font-weight="bold" lengthAdjust="spacing" textLength="96.875" x="1218.75" y="794.338">streams</text><!--MD5=[5d131b55cb9024761e689b436d272259]
+cluster myNetwork2_participants--><path d="M797.9167,762.5 L960.4167,762.5 A6.25,6.25 0 0 1 964.5833,766.6667 L971.875,813.8346 L1175,813.8346 A4.1667,4.1667 0 0 1 1179.1667,818.0013 L1179.1667,908.3333 A4.1667,4.1667 0 0 1 1175,912.5 L797.9167,912.5 A4.1667,4.1667 0 0 1 793.75,908.3333 L793.75,766.6667 A4.1667,4.1667 0 0 1 797.9167,762.5 " fill="url(#gnyienhogr4mm0)" filter="url(#fnyienhogr4mm)" style="stroke:#2196F3;stroke-width:1.0416666666666667;"/><line style="stroke:#2196F3;stroke-width:1.0416666666666667;" x1="793.75" x2="971.875" y1="813.8346" y2="813.8346"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="20.8333" font-weight="bold" lengthAdjust="spacing" textLength="143.75" x="808.3333" y="794.338">participants</text><!--MD5=[efb3e1c0e474a9b66e99730c085e28e7]
+entity Component1_participant_myNetwork1--><rect fill="url(#gnyienhogr4mm1)" filter="url(#fnyienhogr4mm)" height="69.0592" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="300" x="1241.6667" y="162.5"/><rect fill="url(#gnyienhogr4mm1)" height="10.4167" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="15.625" x="1520.8333" y="167.7083"/><rect fill="url(#gnyienhogr4mm1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="1518.75" y="169.7917"/><rect fill="url(#gnyienhogr4mm1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="1518.75" y="173.9583"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="14.5833" lengthAdjust="spacing" textLength="237.5" x="1267.7083" y="207.2866">network-participant: myNetwork1</text><!--MD5=[cc850e464fae4fd9f7245e1238481c1f]
+entity Component1_participant_myNetwork2--><rect fill="url(#gnyienhogr4mm1)" filter="url(#fnyienhogr4mm)" height="69.0592" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="300" x="1241.6667" y="473.9583"/><rect fill="url(#gnyienhogr4mm1)" height="10.4167" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="15.625" x="1520.8333" y="479.1667"/><rect fill="url(#gnyienhogr4mm1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="1518.75" y="481.25"/><rect fill="url(#gnyienhogr4mm1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="1518.75" y="485.4167"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="14.5833" lengthAdjust="spacing" textLength="237.5" x="1267.7083" y="518.7449">network-participant: myNetwork2</text><!--MD5=[ce4b8da65d02488fc8857518bc94f83f]
+entity Component2_participant_myNetwork2--><rect fill="url(#gnyienhogr4mm1)" filter="url(#fnyienhogr4mm)" height="69.0592" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="300" x="883.3333" y="162.5"/><rect fill="url(#gnyienhogr4mm1)" height="10.4167" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="15.625" x="1162.5" y="167.7083"/><rect fill="url(#gnyienhogr4mm1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="1160.4167" y="169.7917"/><rect fill="url(#gnyienhogr4mm1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="1160.4167" y="173.9583"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="14.5833" lengthAdjust="spacing" textLength="237.5" x="909.375" y="207.2866">network-participant: myNetwork2</text><!--MD5=[9478e4567f9f76494027ddad8a946fe4]
+entity sn1--><rect fill="url(#gnyienhogr4mm1)" filter="url(#fnyienhogr4mm)" height="69.0592" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="227.0833" x="198.9583" y="827.0833"/><rect fill="url(#gnyienhogr4mm1)" height="10.4167" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="15.625" x="405.2083" y="832.2917"/><rect fill="url(#gnyienhogr4mm1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="403.125" y="834.375"/><rect fill="url(#gnyienhogr4mm1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="403.125" y="838.5417"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="14.5833" lengthAdjust="spacing" textLength="164.5833" x="225" y="871.8699">mystream.myNetwork1</text><!--MD5=[46c4d482d1bd25c7c1bcff1f037ca6bf]
+entity sn2--><rect fill="url(#gnyienhogr4mm1)" filter="url(#fnyienhogr4mm)" height="69.0592" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="227.0833" x="198.9583" y="1107.2917"/><rect fill="url(#gnyienhogr4mm1)" height="10.4167" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="15.625" x="405.2083" y="1112.5"/><rect fill="url(#gnyienhogr4mm1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="403.125" y="1114.5833"/><rect fill="url(#gnyienhogr4mm1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="403.125" y="1118.75"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="14.5833" lengthAdjust="spacing" textLength="164.5833" x="225" y="1152.0782">mystream.myNetwork2</text><!--MD5=[22d02daeaef713346b55acb5b61f3b28]
+entity mystream.myNetwork2--><rect fill="url(#gnyienhogr4mm1)" filter="url(#fnyienhogr4mm)" height="69.0592" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="227.0833" x="623.9583" y="1107.2917"/><rect fill="url(#gnyienhogr4mm1)" height="10.4167" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="15.625" x="830.2083" y="1112.5"/><rect fill="url(#gnyienhogr4mm1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="828.125" y="1114.5833"/><rect fill="url(#gnyienhogr4mm1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="828.125" y="1118.75"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="14.5833" lengthAdjust="spacing" textLength="164.5833" x="650" y="1152.0782">mystream.myNetwork2</text><!--MD5=[1d15790d5d8b76971b1575653feab81d]
+entity myNetwork1_jetstream1--><rect fill="url(#gnyienhogr4mm1)" filter="url(#fnyienhogr4mm)" height="69.0592" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="160.4167" x="488.5417" y="473.9583"/><rect fill="url(#gnyienhogr4mm1)" height="10.4167" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="15.625" x="628.125" y="479.1667"/><rect fill="url(#gnyienhogr4mm1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="626.0417" y="481.25"/><rect fill="url(#gnyienhogr4mm1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="626.0417" y="485.4167"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="14.5833" lengthAdjust="spacing" textLength="97.9167" x="514.5833" y="518.7449">myJetstream1</text><!--MD5=[7d1665460570605aa4663af840ee8b08]
+entity myNetwork1_jetstream2--><rect fill="url(#gnyienhogr4mm1)" filter="url(#fnyienhogr4mm)" height="69.0592" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="160.4167" x="291.6667" y="473.9583"/><rect fill="url(#gnyienhogr4mm1)" height="10.4167" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="15.625" x="431.25" y="479.1667"/><rect fill="url(#gnyienhogr4mm1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="429.1667" y="481.25"/><rect fill="url(#gnyienhogr4mm1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="429.1667" y="485.4167"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="14.5833" lengthAdjust="spacing" textLength="97.9167" x="317.7083" y="518.7449">myJetstream2</text><!--MD5=[c4f8e99ceeab2ab0e7550d75ead0115e]
+entity myNetwork1_Component1--><rect fill="url(#gnyienhogr4mm1)" filter="url(#fnyienhogr4mm)" height="69.0592" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="157.2917" x="75.5208" y="473.9583"/><rect fill="url(#gnyienhogr4mm1)" height="10.4167" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="15.625" x="211.9792" y="479.1667"/><rect fill="url(#gnyienhogr4mm1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="209.8958" y="481.25"/><rect fill="url(#gnyienhogr4mm1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="209.8958" y="485.4167"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="14.5833" lengthAdjust="spacing" textLength="94.7917" x="101.5625" y="518.7449">Component1</text><!--MD5=[6bfbcd8abadcd8e3c6b60cc4d62a501e]
+entity myNetwork2_jetstream1--><rect fill="url(#gnyienhogr4mm1)" filter="url(#fnyienhogr4mm)" height="69.0592" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="160.4167" x="1220.8333" y="827.0833"/><rect fill="url(#gnyienhogr4mm1)" height="10.4167" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="15.625" x="1360.4167" y="832.2917"/><rect fill="url(#gnyienhogr4mm1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="1358.3333" y="834.375"/><rect fill="url(#gnyienhogr4mm1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="1358.3333" y="838.5417"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="14.5833" lengthAdjust="spacing" textLength="97.9167" x="1246.875" y="871.8699">myJetstream1</text><!--MD5=[b802a5ccec21875e1cd13ce92b30ed2e]
+entity myNetwork2_Component1--><rect fill="url(#gnyienhogr4mm1)" filter="url(#fnyienhogr4mm)" height="69.0592" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="157.2917" x="1004.6875" y="827.0833"/><rect fill="url(#gnyienhogr4mm1)" height="10.4167" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="15.625" x="1141.1458" y="832.2917"/><rect fill="url(#gnyienhogr4mm1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="1139.0625" y="834.375"/><rect fill="url(#gnyienhogr4mm1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="1139.0625" y="838.5417"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="14.5833" lengthAdjust="spacing" textLength="94.7917" x="1030.7292" y="871.8699">Component1</text><!--MD5=[229494a6a419d8a735daf879e2f34cbb]
+entity myNetwork2_Component2--><rect fill="url(#gnyienhogr4mm1)" filter="url(#fnyienhogr4mm)" height="69.0592" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="157.2917" x="810.9375" y="827.0833"/><rect fill="url(#gnyienhogr4mm1)" height="10.4167" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="15.625" x="947.3958" y="832.2917"/><rect fill="url(#gnyienhogr4mm1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="945.3125" y="834.375"/><rect fill="url(#gnyienhogr4mm1)" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="945.3125" y="838.5417"/><text fill="#FFFFFF" font-family="&quot;Verdana&quot;" font-size="14.5833" lengthAdjust="spacing" textLength="94.7917" x="836.9792" y="871.8699">Component2</text><!--MD5=[d333ac1d296157cc11c203ac54ab1677]
+link Component1_participant_myNetwork1 to Component1_participant_myNetwork2--><!--MD5=[3cfbde2c7093f6e8fe08a8b43866bbb2]
+link sn2 to sn1--><!--MD5=[94654422f24c44ffc9adf01f4f25a80f]
+link sn1 to sn2--><!--MD5=[20b814ec05e307305f2b869e84c82abf]
+link secret_Component1_dapr to secret_Component2_dapr--><!--MD5=[cf18f8b6bec0b6c6330acb59e67b2c69]
+link application to myNetwork1--><path d="M824.2221,197.8469 C818.9441,197.8185 811.4806,197.7959 802.1121,197.812 C783.3751,197.8442 757.0181,198.0313 725.2855,198.6361 C661.8203,199.8457 576.8529,202.7266 488.3385,209.3828 C311.3099,222.6953 120.0938,251.1094 58.3333,311.4583 C54.4486,315.2546 50.9156,319.3249 47.706,323.6213 C46.9036,324.6954 46.1214,325.7836 45.3589,326.8852 C45.1683,327.1606 44.9789,327.4368 44.7908,327.7139 " fill="none" id="application-to-myNetwork1" style="stroke:#2196F3;stroke-width:3.125;"/><polygon fill="#2196F3" points="44.7908,327.7139,53.5046,322.2991,47.7168,323.4052,46.6107,317.6174,44.7908,327.7139" style="stroke:#2196F3;stroke-width:3.125;"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="50" x="150" y="288.6113">creates</text><!--MD5=[9ba11dd417d681dd541a248fcffc166e]
+link application to myNetwork2--><path d="M824.9206,274.3677 C824.827,275.2178 824.7328,276.0735 824.638,276.9348 C824.4484,278.6573 824.2563,280.4022 824.0619,282.1688 C823.284,289.235 822.468,296.6484 821.618,304.3704 C814.818,366.1465 805.8444,447.6719 796.8711,529.1953 C792.3844,569.957 787.8979,610.7183 783.6831,649.0101 C782.6294,658.583 781.5927,668.0017 780.5773,677.2274 C780.4504,678.3806 780.3238,679.5308 780.1975,680.6779 " fill="none" id="application-to-myNetwork2" style="stroke:#2196F3;stroke-width:3.125;"/><polygon fill="#2196F3" points="780.1975,680.6779,785.3648,671.815,780.7673,675.5008,777.0815,670.9033,780.1975,680.6779" style="stroke:#2196F3;stroke-width:3.125;"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="50" x="831.25" y="513.0905">creates</text><!--MD5=[c7db5df534a30f645700bb9e358f06ec]
+link myNetwork1 to myNetwork2--><!--MD5=[a9658afefa4a95950073b6fd807cbf5f]
+link Component1_participant_myNetwork1 to myNetwork1_Component1--><path d="M1297.6979,231.3438 C1266.9375,240.9792 1232.3542,250.4479 1200,256.25 C997.3125,292.6146 451.75,205.8021 275,311.4583 C216.2708,346.5625 182.0417,422.3438 165.8125,468.6667 " fill="none" id="Component1_participant_myNetwork1-to-myNetwork1_Component1" style="stroke:#2196F3;stroke-width:3.125;"/><polygon fill="#2196F3" points="164.1146,473.6042,171.107,466.097,165.8106,468.6797,163.2279,463.3833,164.1146,473.6042" style="stroke:#2196F3;stroke-width:3.125;"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="58.3333" x="1107.2917" y="288.6113">registers</text><!--MD5=[c130260aae4d92176180e1754bd3dc16]
+link Component1_participant_myNetwork2 to myNetwork2_Component1--><path d="M1342.8438,542.8646 C1302.6146,572 1245.6354,616.9271 1204.1667,664.5833 C1161.0729,714.1042 1123.5208,780.7396 1102.1458,822.1146 " fill="none" id="Component1_participant_myNetwork2-to-myNetwork2_Component1" style="stroke:#2196F3;stroke-width:3.125;"/><polygon fill="#2196F3" points="1099.6146,827.0313,1107.6001,820.5905,1101.9912,822.3968,1100.185,816.7879,1099.6146,827.0313" style="stroke:#2196F3;stroke-width:3.125;"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="58.3333" x="1257.2917" y="641.7363">registers</text><!--MD5=[e682f7335cdff94063e63adc729debfd]
+link Component2_participant_myNetwork2 to myNetwork2_Component2--><path d="M1026.0104,231.6771 C1001.7083,343.6667 923.8542,702.4479 898.0104,821.5729 " fill="none" id="Component2_participant_myNetwork2-to-myNetwork2_Component2" style="stroke:#2196F3;stroke-width:3.125;"/><polygon fill="#2196F3" points="896.8958,826.7188,902.974,818.4539,898.0115,821.6313,894.8341,816.6688,896.8958,826.7188" style="stroke:#2196F3;stroke-width:3.125;"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="58.3333" x="1018.75" y="513.0905">registers</text><!--MD5=[7584efbef10841a746749f5e6f4dc248]
+link myNetwork1 to secret_Component1_dapr--><path d="M44.3298,593.0832 C45.1008,594.3049 45.9023,595.5049 46.7356,596.6799 C50.0685,601.3797 53.9089,605.6797 58.3333,609.375 C190.7917,720.0104 322.2813,540.9583 442.7083,664.5833 C457.7578,680.0313 466.7878,699.7357 471.8496,720.6662 C474.3805,731.1314 475.9194,741.9032 476.7227,752.6027 C476.7478,752.937 476.7722,753.2713 476.7959,753.6055 " fill="none" id="myNetwork1-to-secret_Component1_dapr" style="stroke:#2196F3;stroke-width:3.125;"/><polygon fill="#2196F3" points="476.7959,753.6055,480.2897,743.9595,476.4279,748.4102,471.9772,744.5484,476.7959,753.6055" style="stroke:#2196F3;stroke-width:3.125;"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="50" x="439.5833" y="641.7363">creates</text><!--MD5=[3849dbb5bb36ebe35689d9e5c5291b87]
+link myNetwork2 to secret_Component2_dapr--><path d="M751.8893,868.6534 C751.7692,868.7421 751.6479,868.8317 751.5256,868.9222 C751.2809,869.1033 751.0317,869.2879 750.7782,869.4761 C750.271,869.8526 749.7462,870.2435 749.2043,870.6484 C747.0368,872.2682 744.5963,874.1142 741.9196,876.1722 C731.2129,884.4043 716.7279,896.0299 700.8255,910.1536 C669.0208,938.401 631.5469,976.6406 607.2917,1017.7083 C605.5091,1020.7272 603.8079,1023.8399 602.1848,1027.0234 C601.3732,1028.6151 600.5812,1030.2246 599.8082,1031.8489 C599.4218,1032.661 599.0401,1033.4769 598.6631,1034.2961 " fill="none" id="myNetwork2-to-secret_Component2_dapr" style="stroke:#2196F3;stroke-width:3.125;"/><polygon fill="#2196F3" points="598.6631,1034.2961,606.3672,1027.5212,600.8403,1029.5646,598.7969,1024.0377,598.6631,1034.2961" style="stroke:#2196F3;stroke-width:3.125;"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="50" x="648.9583" y="994.8613">creates</text><!--MD5=[c69a8382663bb6072edc4ebd89db6043]
+@startuml
+!theme materia from https://raw.githubusercontent.com/plantuml/plantuml/master/themes
+
+package "Application Component specification" as application {
+    package "Component1" as Component1 {
+        [network-participant: myNetwork1] as Component1_participant_myNetwork1
+        [network-participant: myNetwork2] as Component1_participant_myNetwork2
+        Component1_participant_myNetwork1 -[hidden]d- Component1_participant_myNetwork2
+    }
+
+    package "Component2" as Component2{
+        [network-participant: myNetwork2] as Component2_participant_myNetwork2
+    }
+    ' Component1 -[hidden]l- Component2
+}
+
+package "secret: Component1.dapr" as secret_Component1_dapr {
+    [mystream.myNetwork1] as sn1
+    [mystream.myNetwork2] as sn2
+    sn1 -[hidden]u- sn2
+    sn2 -[hidden]u- sn1
+}
+
+package "secret: Component2.dapr" as secret_Component2_dapr {
+    [mystream.myNetwork2]
+}
+secret_Component1_dapr -[hidden]d- secret_Component2_dapr
+
+
+package "network: myNetwork1" as myNetwork1 {
+    package "streams" as myNetwork1_streams {
+        [myJetstream1] as myNetwork1_jetstream1
+        [myJetstream2] as myNetwork1_jetstream2
+    }
+    package "participants" as myNetwork1_participants {
+        [Component1] as myNetwork1_Component1
+    }
+}
+
+package "network: myNetwork2" as myNetwork2 {
+    package "streams" as myNetwork2_streams {
+        [myJetstream1] as myNetwork2_jetstream1
+    }
+    package "participants" as myNetwork2_participants {
+        [Component1] as myNetwork2_Component1
+        [Component2] as myNetwork2_Component2
+    }
+}
+
+application - -> myNetwork1 : creates
+application - -> myNetwork2 : creates
+myNetwork1 -[hidden]r- myNetwork2
+Component1_participant_myNetwork1 - -> myNetwork1_Component1 : registers
+Component1_participant_myNetwork2 - -> myNetwork2_Component1 : registers
+Component2_participant_myNetwork2 - -> myNetwork2_Component2 : registers
+secret_Component1_dapr <-u- myNetwork1 : creates
+secret_Component2_dapr <-u- myNetwork2 : creates
+@enduml
+
+@startuml
+
+
+
+skinparam backgroundColor transparent
+skinparam useBetaStyle false
+
+
+
+
+
+
+<style>
+  root {
+    BackgroundColor transparent
+    FontColor #FFF
+    HyperLinkColor #fd7e14
+    LineColor #1a78c2
+    LineThickness 1
+    Margin 10
+    Padding 6
+    Shadowing 0.0
+  }
+  node {
+   Padding 15
+   roundcorner 20
+   BackgroundColor #2196F3-#1a78c2
+  }
+  caption {
+    LineThickness 0
+  }
+  footer {
+    LineThickness 0
+  }
+  groupHeader {
+    BackgroundColor #fff
+    FontColor #9C27B0
+    FontStyle bold
+  }
+  header {
+    LineThickness 0
+  }
+  referenceHeader {
+    BackgroundColor transparent
+    FontColor #222
+    FontStyle bold
+  }
+  separator {
+    BackgroundColor #222
+    FontColor transparent
+    FontStyle bold
+  }
+  title {
+	FontSize 20
+	BorderRoundCorner            8
+	BorderThickness 	         1
+	BackgroundColor  #fff-#fff
+	FontColor #2196F3
+	BorderColor #fff
+  }
+  nwdiagDiagram {
+	network {
+			FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3    
+		LineColor #2196F3
+		LineThickness 1.0
+		FontColor #1a78c2
+	}
+	server {
+			FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	}
+	arrow {
+		FontColor #1a78c2
+		LineColor #1a78c2
+	}
+	group {
+		BackGroundColor #fff
+		LineColor $LIGHT_DARK
+		LineThickness 2.0
+		Margin 5
+		Padding 5
+	}
+  }
+  ganttDiagram {
+	task {
+			FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+		LineColor #2196F3
+		Margin 10
+		Padding 6
+	}
+	note {
+		FontColor #FFF
+		LineColor #7D1F8D
+		BackGroundColor #9C27B0
+	}
+	separator {
+		LineColor #fff
+		BackGroundColor #fff-#cccccc
+		FontColor #222
+	}
+	milestone {
+		FontColor #9C27B0
+		FontSize 16
+		FontStyle italic
+		BackGroundColor #fff
+		LineColor #cccccc
+	}
+	timeline {
+		BackgroundColor #fff
+		FontColor #222
+	}
+	closed {
+		BackgroundColor #CC7A00
+		FontColor #FFF
+	}
+  }
+</style>
+skinparam defaultFontName       "Verdana"
+skinparam defaultFontSize       12
+skinparam dpi                   100
+skinparam shadowing             true
+skinparam roundcorner           8
+skinparam ParticipantPadding    40
+skinparam BoxPadding            40
+skinparam Padding               10
+skinparam ArrowColor            #666
+skinparam stereotype {
+    CBackgroundColor #fff
+    CBorderColor #cccccc
+    ABackgroundColor #70bf73
+    ABorderColor #3D8C40
+    IBackgroundColor #B7161C
+    IBorderColor #b7161c
+    EBackgroundColor #ffad33
+    EBorderColor #CC7A00
+    NBackgroundColor #b052c0
+    NBorderColor #7D1F8D
+}
+skinparam title {
+	FontColor	                 #2196F3
+	BorderColor	                 #cccccc
+	FontSize	    	         20
+	BorderRoundCorner            8
+	BorderThickness 	         1
+	BackgroundColor              #fff-#fff
+}
+
+skinparam legend {
+	BackgroundColor #fff
+	BorderColor #cccccc
+	FontColor #222
+}
+
+skinparam swimlane {
+	BorderColor #9C27B0
+	BorderThickness 2
+	TitleBackgroundColor  #fff-#fff
+	TitleFontColor #2196F3
+}
+
+
+skinparam activity {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	BarColor #4CAF50
+	StartColor #9C27B0
+	EndColor #9C27B0
+	DiamondBackgroundColor #FFF-#fff
+  	DiamondBorderColor #cccccc
+	DiamondFontColor #222
+}
+
+
+skinparam participant {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	ParticipantBorderThickness 2
+}
+
+
+skinparam actor {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	FontColor #222
+}
+
+
+skinparam arrow {
+	Thickness 3
+	Color #2196F3
+	FontColor #222
+}
+
+
+skinparam sequence {
+	BorderColor #2196F3
+	TitleFontColor #2196F3
+	BackgroundColor transparent
+	StartColor #2196F3
+	EndColor #2196F3
+	BoxBackgroundColor #fff
+	BoxBorderColor #666
+	BoxFontColor #222
+	DelayFontColor #222
+	LifeLineBorderColor #cccccc
+	LifeLineBorderThickness 2
+	LifeLineBackgroundColor #fff
+	GroupBorderColor #666
+	GroupFontColor #222
+	GroupHeaderFontColor #9C27B0
+	DividerBackgroundColor #FFF-#fff
+    DividerBorderColor #666
+    DividerBorderThickness 2
+    DividerFontColor #222
+	ReferenceBackgroundColor transparent
+	ReferenceBorderColor #666
+	ReferenceFontColor #222
+	ReferenceHeaderFontColor #9C27B0
+	StereotypeFontColor #FFF
+}
+
+
+skinparam partition {
+	BorderColor #2196F3
+	FontColor #2196F3
+	BackgroundColor transparent
+}
+
+
+skinparam collections {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+}
+
+
+skinparam control {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	FontColor #222
+}
+
+
+skinparam entity {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	FontColor #222
+}
+
+
+skinparam boundary {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	FontColor #222
+}
+
+
+skinparam agent {
+	BackgroundColor #orange
+	BorderColor #999999
+	FontColor #333333
+}
+
+
+skinparam note {
+	BorderThickness 1
+	BackgroundColor #b052c0-#9C27B0
+	BorderColor #9C27B0
+	FontColor #FFF
+}
+
+
+skinparam artifact {
+	BackgroundColor #FFF-#fff
+	BorderColor #666
+	FontColor #666
+}
+
+
+skinparam component {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+}
+
+
+skinparam interface {
+	BackgroundColor  #B7161C
+	BorderColor  #e51c23
+	FontColor #222
+}
+
+
+skinparam storage {
+	BackgroundColor #ffad33-#ff9800
+  	BorderColor #ff9800
+	FontColor #FFF
+}
+
+
+skinparam node {
+	BackgroundColor #fff-#fff
+	BorderColor #222
+	FontColor #222
+}
+
+
+skinparam cloud {
+	BackgroundColor #F2FCFE-#eeeeee
+	BorderColor #F2FCFE
+	FontColor #222
+}
+
+
+skinparam database {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	FontColor #222
+}
+
+
+skinparam class {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	HeaderBackgroundColor #2196F3-#1a78c2
+	StereotypeFontColor #222
+	BorderThickness 1
+	AttributeFontColor #fff
+	AttributeFontSize 11
+}
+
+
+skinparam object {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	StereotypeFontColor #222
+	BorderThickness 1
+	AttributeFontColor #222
+	AttributeFontSize 11
+}
+
+
+skinparam usecase {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	BorderThickness 2
+	StereotypeFontColor #2196F3
+}
+
+
+skinparam rectangle {
+	FontColor #2196F3
+	BackgroundColor #fff-#fff
+	BorderThickness 2
+	StereotypeFontColor #2196F3
+}
+
+
+skinparam package {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	BackgroundColor #fff-#fff
+	BorderThickness 2
+}
+
+
+skinparam folder {
+	BackgroundColor #FFF-#fff
+  	BorderColor #ff9800
+	FontColor #ff9800
+	BorderThickness 2
+}
+
+
+skinparam frame {
+	BackgroundColor #FFF-#fff
+  	BorderColor #9C27B0
+	FontColor #9C27B0
+	BorderThickness 2
+}
+
+
+skinparam state {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+	BorderColor #1a78c2
+	StartColor #9C27B0
+	EndColor #9C27B0
+	AttributeFontColor #222
+	AttributeFontSize 11
+}
+
+
+skinparam queue {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+}
+
+
+skinparam card {
+	BackgroundColor #b052c0-#9C27B0
+	BorderColor #9C27B0
+	FontColor #FFF
+}
+
+
+skinparam file {
+	BackgroundColor #fff-#fff
+	BorderColor #666
+	FontColor #666
+
+}
+
+
+skinparam stack {
+		FontColor #FFF
+	BorderColor #2196F3
+	BackgroundColor #4dabf5-#2196F3
+}
+
+package "Application Component specification" as application {
+    package "Component1" as Component1 {
+        [network-participant: myNetwork1] as Component1_participant_myNetwork1
+        [network-participant: myNetwork2] as Component1_participant_myNetwork2
+        Component1_participant_myNetwork1 -[hidden]d- Component1_participant_myNetwork2
+    }
+
+    package "Component2" as Component2{
+        [network-participant: myNetwork2] as Component2_participant_myNetwork2
+    }
+}
+
+package "secret: Component1.dapr" as secret_Component1_dapr {
+    [mystream.myNetwork1] as sn1
+    [mystream.myNetwork2] as sn2
+    sn1 -[hidden]u- sn2
+    sn2 -[hidden]u- sn1
+}
+
+package "secret: Component2.dapr" as secret_Component2_dapr {
+    [mystream.myNetwork2]
+}
+secret_Component1_dapr -[hidden]d- secret_Component2_dapr
+
+
+package "network: myNetwork1" as myNetwork1 {
+    package "streams" as myNetwork1_streams {
+        [myJetstream1] as myNetwork1_jetstream1
+        [myJetstream2] as myNetwork1_jetstream2
+    }
+    package "participants" as myNetwork1_participants {
+        [Component1] as myNetwork1_Component1
+    }
+}
+
+package "network: myNetwork2" as myNetwork2 {
+    package "streams" as myNetwork2_streams {
+        [myJetstream1] as myNetwork2_jetstream1
+    }
+    package "participants" as myNetwork2_participants {
+        [Component1] as myNetwork2_Component1
+        [Component2] as myNetwork2_Component2
+    }
+}
+
+application - -> myNetwork1 : creates
+application - -> myNetwork2 : creates
+myNetwork1 -[hidden]r- myNetwork2
+Component1_participant_myNetwork1 - -> myNetwork1_Component1 : registers
+Component1_participant_myNetwork2 - -> myNetwork2_Component1 : registers
+Component2_participant_myNetwork2 - -> myNetwork2_Component2 : registers
+secret_Component1_dapr <-u- myNetwork1 : creates
+secret_Component2_dapr <-u- myNetwork2 : creates
+@enduml
+
+PlantUML version 1.2021.16(Wed Dec 08 17:25:22 UTC 2021)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>

@@ -1,15 +1,18 @@
 module github.com/edgefarm/anck
 
-go 1.17
+go 1.18
 
 require (
-	github.com/edgefarm/anck-credentials v0.6.1
+	github.com/avast/retry-go/v4 v4.0.4
+	github.com/edgefarm/anck-credentials v0.7.1
 	github.com/hsson/once v1.0.1
 	github.com/kinbiko/jsonassert v1.1.0
+	github.com/merkur0/go-slices v0.0.0-20191008224404-0191b04c1ee8
 	github.com/nats-io/jsm.go v0.0.29
 	github.com/nats-io/nats.go v1.13.1-0.20220216000616-0096b1bfae8d
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.17.0
+	github.com/ssoroka/slice v0.0.0-20220402005549-78f0cea3df8b
 	github.com/stretchr/testify v1.7.0
 	github.com/tidwall/pretty v1.2.0
 	google.golang.org/grpc v1.42.0
@@ -73,7 +76,7 @@ require (
 	gomodules.xyz/jsonpatch/v2 v2.2.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20211117155847-120650a500bb // indirect
-	google.golang.org/protobuf v1.27.1 // indirect
+	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect

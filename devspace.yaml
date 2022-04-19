@@ -2,39 +2,39 @@ version: v1beta11
 
 vars:
   - name: IMAGE
-    value: ci4rail/dev-anck
+    value: ci4rail/anck:latest
   - name: IMAGE-ANCKCREDENTIALS
     value: ci4rail/anck-credentials
 
 dependencies:
-  - name: k3d
-    source:
-      git: https://github.com/edgefarm/devspace.base
-      subPath: /environments/k3d
-      branch: main
-  - name: anckcredentials
-    source:
-      git: https://github.com/edgefarm/anck-credentials.git
-      subPath: /
-      branch: main
+#   - name: k3d
+#     source:
+#       git: https://github.com/edgefarm/devspace.base
+#       subPath: /environments/k3d
+#       branch: main
+#   - name: anckcredentials
+#     source:
+#       git: https://github.com/edgefarm/anck-credentials.git
+#       subPath: /
+#       branch: main
 
-commands:
-  - name: init
-    command: |-
-      devspace run update
-      devspace run k3d.init
+# commands:
+#   - name: init
+#     command: |-
+#       devspace run update
+#       devspace run k3d.init
 
-  - name: purge
-    command: |-
-      devspace run k3d.purge
+#   - name: purge
+#     command: |-
+#       devspace run k3d.purge
 
-  - name: activate
-    command: |-
-      devspace run k3d.activate
+#   - name: activate
+#     command: |-
+#       devspace run k3d.activate
 
-  - name: update
-    command: |-
-      devspace update dependencies
+#   - name: update
+#     command: |-
+#       devspace update dependencies
 
 dev:
   ports:
@@ -69,7 +69,7 @@ dev:
 
   replacePods:
     - imageSelector: ${IMAGE}
-      replaceImage: loftsh/go:latest
+      replaceImage: ghcr.io/loft-sh/devspace-containers/go:1.18-alpine
       patches:
         - op: replace
           path: spec.containers[1].command
@@ -78,13 +78,21 @@ dev:
         - op: replace
           path: spec.containers[1].args
           value:
-            - "9999999"
+            - "999999999"
         - op: remove
           path: spec.containers[1].securityContext
+        - op: remove
+          path: spec.containers[1].resources.limits
+        - op: remove
+          path: spec.containers[1].resources.requests
+        - op: remove
+          path: spec.containers[0].resources.limits
+        - op: remove
+          path: spec.containers[0].resources.requests
     # # Uncomment to replace conainter image with golang container to manually run application or debug
     # # Requires sync changes from ../anck-credentials/ in container
     # - imageSelector: ${IMAGE-ANCKCREDENTIALS}
-    #   replaceImage: loftsh/go:latest
+    #   replaceImage: ghcr.io/loft-sh/devspace-containers/go:1.18-alpine
     #   namespace: anck
     #   patches:
     #     - op: replace
