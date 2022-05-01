@@ -5,8 +5,10 @@ on:
     branches:
       - beta
       - main
-  release:
-    types: [created]
+  workflow_run:
+    workflows:
+      - "Release"
+    types: [completed]
 
 env:
   REGISTRY: ghcr.io
