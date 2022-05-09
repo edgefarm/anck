@@ -1,14 +1,16 @@
 name: Container Image
 
 on:
+  push:
+    branches:
+      - main
+      - beta
+    tags:
+      - 'v*'
   pull_request:
     branches:
       - beta
       - main
-  workflow_run:
-    workflows:
-      - "Release"
-    types: [completed]
 
 env:
   REGISTRY: ghcr.io
@@ -37,6 +39,11 @@ jobs:
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
