@@ -1,14 +1,9 @@
-name: "release-image"
+name: "release-image-tagged"
 
 on:
   push:
-    branches:
-      - main
-      - beta
-  pull_request:
-    branches:
-      - beta
-      - main
+    tags:
+      - 'v*'
 
 env:
   REGISTRY: ghcr.io
