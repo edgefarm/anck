@@ -1,0 +1,10 @@
+name: "release-image-tagged"
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  release_image:
+    uses: ./.github/workflows/release-image.yml
