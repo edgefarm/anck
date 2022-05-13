@@ -1,18 +1,7 @@
-name: Container Image
+name: "release-image"
 
 on:
-  push:
-    branches:
-      - main
-      - beta
-    tags:
-      - 'v*'
-  release:
-    types: [published]
-  pull_request:
-    branches:
-      - beta
-      - main
+  workflow_call:
 
 env:
   REGISTRY: ghcr.io
