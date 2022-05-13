@@ -16,5 +16,7 @@ jobs:
           fetch-depth: 0
       - name: Release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # dont use GITHUB_TOKEN here
+          # https://docs.github.com/en/actions/using-workflows/triggering-a-workflow#triggering-a-workflow-from-a-workflow
+          GITHUB_TOKEN: ${{ secrets.TRIGGER_WORKFLOWS_TOKEN }}
         run: npx semantic-release
