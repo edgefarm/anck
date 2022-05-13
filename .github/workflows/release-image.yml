@@ -1,8 +1,17 @@
 name: "release-image"
 
 on:
-  workflow_call:
-
+  push:
+    branches:
+      - main
+      - beta
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - beta
+      - main
+      
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
