@@ -37,6 +37,7 @@ func ApplyNodeDNS(client client.Client) error {
 		Data: map[string]string{
 			"node-dns.conf": `listeninterface: docker0
 listenport: 53
+updateresolvconf: true
 feed:
   k8sapi:
     enabled: true
