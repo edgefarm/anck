@@ -22,6 +22,8 @@ import (
 	"time"
 
 	retry "github.com/avast/retry-go/v4"
+	slice "github.com/merkur0/go-slices"
+	unique "github.com/ssoroka/slice"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -33,7 +35,6 @@ import (
 	networkv1alpha1 "github.com/edgefarm/anck/apis/network/v1alpha1"
 	grpcClient "github.com/edgefarm/anck/pkg/grpc"
 	"github.com/edgefarm/anck/pkg/nats"
-	"github.com/ssoroka/slice"
 
 	anckcredentials "github.com/edgefarm/anck-credentials/pkg/apis/config/v1alpha1"
 	common "github.com/edgefarm/anck/pkg/common"
@@ -383,20 +384,11 @@ func (r *NetworksReconciler) reconcileJetstreams(ctx context.Context, network *n
 	}
 	defer js.Cleanup()
 
-	// nodeStreamNames := func(streams []networkv1alpha1.StreamSpec) []string {
-	// 	var names []string
-	// 	for _, stream := range streams {
-	// 		if stream.Location == "node" {
-	// 			names = append(names, fmt.Sprintf("%s_%s", network.Spec.App, stream.Name))
-	// 		}
-	// 	}
-	// 	return names
-	// }(network.Spec.Streams)
-
 	networkCopy := network.DeepCopy()
 	errorsCreatingJetstreams := make(map[string]bool)
 	domainMessages := jetstreams.NewDomainMessages()
-
+	removedNetworkFinalizers := []string{}
+	addedNetworkFinalizers := []string{}
 	for node := range network.Info.Participating.Nodes {
 		// networkInfoModified := false
 		// Check if the node is participating in the network yet
@@ -437,15 +429,12 @@ func (r *NetworksReconciler) reconcileJetstreams(ctx context.Context, network *n
 				} else {
 					nodeparticipantsLog.Info("Done creating node participation", "node", node, "network", network.Name, "state", network.Info.Participating.Nodes[node])
 					network.Info.Participating.Nodes[node] = participatingNodeStateActive
-					if err := resources.AddNetworkFinalizer(network.Name, network.Namespace, []string{node}); err != nil {
-						errorText := "Error adding finalizer to network"
-						networkLog.Info(errorText)
-					}
+					addedNetworkFinalizers = append(addedNetworkFinalizers, node)
 					// move pods from PodsCreating to Pods
 					for _, pods := range network.Info.Participating.PodsCreating[node] {
 						network.Info.Participating.Pods[node] = append(network.Info.Participating.Pods[node], pods)
 					}
-					network.Info.Participating.Pods[node] = slice.Unique(network.Info.Participating.Pods[node])
+					network.Info.Participating.Pods[node] = unique.Unique(network.Info.Participating.Pods[node])
 					delete(network.Info.Participating.PodsCreating, node) // TODO: delete value from slice. if slice is empty, delete node key from map
 					nodeparticipantsLog.Info("Done adding new pods for network", "node", node, "network", network.Name, "podsCreating", network.Info.Participating.PodsCreating, "pods", network.Info.Participating.Pods, "podsTerminating", network.Info.Participating.PodsTerminating)
 				}
@@ -456,7 +445,7 @@ func (r *NetworksReconciler) reconcileJetstreams(ctx context.Context, network *n
 			// move pods from PodsCreating to Pods
 			for node, pods := range network.Info.Participating.PodsCreating {
 				network.Info.Participating.Pods[node] = append(network.Info.Participating.Pods[node], pods...)
-				network.Info.Participating.Pods[node] = slice.Unique(network.Info.Participating.Pods[node])
+				network.Info.Participating.Pods[node] = unique.Unique(network.Info.Participating.Pods[node])
 				delete(network.Info.Participating.PodsCreating, node)
 			}
 			nodeparticipantsLog.Info("Done adding new nodes to already participating nodes", "node", node, "network", network.Name, "podsCreating", network.Info.Participating.PodsCreating, "pods", network.Info.Participating.Pods, "podsTerminating", network.Info.Participating.PodsTerminating)
@@ -469,26 +458,8 @@ func (r *NetworksReconciler) reconcileJetstreams(ctx context.Context, network *n
 				// Handle only the logic for the network resource
 				delete(network.Info.Participating.Pods, node)
 				delete(network.Info.Participating.Nodes, node)
-				for _, pod := range network.Info.Participating.PodsTerminating[node] {
-					nodeparticipantsLog.Info("Deleting pod finalizer", "node", node, "network", network.Name, "pod", pod)
-					err := resources.RemovePodFinalizers(pod, network.Namespace, []string{PodFinalizer})
-					if err != nil {
-						nodeparticipantsLog.Error(err, "Error removing pod finalizer", "pod", pod, "network", network.Name)
-						if !errors.IsNotFound(err) {
-							return ctrl.Result{}, err
-						}
-					}
-					nodeparticipantsLog.Info("Done deleting pod finalizer", "node", node, "network", network.Name, "pod", pod)
-				}
 				delete(network.Info.Participating.PodsTerminating, node)
-				nodeparticipantsLog.Info("Deleting network finalizer for node", "network", network.Name, "finalizers", network.ObjectMeta.Finalizers)
-				err := resources.RemoveNetworkFinalizers(network.Name, network.Namespace, []string{node})
-				if err != nil {
-					return ctrl.Result{
-						RequeueAfter: 5 * time.Second,
-					}, err
-				}
-				nodeparticipantsLog.Info("Done deleting network finalizer for node", "network", network.Name, "finalizers", network.ObjectMeta.Finalizers)
+				removedNetworkFinalizers = append(removedNetworkFinalizers, node)
 				nodeparticipantsLog.Info("Done removing nodes participation", "node", node, "network", network.Name, "podsCreating", network.Info.Participating.PodsCreating, "pods", network.Info.Participating.Pods, "podsTerminating", network.Info.Participating.PodsTerminating)
 			}
 		// Node is still particpating in the network - delete pod case
@@ -504,25 +475,20 @@ func (r *NetworksReconciler) reconcileJetstreams(ctx context.Context, network *n
 					}
 				}
 				nodeparticipantsLog.Info("Removing finalizer from pod", "pod", pod, "node", node, "network", network.Name, "pods", network.Info.Participating.Pods[node])
-				err := resources.RemovePodFinalizers(pod, network.Namespace, []string{PodFinalizer})
-				if err != nil {
-					if !errors.IsNotFound(err) {
-						nodeparticipantsLog.Error(err, "Error removing pod finalizer. ", "pod", pod, "network", network.Name, "error", err.Error())
-					}
-				}
 				delete(network.Info.Participating.PodsTerminating, node)
 			}
 			nodeparticipantsLog.Info("Done removing nodes from still participating nodes", "node", node, "network", network.Name, "podsCreating", network.Info.Participating.PodsCreating, "pods", network.Info.Participating.Pods, "podsTerminating", network.Info.Participating.PodsTerminating)
-			nodeparticipantsLog.Info("Deleting network finalizer for node", "network", network.Name, "finalizers", network.ObjectMeta.Finalizers)
-			err := resources.RemoveNetworkFinalizers(network.Name, network.Namespace, []string{node})
-			if err != nil {
-				return ctrl.Result{
-					RequeueAfter: 5 * time.Second,
-				}, err
-			}
-			nodeparticipantsLog.Info("Done deleting network finalizer for node", "network", network.Name, "finalizers", network.ObjectMeta.Finalizers)
+			removedNetworkFinalizers = append(removedNetworkFinalizers, node)
 		}
 	}
+
+	nodeparticipantsLog.Info("Deleting network finalizer for nodes", "nodes", removedNetworkFinalizers, "network", network.Name, "finalizers", network.ObjectMeta.Finalizers)
+	removeNetworkFinalizers(network, removedNetworkFinalizers)
+	nodeparticipantsLog.Info("Done deleting network finalizer for nodes", "nodes", removedNetworkFinalizers, "network", network.Name, "finalizers", network.ObjectMeta.Finalizers)
+	nodeparticipantsLog.Info("Deleting adding finalizer for nodes", "nodes", addedNetworkFinalizers, "network", network.Name, "finalizers", network.ObjectMeta.Finalizers)
+	addNetworkFinalizer(network, addedNetworkFinalizers)
+	nodeparticipantsLog.Info("Done adding network finalizer for nodes", "nodes", addedNetworkFinalizers, "network", network.Name, "finalizers", network.ObjectMeta.Finalizers)
+
 	for _, node := range domainMessages.OkMap {
 		for _, message := range node {
 			nodeparticipantsLog.Info(message)
@@ -564,4 +530,23 @@ func (r *NetworksReconciler) updateInfoAndReturn(ctx context.Context, network *n
 		}
 	}
 	return nil
+}
+
+// removeNetworkFinalizers removes the finalizers from a network
+func removeNetworkFinalizers(network *networkv1alpha1.Network, removeFinalizers []string) *networkv1alpha1.Network {
+	finalizers := network.ObjectMeta.Finalizers
+	for i, v := range removeFinalizers {
+		if slice.ContainsString(finalizers, v) {
+			finalizers = append(finalizers[:i], finalizers[i+1:]...)
+		}
+	}
+
+	network.ObjectMeta.Finalizers = finalizers
+	return network
+}
+
+// addNetworkFinalizer adds the finalizers from a network
+func addNetworkFinalizer(network *networkv1alpha1.Network, finalizers []string) {
+	network.ObjectMeta.Finalizers = append(network.ObjectMeta.Finalizers, finalizers...)
+	network.ObjectMeta.Finalizers = unique.Unique(network.ObjectMeta.Finalizers)
 }

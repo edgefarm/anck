@@ -2,15 +2,11 @@ package resources
 
 import (
 	"context"
-	"fmt"
 
 	networkv1alpha1 "github.com/edgefarm/anck/apis/network/v1alpha1"
 	"github.com/edgefarm/anck/pkg/client/networkclientset"
-	slice "github.com/merkur0/go-slices"
-	unique "github.com/ssoroka/slice"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/rest"
-	"k8s.io/client-go/util/retry"
 	ctrl "sigs.k8s.io/controller-runtime"
 )
 
@@ -44,64 +40,32 @@ func UpdateNetwork(network *networkv1alpha1.Network, namespace string) (*network
 	return network, nil
 }
 
-// AddNetworkFinalizer adds the finalizers from a network
-func AddNetworkFinalizer(name string, namespace string, finalizers []string) error {
-	clientset, err := SetupNetworkClientset()
-	if err != nil {
-		networkLog.Error(err, "error getting client for cluster")
-		return err
-	}
-	err = retry.RetryOnConflict(retry.DefaultRetry, func() error {
-		network, err := clientset.NetworkV1alpha1().Networks(namespace).Get(context.Background(), name, metav1.GetOptions{})
-		if err != nil {
-			networkLog.Info(fmt.Sprintf("error listing networks: %s", err))
-			return err
-		}
+// // AddNetworkFinalizer adds the finalizers from a network
+// func AddNetworkFinalizer(name string, namespace string, finalizers []string) error {
+// 	clientset, err := SetupNetworkClientset()
+// 	if err != nil {
+// 		networkLog.Error(err, "error getting client for cluster")
+// 		return err
+// 	}
+// 	err = retry.RetryOnConflict(retry.DefaultRetry, func() error {
+// 		network, err := clientset.NetworkV1alpha1().Networks(namespace).Get(context.Background(), name, metav1.GetOptions{})
+// 		if err != nil {
+// 			networkLog.Info(fmt.Sprintf("error listing networks: %s", err))
+// 			return err
+// 		}
 
-		network.ObjectMeta.Finalizers = append(network.ObjectMeta.Finalizers, finalizers...)
-		network.ObjectMeta.Finalizers = unique.Unique(network.ObjectMeta.Finalizers)
+// 		network.ObjectMeta.Finalizers = append(network.ObjectMeta.Finalizers, finalizers...)
+// 		network.ObjectMeta.Finalizers = unique.Unique(network.ObjectMeta.Finalizers)
 
-		_, err = clientset.NetworkV1alpha1().Networks(namespace).Update(context.Background(), network, metav1.UpdateOptions{})
-		if err != nil {
-			networkLog.Info(fmt.Sprintf("error listing networks: %s", err))
-			return err
-		}
-		return nil
-	})
-	return err
-}
-
-// RemoveNetworkFinalizers removes the finalizers from a network
-func RemoveNetworkFinalizers(name string, namespace string, removeFinalizers []string) error {
-	clientset, err := SetupNetworkClientset()
-	if err != nil {
-		networkLog.Error(err, "error getting client for cluster")
-		return err
-	}
-	err = retry.RetryOnConflict(retry.DefaultRetry, func() error {
-		network, err := clientset.NetworkV1alpha1().Networks(namespace).Get(context.Background(), name, metav1.GetOptions{})
-		if err != nil {
-			networkLog.Info(fmt.Sprintf("error listing networks: %s", err))
-			return err
-		}
-
-		finalizers := network.ObjectMeta.Finalizers
-		for i, v := range removeFinalizers {
-			if slice.ContainsString(finalizers, v) {
-				finalizers = append(finalizers[:i], finalizers[i+1:]...)
-			}
-		}
-
-		network.ObjectMeta.Finalizers = finalizers
-		_, err = clientset.NetworkV1alpha1().Networks(namespace).Update(context.Background(), network, metav1.UpdateOptions{})
-		if err != nil {
-			networkLog.Info(fmt.Sprintf("error listing networks: %s", err))
-			return err
-		}
-		return nil
-	})
-	return err
-}
+// 		_, err = clientset.NetworkV1alpha1().Networks(namespace).Update(context.Background(), network, metav1.UpdateOptions{})
+// 		if err != nil {
+// 			networkLog.Info(fmt.Sprintf("error listing networks: %s", err))
+// 			return err
+// 		}
+// 		return nil
+// 	})
+// 	return err
+// }
 
 // SetNetworkAccountName sets the account name of a network
 func SetNetworkAccountName(network *networkv1alpha1.Network, accountName string) (*networkv1alpha1.Network, error) {

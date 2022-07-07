@@ -25,6 +25,7 @@ import (
 	resources "github.com/edgefarm/anck/pkg/resources"
 	"github.com/ssoroka/slice"
 	corev1 "k8s.io/api/core/v1"
+	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -36,11 +37,6 @@ import (
 
 var (
 	podsLog = ctrl.Log.WithName("pods")
-)
-
-const (
-	// PodFinalizer is the name of the finalizer which will be added to the
-	PodFinalizer = "applications.edgefarm.io/finalizer"
 )
 
 // PodsReconiler reconciles a Participants object
@@ -180,10 +176,20 @@ func (r *PodsReconiler) reconcileDeletePod(ctx context.Context, pod *corev1.Pod)
 			}
 			network.Info.Participating.PodsTerminating[node] = append(network.Info.Participating.PodsTerminating[node], pod.Name)
 			network.Info.Participating.PodsTerminating[node] = slice.Unique(network.Info.Participating.PodsTerminating[node])
+
+			pod = removePodFinalizers(pod)
+
 			if common.SliceEqual(network.Info.Participating.PodsTerminating[node], network.Info.Participating.Pods[node]) {
 				if !slice.Contains(network.Info.Participating.PodsCreating[node], pod.Name) {
 					network.Info.Participating.Nodes[node] = participatingNodeStateTerminating
 				}
+			}
+			_, err = resources.UpdatePod(pod)
+			if err != nil {
+				podsLog.Error(err, "error updating pod")
+				return ctrl.Result{
+					RequeueAfter: 5 * time.Second,
+				}, err
 			}
 			_, err = resources.UpdateNetwork(network, pod.Namespace)
 			if err != nil {
@@ -194,13 +200,6 @@ func (r *PodsReconiler) reconcileDeletePod(ctx context.Context, pod *corev1.Pod)
 			}
 		}
 	}
-	// err = resources.RemovePodFinalizers(req.Name, req.Namespace, []string{PodFinalizer})
-	// if err != nil {
-	// 	podsLog.Error(err, "error removing finalizers")
-	// 	return ctrl.Result{
-	// 		Requeue: false,
-	// 	}, err
-	// }
 
 	return ctrl.Result{
 		Requeue: false,
@@ -250,4 +249,10 @@ func (r *PodsReconiler) SetupWithManager(mgr ctrl.Manager) error {
 			},
 		}).
 		Complete(r)
+}
+
+// removePodFinalizers removes the finalizers from a network
+func removePodFinalizers(pod *v1.Pod) *v1.Pod {
+	pod.ObjectMeta.Finalizers = []string{}
+	return pod
 }
