@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	slice "github.com/merkur0/go-slices"
 	ctrl "sigs.k8s.io/controller-runtime"
 
 	v1 "k8s.io/api/core/v1"
@@ -92,38 +91,6 @@ func GetPod(name string, namespace string) (*v1.Pod, error) {
 // 	return pod, nil
 // }
 
-// RemovePodFinalizers removes the finalizers from a pod
-func RemovePodFinalizers(name string, namespace string, removeFinalizers []string) error {
-	clientset, err := clientset()
-	if err != nil {
-		podLog.Error(err, "error getting client for cluster")
-		return err
-	}
-	err = retry.RetryOnConflict(retry.DefaultRetry, func() error {
-		pod, err := clientset.CoreV1().Pods(namespace).Get(context.Background(), name, metav1.GetOptions{})
-		if err != nil {
-			podLog.Info(fmt.Sprintf("error listing pods: %s", err))
-			return err
-		}
-
-		podFinalizers := pod.ObjectMeta.Finalizers
-		for i, v := range removeFinalizers {
-			if slice.ContainsString(podFinalizers, v) {
-				podFinalizers = append(podFinalizers[:i], podFinalizers[i+1:]...)
-			}
-		}
-
-		pod.ObjectMeta.Finalizers = podFinalizers
-		_, err = clientset.CoreV1().Pods(namespace).Update(context.Background(), pod, metav1.UpdateOptions{})
-		if err != nil {
-			podLog.Info(fmt.Sprintf("error listing pods: %s", err))
-			return err
-		}
-		return nil
-	})
-	return err
-}
-
 // RemovePodLabels removes the labels from a pod
 func RemovePodLabels(name string, namespace string, labels []string) error {
 	clientset, err := clientset()
@@ -180,4 +147,19 @@ func UpdatePodLabel(name string, namespace string, key string, value string) err
 		return nil
 	})
 	return err
+}
+
+// UpdatePod updates a pods
+func UpdatePod(pod *v1.Pod) (*v1.Pod, error) {
+	clientset, err := clientset()
+	if err != nil {
+		podLog.Error(err, "error getting client for cluster")
+		return nil, err
+	}
+	ret, err := clientset.CoreV1().Pods(pod.Namespace).Update(context.Background(), pod, metav1.UpdateOptions{})
+	if err != nil {
+		podLog.Info(fmt.Sprintf("error listing pods: %s", err))
+		return nil, err
+	}
+	return ret, nil
 }
