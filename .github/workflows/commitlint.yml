@@ -3,6 +3,11 @@ on:
   pull_request:
     branches:
       - "**"
+  push:
+    branches:
+      - beta
+      - main
+
 jobs:
   commitlint:
     runs-on: ubuntu-latest

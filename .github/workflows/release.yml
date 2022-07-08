@@ -1,14 +1,16 @@
 name: Release
 on:
-  push:
-    branches:
-      - main
-      - beta
+  workflow_run:
+    workflows:
+      - "Lint Commit Messages"
+    types: [completed]
 
 jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' &&
+      (github.ref == 'refs/heads/beta' || github.ref == 'refs/heads/main')}}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -19,4 +21,5 @@ jobs:
           # dont use GITHUB_TOKEN here
           # https://docs.github.com/en/actions/using-workflows/triggering-a-workflow#triggering-a-workflow-from-a-workflow
           GITHUB_TOKEN: ${{ secrets.TRIGGER_WORKFLOWS_TOKEN }}
-        run: npx semantic-release
+          # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm install @semantic-release/git -D && npx semantic-release
