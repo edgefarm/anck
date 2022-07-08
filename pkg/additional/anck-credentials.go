@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	anckcredentialsImage    = "ci4rail/anck-credentials:latest"
+	anckcredentialsImage    = "ghcr.io/edgefarm/anck-credentials:0.8.0-beta.1"
 	anckcredentialsGrpcPort = 6000
 )
 

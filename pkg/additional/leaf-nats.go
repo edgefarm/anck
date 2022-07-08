@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	natsImage                   = "ci4rail/edgefarm-nats:66c57aaf"
+	natsImage                   = "ghcr.io/edgefarm/edgefarm-nats:1.0.0-beta.12"
 	natsNamespace               = "nats"
 	defaultDomain               = "DEFAULT_DOMAIN"
 	defaultJetstreamStoreageDir = "/store"
