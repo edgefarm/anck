@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	nodeDNSImage     = "ci4rail/node-dns:latest"
+	nodeDNSImage     = "ghcr.io/edgefarm/node-dns:1.0.0-beta.2"
 	nodeDNSNamespace = "node-dns"
 )
 
