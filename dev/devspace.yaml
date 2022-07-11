@@ -8,9 +8,6 @@ vars:
     command: echo $(pwd)/kind-config.yaml
   - name: KIND_CLUSTER_VERSION
     value: "v1.21.12"
-  # devspace dev
-  - name: IMAGE
-    value: ci4rail/anck:latest
 
 dependencies:
   - name: anck
@@ -50,22 +47,30 @@ commands:
 
 dev:
   ports:
-    - imageSelector: ${IMAGE}
+    - labelSelector:
+        control-plane: controller-manager
+      containerName: manager
       forward:
         - port: 23451 # Forward the port from the Pod to localhost:23451
           remotePort: 2345
   sync:
-    - imageSelector: ${IMAGE}
+    - labelSelector:
+        control-plane: controller-manager
+      containerName: manager
       localSubPath: ../
       excludePaths:
         - .git/
   terminal:
-    imageSelector: ${IMAGE}
+    labelSelector:
+      control-plane: controller-manager
+    containerName: manager
     command:
       - bash
 
   replacePods:
-    - imageSelector: ${IMAGE}
+    - labelSelector:
+        control-plane: controller-manager
+      containerName: manager
       replaceImage: ghcr.io/loft-sh/devspace-containers/go:1.18-alpine
       patches:
         - op: replace

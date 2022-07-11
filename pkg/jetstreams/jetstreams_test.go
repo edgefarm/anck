@@ -50,7 +50,7 @@ func TestCreateJetstreamConfigsStorageFile(t *testing.T) {
 			Discard:           "new",
 		},
 	}
-	c, err := createJetstreamConfig(config, []networkv1alpha1.SubjectSpec{
+	c, err := createJetstreamConfig("", config, []networkv1alpha1.SubjectSpec{
 		{
 			Name:     "mystreams",
 			Subjects: []string{"mySubject1", "mySubject2"},
@@ -88,7 +88,7 @@ func TestCreateJetstreamConfigsStorageMemory(t *testing.T) {
 		},
 	}
 
-	c, err := createJetstreamConfig(config, []networkv1alpha1.SubjectSpec{
+	c, err := createJetstreamConfig("", config, []networkv1alpha1.SubjectSpec{
 		{
 			Name:     "mystreams",
 			Subjects: []string{"mySubject1", "mySubject2"},
@@ -126,7 +126,7 @@ func TestCreateJetstreamConfigInvalidStorage(t *testing.T) {
 		},
 	}
 
-	c, err := createJetstreamConfig(config, []networkv1alpha1.SubjectSpec{
+	c, err := createJetstreamConfig("", config, []networkv1alpha1.SubjectSpec{
 		{
 			Name:     "mystreams",
 			Subjects: []string{"mySubject1", "mySubject2"},
@@ -154,7 +154,7 @@ func TestCreateJetstreamConfigsRetentionLimits(t *testing.T) {
 		},
 	}
 
-	c, err := createJetstreamConfig(config, []networkv1alpha1.SubjectSpec{
+	c, err := createJetstreamConfig("", config, []networkv1alpha1.SubjectSpec{
 		{
 			Name:     "mystreams",
 			Subjects: []string{"mySubject1", "mySubject2"},
@@ -192,7 +192,7 @@ func TestCreateJetstreamConfigsRetentionInterest(t *testing.T) {
 		},
 	}
 
-	c, err := createJetstreamConfig(config, []networkv1alpha1.SubjectSpec{
+	c, err := createJetstreamConfig("", config, []networkv1alpha1.SubjectSpec{
 		{
 			Name:     "mystreams",
 			Subjects: []string{"mySubject1", "mySubject2"},
@@ -230,7 +230,7 @@ func TestCreateJetstreamConfigsRetentionWorkqueue(t *testing.T) {
 		},
 	}
 
-	c, err := createJetstreamConfig(config, []networkv1alpha1.SubjectSpec{
+	c, err := createJetstreamConfig("", config, []networkv1alpha1.SubjectSpec{
 		{
 			Name:     "mystreams",
 			Subjects: []string{"mySubject1", "mySubject2"},
@@ -268,7 +268,7 @@ func TestCreateJetstreamConfigInvalidRetention(t *testing.T) {
 		},
 	}
 
-	c, err := createJetstreamConfig(config, []networkv1alpha1.SubjectSpec{
+	c, err := createJetstreamConfig("", config, []networkv1alpha1.SubjectSpec{
 		{
 			Name:     "mystreams",
 			Subjects: []string{"mySubject1", "mySubject2"},
@@ -296,7 +296,7 @@ func TestCreateJetstreamConfigDiscardNew(t *testing.T) {
 		},
 	}
 
-	c, err := createJetstreamConfig(config, []networkv1alpha1.SubjectSpec{
+	c, err := createJetstreamConfig("", config, []networkv1alpha1.SubjectSpec{
 		{
 			Name:     "mystreams",
 			Subjects: []string{"mySubject1", "mySubject2"},
@@ -335,7 +335,7 @@ func TestCreateJetstreamConfigDiscardOld(t *testing.T) {
 		},
 	}
 
-	c, err := createJetstreamConfig(config, []networkv1alpha1.SubjectSpec{
+	c, err := createJetstreamConfig("", config, []networkv1alpha1.SubjectSpec{
 		{
 			Name:     "mystreams",
 			Subjects: []string{"mySubject1", "mySubject2"},
@@ -374,7 +374,7 @@ func TestCreateJetstreamConfigInvalidDiscard(t *testing.T) {
 		},
 	}
 
-	c, err := createJetstreamConfig(config, []networkv1alpha1.SubjectSpec{
+	c, err := createJetstreamConfig("", config, []networkv1alpha1.SubjectSpec{
 		{
 			Name:     "mystreams",
 			Subjects: []string{"mySubject1", "mySubject2"},
@@ -403,7 +403,7 @@ func TestCreateJetstreamConfigInvalidMaxAge(t *testing.T) {
 		},
 	}
 
-	c, err := createJetstreamConfig(config, []networkv1alpha1.SubjectSpec{
+	c, err := createJetstreamConfig("", config, []networkv1alpha1.SubjectSpec{
 		{
 			Name:     "mystreams",
 			Subjects: []string{"mySubject1", "mySubject2"},

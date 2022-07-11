@@ -240,7 +240,7 @@ func (j *JetstreamController) Create(domain string, network string, streamConfig
 		return err
 	}
 
-	opts, err := createJetstreamConfig(streamConfig, subjects)
+	opts, err := createJetstreamConfig(domain, streamConfig, subjects)
 	if err != nil {
 		return err
 	}
@@ -257,7 +257,7 @@ func (j *JetstreamController) Create(domain string, network string, streamConfig
 // CreateAggregate creates a new jetstream stream with a given configuration for a given domain
 func (j *JetstreamController) CreateAggregate(domain string, network *networkv1alpha1.Network, streamConfig networkv1alpha1.StreamSpec, sourceDomains []string) error {
 
-	cfg, err := createJetstreamConfig(streamConfig, nil)
+	cfg, err := createJetstreamConfig("", streamConfig, nil)
 	if err != nil {
 		return err
 	}
@@ -335,7 +335,7 @@ func (j *JetstreamController) CreateMirror(domain string, sourceDomain string, n
 		return err
 	}
 
-	opts, err := createJetstreamConfig(streamConfig, nil)
+	opts, err := createJetstreamConfig("", streamConfig, nil)
 	if err != nil {
 		return err
 	}
@@ -434,7 +434,7 @@ func (j *JetstreamController) Delete(domain string, network string, names []stri
 	return nil
 }
 
-func createJetstreamConfig(streamConfig networkv1alpha1.StreamSpec, subjects []networkv1alpha1.SubjectSpec) (*jsmapi.StreamConfig, error) {
+func createJetstreamConfig(domain string, streamConfig networkv1alpha1.StreamSpec, subjects []networkv1alpha1.SubjectSpec) (*jsmapi.StreamConfig, error) {
 	subjectsForStream := []string{}
 	if subjects != nil {
 		for _, subject := range subjects {
@@ -445,6 +445,17 @@ func createJetstreamConfig(streamConfig networkv1alpha1.StreamSpec, subjects []n
 		if len(subjectsForStream) == 0 {
 			return nil, fmt.Errorf("no subjects found for stream %s", streamConfig.Name)
 		}
+	}
+	// Adding the node name as a prefix for the subjects.
+	// This is needed to prevent crosstalk between leaf-nats sharing the same jetstream configuration.
+	// The user has to prefix the subjects accordingly to the domain used.
+	domainSubjectsForStream := []string{}
+	if domain != "" {
+		for _, s := range subjectsForStream {
+			domainSubjectsForStream = append(domainSubjectsForStream, fmt.Sprintf("%s.%s", domain, s))
+		}
+	} else {
+		domainSubjectsForStream = subjectsForStream
 	}
 	maxAge, err := parseDurationString(streamConfig.Config.MaxAge)
 	if err != nil {
@@ -494,7 +505,7 @@ func createJetstreamConfig(streamConfig networkv1alpha1.StreamSpec, subjects []n
 
 	opts := &jsmapi.StreamConfig{
 		Name:         streamConfig.Name,
-		Subjects:     subjectsForStream,
+		Subjects:     domainSubjectsForStream,
 		Retention:    retention,
 		MaxMsgsPer:   streamConfig.Config.MaxMsgsPerSubject,
 		MaxMsgs:      streamConfig.Config.MaxMsgs,
