@@ -535,13 +535,14 @@ func (r *NetworksReconciler) updateInfoAndReturn(ctx context.Context, network *n
 // removeNetworkFinalizers removes the finalizers from a network
 func removeNetworkFinalizers(network *networkv1alpha1.Network, removeFinalizers []string) *networkv1alpha1.Network {
 	finalizers := network.ObjectMeta.Finalizers
-	for i, v := range removeFinalizers {
-		if slice.ContainsString(finalizers, v) {
-			finalizers = append(finalizers[:i], finalizers[i+1:]...)
+	new := []string{}
+	for _, v := range finalizers {
+		if !slice.ContainsString(removeFinalizers, v) {
+			new = append(new, v)
 		}
 	}
 
-	network.ObjectMeta.Finalizers = finalizers
+	network.ObjectMeta.Finalizers = new
 	return network
 }
 
