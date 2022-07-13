@@ -449,10 +449,15 @@ func createJetstreamConfig(domain string, streamConfig networkv1alpha1.StreamSpe
 	// Adding the node name as a prefix for the subjects.
 	// This is needed to prevent crosstalk between leaf-nats sharing the same jetstream configuration.
 	// The user has to prefix the subjects accordingly to the domain used.
+	// "local.>" is excluded as it needs to be local only
 	domainSubjectsForStream := []string{}
 	if domain != "" {
 		for _, s := range subjectsForStream {
-			domainSubjectsForStream = append(domainSubjectsForStream, fmt.Sprintf("%s.%s", domain, s))
+			if s == common.NatsDeniedExportTopics {
+				domainSubjectsForStream = append(domainSubjectsForStream, s)
+			} else {
+				domainSubjectsForStream = append(domainSubjectsForStream, fmt.Sprintf("%s.%s", domain, s))
+			}
 		}
 	} else {
 		domainSubjectsForStream = subjectsForStream

@@ -20,6 +20,8 @@ const (
 	AnckEdgefarmSysSysAccountJWT = "sys-jwt"
 	// AnckEdgefarmSysSysAccounPublicKey is the key in the edgefarm-sys secret that contains the sys account public key
 	AnckEdgefarmSysSysAccounPublicKey = "sys-public-key"
+	// NatsDeniedExportTopics are topics that are denied for exporting
+	NatsDeniedExportTopics = "local.>"
 )
 
 var (

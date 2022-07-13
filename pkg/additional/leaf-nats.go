@@ -3,6 +3,7 @@ package additional
 import (
 	"fmt"
 
+	"github.com/edgefarm/anck/pkg/common"
 	"github.com/edgefarm/anck/pkg/nats"
 	v1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -16,7 +17,6 @@ const (
 	natsNamespace               = "nats"
 	defaultDomain               = "DEFAULT_DOMAIN"
 	defaultJetstreamStoreageDir = "/store"
-	deniedExportTopics          = "local.>"
 )
 
 // ApplyLeafNats creates the leaf-nats DaemonSet and necessary namespace and configmap
@@ -39,7 +39,7 @@ func ApplyLeafNats(client client.Client) error {
 	defaultSysAccountCredsPath := fmt.Sprintf("%s/%s", credsMountDirectory, sysAccountCredsFile)
 
 	opts := []nats.Option{}
-	opts = append(opts, nats.WithRemote(natsServer.Addresses.LeafAddress, defaultSysAccountCredsPath, natsServer.SysAccount.SysPublicKey, []string{deniedExportTopics}, []string{deniedExportTopics}))
+	opts = append(opts, nats.WithRemote(natsServer.Addresses.LeafAddress, defaultSysAccountCredsPath, natsServer.SysAccount.SysPublicKey, []string{common.NatsDeniedExportTopics}, []string{common.NatsDeniedExportTopics}))
 	opts = append(opts, nats.WithPidFile("/var/run/nats/nats.pid"))
 	opts = append(opts, nats.WithCacheResolver(natsServer.SysAccount.OperatorJWT, natsServer.SysAccount.SysPublicKey, natsServer.SysAccount.SysJWT, "/jwt"))
 	opts = append(opts, nats.WithJetstream(defaultJetstreamStoreageDir, defaultDomain))
