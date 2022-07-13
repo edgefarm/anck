@@ -37,7 +37,7 @@ func ApplyNodeDNS(client client.Client) error {
 		Data: map[string]string{
 			"node-dns.conf": `listeninterface: docker0
 listenport: 53
-updateresolvconf: false
+updateresolvconf: true
 resolvConf: /etc/resolv.conf
 removeSearchDomains: true
 feed:
