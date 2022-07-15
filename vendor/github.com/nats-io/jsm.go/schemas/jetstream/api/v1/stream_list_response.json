@@ -227,8 +227,7 @@
                         "properties": {
                           "cluster": {
                             "type": "string",
-                            "description": "The desired cluster name to place the stream",
-                            "minLength": 1
+                            "description": "The desired cluster name to place the stream"
                           },
                           "tags": {
                             "description": "Tags required on servers hosting this stream",
@@ -360,6 +359,24 @@
                         "type": "boolean",
                         "default": false,
                         "description": "Allows the use of the Nats-Rollup header to replace all contents of a stream, or subject in a stream, with a single new message"
+                      },
+                      "republish": {
+                        "type": "object",
+                        "description": "Rules for mapping subjects onto new subjects for partitioning and more",
+                        "required": [
+                          "src",
+                          "dest"
+                        ],
+                        "properties": {
+                          "src": {
+                            "type": "string",
+                            "description": "The source subject to republish"
+                          },
+                          "dest": {
+                            "type": "string",
+                            "description": "The destination to publish to"
+                          }
+                        }
                       }
                     }
                   }
@@ -566,8 +583,8 @@
                     "maximum": 18446744073709551615
                   },
                   "active": {
-                    "description": "When last the mirror had activity, in nanoseconds",
-                    "minimum": 0,
+                    "description": "When last the mirror had activity, in nanoseconds. Value will be -1 when there has been no activity.",
+                    "minimum": -1,
                     "$comment": "nanoseconds depicting a duration in time, signed 64 bit integer",
                     "type": "integer",
                     "maximum": 9223372036854775807
@@ -639,8 +656,8 @@
                       "maximum": 18446744073709551615
                     },
                     "active": {
-                      "description": "When last the mirror had activity, in nanoseconds",
-                      "minimum": 0,
+                      "description": "When last the mirror had activity, in nanoseconds. Value will be -1 when there has been no activity.",
+                      "minimum": -1,
                       "$comment": "nanoseconds depicting a duration in time, signed 64 bit integer",
                       "type": "integer",
                       "maximum": 9223372036854775807
@@ -685,6 +702,32 @@
                           "maximum": 65535
                         }
                       }
+                    }
+                  }
+                }
+              },
+              "alternates": {
+                "type": "array",
+                "description": "List of mirrors sorted by priority",
+                "items": {
+                  "type": "object",
+                  "description": "An alternate location to read mirrored data",
+                  "required": [
+                    "name",
+                    "cluster"
+                  ],
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "The mirror stream name"
+                    },
+                    "cluster": {
+                      "type": "string",
+                      "description": "The name of the cluster holding the stream"
+                    },
+                    "domain": {
+                      "type": "string",
+                      "description": "The domain holding the string"
                     }
                   }
                 }

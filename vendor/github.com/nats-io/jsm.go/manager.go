@@ -16,6 +16,7 @@ package jsm
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"sort"
@@ -80,10 +81,33 @@ func (m *Manager) JetStreamAccountInfo() (info *api.JetStreamAccountStats, err e
 	var resp api.JSApiAccountInfoResponse
 	err = m.jsonRequest(api.JSApiAccountInfo, nil, &resp)
 	if err != nil {
+		if errors.Is(err, nats.ErrNoResponders) {
+			return nil, nats.ErrJetStreamNotEnabled
+		}
 		return nil, err
 	}
 
 	return resp.JetStreamAccountStats, nil
+}
+
+// IsStreamMaxBytesRequired determines if the JetStream account requires streams to set a byte limit
+func (m *Manager) IsStreamMaxBytesRequired() (bool, error) {
+	nfo, err := m.JetStreamAccountInfo()
+	if err != nil {
+		return false, err
+	}
+
+	if nfo.Limits.MaxBytesRequired {
+		return true, nil
+	}
+
+	for _, t := range nfo.Tiers {
+		if t.Limits.MaxBytesRequired {
+			return true, nil
+		}
+	}
+
+	return false, nil
 }
 
 func (m *Manager) jsonRequest(subj string, req interface{}, response interface{}) (err error) {

@@ -111,7 +111,7 @@ func (m *Manager) LoadOrNewStreamFromDefault(name string, dflt api.StreamConfig,
 		o(&dflt)
 	}
 	s, err := m.LoadStream(name)
-	if s == nil || err != nil {
+	if IsNatsError(err, 10059) {
 		return m.NewStreamFromDefault(name, dflt)
 	}
 
@@ -388,9 +388,20 @@ func AllowRollup() StreamOption {
 	}
 }
 
+func Republish(m *api.SubjectMapping) StreamOption {
+	return func(o *api.StreamConfig) error {
+		o.RePublish = m
+		return nil
+	}
+}
+
 // PageContents creates a StreamPager used to traverse the contents of the stream,
 // Close() should be called to dispose of the background consumer and resources
 func (s *Stream) PageContents(opts ...PagerOption) (*StreamPager, error) {
+	if s.Retention() == api.WorkQueuePolicy {
+		return nil, fmt.Errorf("work queue retention streams can not be paged")
+	}
+
 	pgr := &StreamPager{}
 	err := pgr.start(s.Name(), s.mgr, opts...)
 	if err != nil {
@@ -698,3 +709,5 @@ func (s *Stream) Sealed() bool                    { return s.cfg.Sealed }
 func (s *Stream) DeleteAllow() bool               { return !s.cfg.DenyDelete }
 func (s *Stream) PurgeAllowed() bool              { return !s.cfg.DenyPurge }
 func (s *Stream) RollupAllowed() bool             { return s.cfg.RollupAllowed }
+func (s *Stream) Republish() *api.SubjectMapping  { return s.cfg.RePublish }
+func (s *Stream) IsRepublishing() bool            { return s.Republish() != nil }

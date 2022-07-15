@@ -372,6 +372,7 @@ type StreamConfig struct {
 	Placement     *Placement      `json:"placement,omitempty"`
 	Mirror        *StreamSource   `json:"mirror,omitempty"`
 	Sources       []*StreamSource `json:"sources,omitempty"`
+	RePublish     *SubjectMapping `json:"republish,omitempty"`
 	Sealed        bool            `json:"sealed"`
 	DenyDelete    bool            `json:"deny_delete"`
 	DenyPurge     bool            `json:"deny_purge"`
@@ -417,12 +418,19 @@ type ExternalStream struct {
 }
 
 type StreamInfo struct {
-	Config  StreamConfig        `json:"config"`
-	Created time.Time           `json:"created"`
-	State   StreamState         `json:"state"`
-	Cluster *ClusterInfo        `json:"cluster,omitempty"`
-	Mirror  *StreamSourceInfo   `json:"mirror,omitempty"`
-	Sources []*StreamSourceInfo `json:"sources,omitempty"`
+	Config     StreamConfig        `json:"config"`
+	Created    time.Time           `json:"created"`
+	State      StreamState         `json:"state"`
+	Cluster    *ClusterInfo        `json:"cluster,omitempty"`
+	Mirror     *StreamSourceInfo   `json:"mirror,omitempty"`
+	Sources    []*StreamSourceInfo `json:"sources,omitempty"`
+	Alternates []StreamAlternate   `json:"alternates,omitempty"`
+}
+
+type StreamAlternate struct {
+	Name    string `json:"name"`
+	Domain  string `json:"domain,omitempty"`
+	Cluster string `json:"cluster"`
 }
 
 type StreamState struct {
@@ -438,4 +446,10 @@ type StreamState struct {
 	Subjects    map[string]uint64 `json:"subjects,omitempty"`
 	Lost        *LostStreamData   `json:"lost,omitempty"`
 	Consumers   int               `json:"consumer_count"`
+}
+
+// SubjectMapping allows a source subject to be mapped to a destination subject for republishing.
+type SubjectMapping struct {
+	Source      string `json:"src,omitempty"`
+	Destination string `json:"dest"`
 }

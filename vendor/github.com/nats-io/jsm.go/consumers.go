@@ -146,7 +146,7 @@ func (m *Manager) LoadOrNewConsumerFromDefault(stream string, name string, templ
 	}
 
 	c, err := m.LoadConsumer(stream, name)
-	if c == nil || err != nil {
+	if IsNatsError(err, 10014) {
 		return m.NewConsumerFromDefault(stream, template, opts...)
 	}
 
@@ -463,6 +463,14 @@ func DeliverGroup(g string) ConsumerOption {
 	}
 }
 
+// MaxRequestMaxBytes sets the limit of max bytes a consumer my request
+func MaxRequestMaxBytes(max int) ConsumerOption {
+	return func(o *api.ConsumerConfig) error {
+		o.MaxRequestMaxBytes = max
+		return nil
+	}
+}
+
 // MaxRequestBatch is the largest batch that can be specified when doing pulls against the consumer
 func MaxRequestBatch(max uint) ConsumerOption {
 	return func(o *api.ConsumerConfig) error {
@@ -513,6 +521,21 @@ func BackoffIntervals(i ...time.Duration) ConsumerOption {
 func BackoffPolicy(policy []time.Duration) ConsumerOption {
 	return func(o *api.ConsumerConfig) error {
 		o.BackOff = policy
+		return nil
+	}
+}
+
+// ConsumerOverrideReplicas override the replica count inherited from the Stream with this value
+func ConsumerOverrideReplicas(r int) ConsumerOption {
+	return func(o *api.ConsumerConfig) error {
+		o.Replicas = r
+		return nil
+	}
+}
+
+func ConsumerOverrideMemoryStorage() ConsumerOption {
+	return func(o *api.ConsumerConfig) error {
+		o.MemoryStorage = true
 		return nil
 	}
 }
@@ -829,7 +852,10 @@ func (c *Consumer) DeliverGroup() string             { return c.cfg.DeliverGroup
 func (c *Consumer) MaxWaiting() int                  { return c.cfg.MaxWaiting }
 func (c *Consumer) MaxRequestBatch() int             { return c.cfg.MaxRequestBatch }
 func (c *Consumer) MaxRequestExpires() time.Duration { return c.cfg.MaxRequestExpires }
+func (c *Consumer) MaxRequestMaxBytes() int          { return c.cfg.MaxRequestMaxBytes }
 func (c *Consumer) InactiveThreshold() time.Duration { return c.cfg.InactiveThreshold }
+func (c *Consumer) Replicas() int                    { return c.cfg.Replicas }
+func (c *Consumer) MemoryStorage() bool              { return c.cfg.MemoryStorage }
 func (c *Consumer) StartTime() time.Time {
 	if c.cfg.OptStartTime == nil {
 		return time.Time{}
