@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	nodeDNSImage     = "ghcr.io/edgefarm/node-dns:1.0.0-beta.2"
+	nodeDNSImage     = "ghcr.io/edgefarm/node-dns:1.0.0-beta.4"
 	nodeDNSNamespace = "node-dns"
 )
 
