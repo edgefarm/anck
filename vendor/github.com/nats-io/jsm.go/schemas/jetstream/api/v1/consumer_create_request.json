@@ -182,7 +182,7 @@
         },
         "max_ack_pending": {
           "description": "The maximum number of messages without acknowledgement that can be outstanding, once this limit is reached message delivery will be suspended",
-          "default": 20000,
+          "default": 1000,
           "$comment": "integer with a dynamic bit size depending on the platform the cluster runs on, can be up to 64bit",
           "type": "integer",
           "maximum": 9223372036854775807,
@@ -230,6 +230,14 @@
           "maximum": 9223372036854775807,
           "minimum": -9223372036854775807
         },
+        "max_bytes": {
+          "description": "The maximum bytes value that maybe set when dong a pull on a Pull Consumer",
+          "minimum": 0,
+          "default": 0,
+          "$comment": "integer with a dynamic bit size depending on the platform the cluster runs on, can be up to 64bit",
+          "type": "integer",
+          "maximum": 9223372036854775807
+        },
         "inactive_threshold": {
           "description": "Duration that instructs the server to cleanup ephemeral consumers that are inactive for that long",
           "default": 0,
@@ -247,6 +255,18 @@
             "maximum": 9223372036854775807,
             "minimum": -9223372036854775807
           }
+        },
+        "num_replicas": {
+          "description": "When set do not inherit the replica count from the stream but specifically set it to this amount",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5,
+          "$comment": "integer with a dynamic bit size depending on the platform the cluster runs on, can be up to 64bit"
+        },
+        "mem_storage": {
+          "description": "Force the consumer state to be kept in memory rather than inherit the setting from the stream",
+          "type": "boolean",
+          "default": false
         }
       }
     }
