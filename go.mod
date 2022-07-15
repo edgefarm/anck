@@ -9,7 +9,7 @@ require (
 	github.com/kinbiko/jsonassert v1.1.0
 	github.com/merkur0/go-slices v0.0.0-20191008224404-0191b04c1ee8
 	github.com/nats-io/jsm.go v0.0.29
-	github.com/nats-io/nats.go v1.13.1-0.20220216000616-0096b1bfae8d
+	github.com/nats-io/nats.go v1.16.0
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.17.0
 	github.com/ssoroka/slice v0.0.0-20220402005549-78f0cea3df8b
