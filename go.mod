@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/avast/retry-go/v4 v4.0.4
-	github.com/edgefarm/anck-credentials v0.7.1
+	github.com/edgefarm/anck-credentials v0.7.2
 	github.com/hsson/once v1.0.1
 	github.com/kinbiko/jsonassert v1.1.0
 	github.com/merkur0/go-slices v0.0.0-20191008224404-0191b04c1ee8
