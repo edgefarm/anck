@@ -3,7 +3,7 @@ module github.com/edgefarm/anck
 go 1.18
 
 require (
-	github.com/avast/retry-go/v4 v4.0.4
+	github.com/avast/retry-go/v4 v4.1.0
 	github.com/edgefarm/anck-credentials v0.7.1
 	github.com/hsson/once v1.0.1
 	github.com/kinbiko/jsonassert v1.1.0
