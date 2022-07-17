@@ -61,7 +61,12 @@ func createOrUpdateComponentSecrets(component string, namespace string, networkC
 	secretv1 := &v1.Secret{}
 	if secretExists {
 		secretv1, err = resources.UpdateSecret(component, namespace, &secret)
-	} else {
+		if secretv1 == nil {
+			secretLog.Info(fmt.Sprintf("#### secret could not be update. Deleted meanwhile?. Creating new secret: %s", component))
+			secretExists = false
+		}
+	} 
+	if !secretExists {	
 		secretv1, err = resources.CreateSecret(component, namespace, &secret)
 	}
 	if err != nil {
