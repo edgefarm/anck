@@ -192,7 +192,7 @@ func (r *NetworksReconciler) SetupWithManager(mgr ctrl.Manager) error {
 			},
 			DeleteFunc: func(e event.DeleteEvent) bool {
 				// Delete is handeled by the reconcile function using the finalizer
-				return true
+				return false
 			},
 		}).
 		Complete(r)
