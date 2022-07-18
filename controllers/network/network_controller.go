@@ -28,6 +28,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	"sigs.k8s.io/controller-runtime/pkg/event"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
@@ -89,9 +90,11 @@ type NetworksReconciler struct {
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.10.0/pkg/reconcile
 func (r *NetworksReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
+	networkLog.Info("Reconcile:", "name", req.NamespacedName)
 	network := &networkv1alpha1.Network{}
 	err := r.Get(ctx, req.NamespacedName, network)
 	if err != nil {
+		networkLog.Info("Reconcile: cant get object", "name", req.NamespacedName)
 		if errors.IsNotFound(err) {
 			// Object not found, return.  Created objects are automatically garbage collected.
 			// For additional cleanup logic use finalizers.
@@ -100,9 +103,39 @@ func (r *NetworksReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		// Error reading the object - requeue the request.
 		return ctrl.Result{}, err
 	}
-	if !network.ObjectMeta.DeletionTimestamp.IsZero() {
-		return r.reconcileDelete(ctx, network)
+	if network.ObjectMeta.DeletionTimestamp.IsZero() {
+		// from https://book.kubebuilder.io/reference/using-finalizers.html
+		// The object is not being deleted, so if it does not have our finalizer,
+		// then lets add the finalizer and update the object. This is equivalent
+		// registering our finalizer.
+		if !controllerutil.ContainsFinalizer(network, NetworkFinalizer) {
+			controllerutil.AddFinalizer(network, NetworkFinalizer)
+			if err := r.Update(ctx, network); err != nil {
+				return ctrl.Result{}, err
+			}
+		}
+	} else {
+		// The object is being deleted
+		if controllerutil.ContainsFinalizer(network, NetworkFinalizer) {
+			// our finalizer is present, so lets handle any external dependency
+			networkLog.Info("Reconcile: Deleting network", "name", network.Name)
+
+			result, err := r.reconcileDelete(ctx, network);
+			if err != nil {
+				// if fail to delete the external dependency here, return with error
+				// so that it can be retried (TODO: Why does reconcileDelete force a requeue as well?) 
+				return result, err
+			}
+
+			// remove our finalizer from the list and update it.
+			controllerutil.RemoveFinalizer(network, NetworkFinalizer)
+			if err := r.Update(ctx, network); err != nil {
+				return ctrl.Result{}, err
+			}
+		}
+		return ctrl.Result{}, nil
 	}
+	networkLog.Info("Reconcile: Creating network", "name", network.Name)
 	return r.reconcileCreate(ctx, network)
 }
 
@@ -130,6 +163,7 @@ func (r *NetworksReconciler) reconcileDelete(ctx context.Context, network *netwo
 	_, nodeErr := r.reconcileJetstreams(ctx, network)
 	_, networkError := r.reconcileDeleteNetwork(ctx, network)
 	err := fmt.Sprintf("mainErr: %v, nodeErr: %v, networkError: %v", mainErr, nodeErr, networkError)
+	networkLog.Info("Network reconcileDelete", "errors", err)
 	if networkError != nil || nodeErr != nil || mainErr != nil {
 		return ctrl.Result{
 			RequeueAfter: 5 * time.Second,
@@ -158,7 +192,7 @@ func (r *NetworksReconciler) SetupWithManager(mgr ctrl.Manager) error {
 			},
 			DeleteFunc: func(e event.DeleteEvent) bool {
 				// Delete is handeled by the reconcile function using the finalizer
-				return false
+				return true
 			},
 		}).
 		Complete(r)
