@@ -71,7 +71,8 @@ func (r *ParticipantsReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		}
 		// Error reading the object - requeue the request.
 		return ctrl.Result{
-			Requeue: true,
+			Requeue:      true,
+			RequeueAfter: 5 * time.Second,
 		}, err
 	}
 
@@ -100,7 +101,8 @@ func (r *ParticipantsReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		}
 	} else {
 		return ctrl.Result{
-			Requeue: true,
+			Requeue:      true,
+			RequeueAfter: 5 * time.Second,
 		}, nil
 	}
 
