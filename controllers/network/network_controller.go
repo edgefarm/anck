@@ -46,7 +46,6 @@ import (
 var (
 	networkLog          = ctrl.Log.WithName("network")
 	nodeparticipantsLog = ctrl.Log.WithName("node-participants")
-	createJetstreamsLog = ctrl.Log.WithName("create-jetstreams")
 )
 
 const (
@@ -120,10 +119,10 @@ func (r *NetworksReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 			// our finalizer is present, so lets handle any external dependency
 			networkLog.Info("Reconcile: Deleting network", "name", network.Name)
 
-			result, err := r.reconcileDelete(ctx, network);
+			result, err := r.reconcileDelete(ctx, network)
 			if err != nil {
 				// if fail to delete the external dependency here, return with error
-				// so that it can be retried (TODO: Why does reconcileDelete force a requeue as well?) 
+				// so that it can be retried (TODO: Why does reconcileDelete force a requeue as well?)
 				return result, err
 			}
 
@@ -352,14 +351,14 @@ func (r *NetworksReconciler) reconcileDeleteNetwork(ctx context.Context, network
 		// third case: create secret within the namespace the resource was defined 'network.Namespace'.
 		namespace = network.Namespace
 	}
-	participantsMap := network.Info.Participating.Components
-	participants := make([]string, 0, len(participantsMap))
-	for participant := range participantsMap {
-		participants = append(participants, participant)
+	componentsMap := network.Info.Participating.Components
+	components := make([]string, 0, len(componentsMap))
+	for component := range componentsMap {
+		components = append(components, component)
 	}
-	participants = append(participants, appComponentName(network.Spec.App, anckParticipant))
+	components = append(components, appComponentName(network.Spec.App, anckParticipant))
 
-	for _, component := range participants {
+	for _, component := range components {
 		err = removeNetworkFromComponentSecret(component, network.Name, namespace)
 		if err != nil {
 			if errors.IsNotFound(err) {
@@ -381,6 +380,7 @@ func (r *NetworksReconciler) reconcileDeleteNetwork(ctx context.Context, network
 			}
 		}
 	}
+
 	return ctrl.Result{}, nil
 }
 
@@ -516,12 +516,15 @@ func (r *NetworksReconciler) reconcileJetstreams(ctx context.Context, network *n
 		}
 	}
 
-	nodeparticipantsLog.Info("Deleting network finalizer for nodes", "nodes", removedNetworkFinalizers, "network", network.Name, "finalizers", network.ObjectMeta.Finalizers)
-	removeNetworkFinalizers(network, removedNetworkFinalizers)
-	nodeparticipantsLog.Info("Done deleting network finalizer for nodes", "nodes", removedNetworkFinalizers, "network", network.Name, "finalizers", network.ObjectMeta.Finalizers)
-	nodeparticipantsLog.Info("Deleting adding finalizer for nodes", "nodes", addedNetworkFinalizers, "network", network.Name, "finalizers", network.ObjectMeta.Finalizers)
-	addNetworkFinalizer(network, addedNetworkFinalizers)
-	nodeparticipantsLog.Info("Done adding network finalizer for nodes", "nodes", addedNetworkFinalizers, "network", network.Name, "finalizers", network.ObjectMeta.Finalizers)
+	if len(removedNetworkFinalizers) > 0 {
+		nodeparticipantsLog.Info("Deleting network finalizer for nodes", "nodes", removedNetworkFinalizers, "network", network.Name, "finalizers", network.ObjectMeta.Finalizers)
+		removeNetworkFinalizers(network, removedNetworkFinalizers)
+	}
+
+	if len(addedNetworkFinalizers) > 0 {
+		nodeparticipantsLog.Info("Adding finalizer for nodes", "nodes", addedNetworkFinalizers, "network", network.Name, "finalizers", network.ObjectMeta.Finalizers)
+		addNetworkFinalizer(network, addedNetworkFinalizers)
+	}
 
 	for _, node := range domainMessages.OkMap {
 		for _, message := range node {

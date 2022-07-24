@@ -81,6 +81,7 @@ func (r *PodsReconiler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 func (r *PodsReconiler) reconcileCreatePod(ctx context.Context, pod *corev1.Pod) (ctrl.Result, error) {
 	podNetworks := []string{}
 
+	// search for participant label and extract network name(s)
 	labels := pod.GetLabels()
 	for k, v := range labels {
 		if strings.Contains(k, "participant.edgefarm.io/") {
@@ -88,19 +89,29 @@ func (r *PodsReconiler) reconcileCreatePod(ctx context.Context, pod *corev1.Pod)
 		}
 	}
 
+	// is in network(s)?
 	if len(podNetworks) > 0 {
+
+		// node assigned?
 		if pod.Spec.NodeName == "" {
 			return ctrl.Result{
 				RequeueAfter: 5 * time.Second,
 			}, fmt.Errorf("Still waiting for pod '%s' to be scheduled onto a node", pod.Name)
 		}
+
 		podsLog.Info("Create: ", "event", pod.Name)
+
+		// access pod
 		pod, err := resources.GetPod(pod.Name, pod.Namespace)
 		if err != nil {
 			podsLog.Error(err, "error getting pod")
 			return ctrl.Result{}, err
 		}
+
+		// get assigned node from pod
 		node := pod.Spec.NodeName
+
+		// get all labels from node
 		nodeLabels, err := resources.GetNodeLabels(node)
 		if err != nil {
 			podsLog.Error(err, "error getting node labels")
@@ -108,25 +119,32 @@ func (r *PodsReconiler) reconcileCreatePod(ctx context.Context, pod *corev1.Pod)
 				RequeueAfter: 5 * time.Second,
 			}, err
 		}
+
+		// check if node is an edge node
 		edgeNode := false
-		fmt.Println(node)
-		fmt.Println(nodeLabels)
 		if _, ok := nodeLabels["node-role.kubernetes.io/edge"]; ok {
 			edgeNode = true
 		}
+		// when no edge node, assing main
 		if !edgeNode {
 			node = "main"
 		}
 		podsLog.Info("Networks for pod:", "pod", pod.Name, "node", node, "networks", podNetworks)
+
+		// iterate over all assigned networks
 		for _, networkName := range podNetworks {
+
+			// access network
 			network, err := resources.GetNetwork(networkName, pod.Namespace)
 			if err != nil {
 				podsLog.Error(err, "error getting network")
 				return ctrl.Result{}, err
 			}
-			// prevent from creating the same pod twice
+
+			// update network informations about pod
 			if !slice.Contains(network.Info.Participating.Pods[node], pod.Name) {
 				network.Info.Participating.PodsCreating[node] = append(network.Info.Participating.PodsCreating[node], pod.Name)
+				// prevent from creating the same pod twice
 				network.Info.Participating.PodsCreating[node] = slice.Unique(network.Info.Participating.PodsCreating[node])
 				if network.Info.Participating.Nodes[node] != participatingNodeStateActive {
 					if len(network.Info.Participating.PodsCreating[node]) > 0 {
@@ -134,6 +152,8 @@ func (r *PodsReconiler) reconcileCreatePod(ctx context.Context, pod *corev1.Pod)
 					}
 				}
 			}
+
+			// update network with informations
 			_, err = resources.UpdateNetwork(network, pod.Namespace)
 			if err != nil {
 				podsLog.Error(err, "error updating network")

@@ -283,7 +283,6 @@ func (j *JetstreamController) CreateAggregate(domain string, network *networkv1a
 	targetStreamName := fmt.Sprintf("%s_%s", network.Name, streamConfig.Name)
 
 	cfg.Name = targetStreamName
-	jetstreamLog.Info("creating aggregated stream", "domain", domain, "name", cfg.Name, "network", network.Name)
 
 	exists, err := j.Exists(domain, targetStreamName)
 	if err != nil {
@@ -292,6 +291,7 @@ func (j *JetstreamController) CreateAggregate(domain string, network *networkv1a
 
 	if exists {
 		// First check if update is working. If not, create it.
+		jetstreamLog.Info("update aggregated stream", "domain", domain, "name", cfg.Name, "network", network.Name)
 		err = j.UpdateSources(domain, targetStreamName, cfg.Sources)
 		if err != nil {
 			if !jsm.IsNatsError(err, 10059) {
@@ -301,6 +301,7 @@ func (j *JetstreamController) CreateAggregate(domain string, network *networkv1a
 	} else {
 		if len(cfg.Sources) > 0 {
 			// stream does not exist. Create it
+			jetstreamLog.Info("create aggregated stream", "domain", domain, "name", cfg.Name, "network", network.Name)
 			nc, err := nats.Connect(j.natsServerAddress, nats.UserCredentials(j.credsFile))
 			if err != nil {
 				return err

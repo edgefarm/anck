@@ -70,7 +70,6 @@ func (r *NetworksReconciler) deleteMainJetstreams(ctx context.Context, network *
 		}
 		return ctrl.Result{}, fmt.Errorf("err: %s", domainMessages.ErrMap[mainDomain])
 	}
-	createJetstreamsLog.Info(fmt.Sprintf("Successfully deleted jetstream: {%s: %s, %s: %s}", "domain", mainDomain, "stream", mainStreamNames))
 	return ctrl.Result{}, nil
 }
 
